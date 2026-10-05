@@ -1,6 +1,6 @@
 // Переключатель темы: тёмная «Технологичный премиум» (styles.css) и светлая «Бизнес и надёжность»
 (function () {
-  var DARK = "styles.css?v=3", LIGHT = "themes/business-light.css?v=3";
+  var DARK = "styles.css?v=4", LIGHT = "themes/ocean-light.css?v=4";
   var link = document.getElementById("theme-css");
   var theme = "dark";
   try { if (localStorage.getItem("theme") === "light") theme = "light"; } catch (e) {}
