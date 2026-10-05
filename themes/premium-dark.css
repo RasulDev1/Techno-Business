@@ -352,3 +352,19 @@ img { max-width: 100%; display: block; }
   *, *::before { animation: none !important; transition: none !important; }
   .stamp, .ledger-body .hand { opacity: 1; transform: none; }
 }
+
+/* Переключатель темы */
+.top-actions { display: flex; align-items: center; gap: 10px; }
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--ink);
+  font: 500 15px/1 var(--font-body); padding: 10px 16px; white-space: nowrap;
+  border: 1px solid var(--line-strong); border-radius: 999px; background: transparent;
+  transition: border-color .2s, color .2s;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 620px) {
+  .theme-toggle { padding: 9px; }
+  .theme-toggle span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .top-actions { gap: 8px; }
+  .page-head h1 { font-size: 34px; overflow-wrap: normal; hyphens: auto; }
+}
