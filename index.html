@@ -12,29 +12,23 @@
 <!--BODY-->
 <header class="wrap top">
   <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">АБ</span>Автоматизация Бизнеса</a>
-  <div class="top-actions">
-    <div class="anim-switch" role="group" aria-label="Анимация у заголовка">
-      <button type="button" data-anim="table" aria-pressed="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 10v10"/></svg><span>Таблица</span></button>
-      <button type="button" data-anim="flow" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="7" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="16" cy="18" r="2.5"/><path d="M7.5 7h9M18 8.5l-1.5 7"/></svg><span>Схема</span></button>
-    </div>
-    <a class="top-link" href="#types">Выбрать сайт</a>
-  </div>
+  <a class="top-link" href="#types">Выбрать сайт</a>
 </header>
 
 <main>
   <section class="wrap hero" aria-labelledby="hero-title">
-    <div class="sheet hero-v" data-anim="table">
+    <div class="sheet">
       <div class="sheet-head">
         <h1 id="hero-title">Освободите до 70% времени и перестаньте платить за рутину</h1>
         <div class="hero-side">
-          <p class="lead">Сайт собирает заявки, CRM мгновенно распределяет их и контролирует каждый шаг клиента. Автоматизация позволяет одному менеджеру делать работу пятерых без хаоса и упущенных лидов.</p>
+          <p class="lead">Сайт собирает заявки, CRM мгновенно распределяет их и контролирует каждый шаг клиента. Автоматизация позволяет одному менеджеру делать работу троих без хаоса и упущенных лидов.</p>
           <a class="btn" href="#types">Посмотреть готовые сайты
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
           </a>
         </div>
       </div>
 
-      <div class="ledger" role="img" aria-label="Пример журнала заявок: заявки с сайта записываются сами, один менеджер отмечает каждую выполненной">
+      <div class="ledger" role="img" aria-label="Пример журнала заявок: заявки с сайта записываются сами, один менеджер ведёт каждую: принимает, ждёт оплату, вручает или отменяет">
         <div class="ledger-row ledger-cols" aria-hidden="true">
           <span>№</span><span>Время</span><span>Клиент</span><span>Что нужно</span><span>Исполнитель</span><span>Отметка</span>
         </div>
@@ -42,26 +36,9 @@
         <div class="ledger-foot" aria-hidden="true">
           <span class="ledger-note">Пример заполнения</span>
           <div class="ledger-total">
-            <span class="tally"><b id="ledger-count">0</b><small>заявок выполнено</small></span>
+            <span class="tally"><b id="ledger-count">0</b><small>заявок обработано</small></span>
             <span class="tally tally-one"><b>1</b><small>менеджер</small></span>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="sheet flow-sheet hero-v" data-anim="flow" hidden>
-      <div class="flow-text">
-        <h1>Освободите до 70% времени и перестаньте платить за рутину</h1>
-        <p class="lead">Сайт собирает заявки, CRM мгновенно распределяет их и контролирует каждый шаг клиента. Автоматизация позволяет одному менеджеру делать работу пятерых без хаоса и упущенных лидов.</p>
-        <a class="btn" href="#types">Посмотреть готовые сайты
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-        </a>
-      </div>
-      <div class="flow" role="img" aria-label="Схема: заявки с сайта попадают в CRM, один менеджер обрабатывает весь поток и доводит клиентов до оплаты">
-        <canvas></canvas>
-        <div class="flow-head"><span>Как это работает</span><span>1 менеджер вместо 5</span></div>
-        <div class="flow-counter">
-          <span>Заявок обработал один менеджер</span>
-          <strong id="flow-count">0</strong>
         </div>
       </div>
     </div>
@@ -142,7 +119,6 @@
 
 <footer class="wrap foot">© 2026 · Сайты, CRM и автоматизация для бизнеса</footer>
 <!--/BODY-->
-<script src="flow.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

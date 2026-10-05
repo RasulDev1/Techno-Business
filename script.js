@@ -1,4 +1,4 @@
-// Журнал заявок в hero: новые заявки появляются в таблице, один менеджер закрывает каждую.
+// Журнал заявок в hero: новые заявки появляются в таблице, один менеджер ведёт каждую до своего статуса.
 (function () {
   const body = document.querySelector(".ledger-body");
   if (!body) return;
@@ -8,19 +8,27 @@
 
   // Примеры заявок: подписаны на странице как «Пример заполнения»
   const ENTRIES = [
-    ["Анна К.", "Перфоратор на 2 суток"],
-    ["Игорь", "Футболка Airline, размер M"],
-    ["ООО «Ремстрой»", "Смета на ремонт офиса"],
-    ["Марина", "Запись на консультацию"],
-    ["Дмитрий", "Ветровка Tempo Shell, 2 шт."],
-    ["Сергей П.", "Бетономешалка на выходные"],
-    ["Ольга", "Курс по маникюру, оплата"],
-    ["Тимур", "Шуруповёрт с доставкой"],
-    ["Елена В.", "Беговые кроссовки, возврат"],
-    ["Студия «Лайм»", "Лендинг под акцию"],
-    ["Павел", "Плиткорез на 3 суток"],
-    ["Наталья", "Худи, 3 размера на выбор"],
+    ["Анна К.", "Перфоратор на 2 суток", "done"],
+    ["Игорь", "Футболка Airline, размер M", "pay"],
+    ["ООО «Ремстрой»", "Смета на ремонт офиса", "new"],
+    ["Марина", "Запись на консультацию", "done"],
+    ["Дмитрий", "Ветровка Tempo Shell, 2 шт.", "cancel"],
+    ["Сергей П.", "Бетономешалка на выходные", "pay"],
+    ["Ольга", "Курс по маникюру, оплата", "done"],
+    ["Тимур", "Шуруповёрт с доставкой", "new"],
+    ["Елена В.", "Беговые кроссовки, возврат", "done"],
+    ["Студия «Лайм»", "Лендинг под акцию", "pay"],
+    ["Павел", "Плиткорез на 3 суток", "new"],
+    ["Наталья", "Худи, 3 размера на выбор", "done"],
   ];
+
+  // Статусы заявки: подпись и значок
+  const STATUS = {
+    new: ["Принято", '<path d="M5 12.5l4.5 4.5L19 7.5"/>'],
+    pay: ["Ждёт оплаты", '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'],
+    done: ["Вручено", '<path d="M2.5 12.5l4.5 4.5 9-9.5M11 16.5l.5.5 9-9.5"/>'],
+    cancel: ["Отменено", '<path d="M7 7l10 10M17 7L7 17"/>'],
+  };
 
   let n = 0, done = 0, minutes = 9 * 60 + 4;
 
@@ -31,14 +39,15 @@
   }
 
   function makeRow() {
-    const [client, need] = ENTRIES[n % ENTRIES.length];
+    const [client, need, st] = ENTRIES[n % ENTRIES.length];
+    const [label, icon] = STATUS[st];
     n++;
     const row = document.createElement("div");
     row.className = "ledger-row";
     row.innerHTML =
       '<span class="num"></span><span class="hand c-time"></span><span class="hand c-client"></span>' +
       '<span class="hand c-need"></span><span class="hand c-man">Менеджер 1</span>' +
-      '<span class="mark"><span class="stamp"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Выполнено</span></span>';
+      '<span class="mark"><span class="stamp st-' + st + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icon + "</svg>" + label + "</span></span>";
     const cells = row.children;
     cells[0].textContent = n;
     cells[1].textContent = time();
@@ -111,21 +120,3 @@ document.querySelectorAll(".shot img").forEach((img) => {
   img.addEventListener("load", ok);
 });
 
-// Переключатель анимации у заголовка: таблица заявок или схема «Заявка → CRM → менеджер → оплата»
-(function () {
-  const btns = document.querySelectorAll(".anim-switch button");
-  if (!btns.length) return;
-  const views = document.querySelectorAll(".hero-v");
-  function show(a) {
-    views.forEach((v) => { v.hidden = v.dataset.anim !== a; });
-    btns.forEach((b) => b.setAttribute("aria-pressed", b.dataset.anim === a ? "true" : "false"));
-    window.dispatchEvent(new Event("resize")); // схема пересчитывает размер холста, когда становится видна
-  }
-  let current = "table";
-  try { if (localStorage.getItem("heroAnim") === "flow") current = "flow"; } catch (e) {}
-  show(current);
-  btns.forEach((b) => b.addEventListener("click", () => {
-    show(b.dataset.anim);
-    try { localStorage.setItem("heroAnim", b.dataset.anim); } catch (e) {}
-  }));
-})();
