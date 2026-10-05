@@ -4,27 +4,43 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Автоматизация Бизнеса</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@600;700&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="wrap top">
-  <a class="logo" href="index.html"><span class="logo-mark">↗</span>Автоматизация Бизнеса</a>
+  <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">АБ</span>Автоматизация Бизнеса</a>
   <a class="top-link" href="index.html">← На главную</a>
 </header>
 <!--BODY-->
 <main class="wrap tpl">
-  <p class="eyebrow">Сервис аренды инструментов</p>
-  <h1>Одностраничный сайт</h1>
-  <p class="tpl-lead">Вся информация о бизнесе на одной странице, приём заявок по электронной почте.</p>
+  <div class="sheet passport">
+    <div class="page-head">
+      <h1>Одностраничный сайт</h1>
+      <p class="tpl-lead-main">Сайт из одной страницы, который превращает посетителей в клиентов.</p>
+      <p class="tpl-lead">Потенциальный покупатель сразу видит ваше предложение, понимает выгоду и заполняет форму. Заявка мгновенно приходит вам на почту. Никаких лишних страниц и переходов — только чистые продажи.</p>
+    </div>
+    <dl class="passport-rows">
+      <div><dt>Одна цель — заявка</dt><dd>Посетитель не теряется в меню: весь путь от первого экрана до формы ведёт к одному действию.</dd></div>
+      <div><dt>Ни одна заявка не потеряется</dt><dd>Каждое обращение с сайта приходит на электронную почту в ту же минуту.</dd></div>
+      <div><dt>Быстрый запуск</dt><dd>Одна страница — меньше текстов, фото и согласований. Сайт можно быстрее запустить и сразу вести на него рекламу.</dd></div>
+      <div><dt>Удобно с телефона</dt><dd>Страница одинаково хорошо работает на компьютере и смартфоне, откуда приходит большинство клиентов.</dd></div>
+    </dl>
+  </div>
 
-  <div class="live">
-    <div class="browser">
-      <div class="browser-bar"><i></i><i></i><i></i><em>Демо: сервис аренды инструментов</em>
+  <div class="variant-head">
+    <h2>Один из вариантов реализации</h2>
+    <p>Ниже — одностраничный сайт, сделанный для сервиса аренды строительного инструмента. Для вашего бизнеса меняются тексты, фотографии, цвета и набор блоков.</p>
+  </div>
+
+  <div class="sheet live">
+    <span class="card-label">Вариант: сервис аренды инструментов</span>
+    <div class="live-frame">
+      <div class="live-bar"><span>Сервис аренды инструментов</span>
         <a class="live-open" href="demo/tyaga/index.html" target="_blank" rel="noopener">Открыть на весь экран ↗</a></div>
       <iframe src="demo/tyaga/index.html" title="Демо-версия сайта сервиса аренды инструментов" loading="lazy"></iframe>
     </div>
-    <p class="live-hint">Это живой сайт: листайте, выбирайте инструмент и заполняйте форму. Заявки в демо-версии не отправляются.</p>
+    <p class="live-hint"><span class="note-mark">Пометка</span>Это живой сайт: листайте, выбирайте инструмент и заполняйте форму. Заявки в демо-версии не отправляются.</p>
   </div>
 
   <nav class="tabs" aria-label="Разделы шаблона">
@@ -32,14 +48,16 @@
   </nav>
 
   <section class="features" id="features">
-    <article class="feature">
+    <article class="sheet feature">
+      <span class="card-label">Функция 1</span>
       <div class="feature-media">
         <iframe src="https://rutube.ru/play/embed/cbf4a681946a85fdb3707266f0a65bbb/?p=A-qkD43Vmlp6r_dK-swFmA" title="Оформление заявки: видео" allow="clipboard-write; autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
       </div>
       <h2>Оформление заявки</h2>
       <a class="feature-link" href="https://rutube.ru/video/private/cbf4a681946a85fdb3707266f0a65bbb/?p=A-qkD43Vmlp6r_dK-swFmA" target="_blank" rel="noopener">Смотреть на Rutube ↗</a>
     </article>
-    <article class="feature">
+    <article class="sheet feature">
+      <span class="card-label">Функция 2</span>
       <div class="feature-media">
         <iframe src="https://rutube.ru/play/embed/676130074e425b1459b6992e9a8d78d6/?p=ypKnps-PblLMqOMMchLAbA" title="Админ-панель: видео" allow="clipboard-write; autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy"></iframe>
       </div>
@@ -47,6 +65,14 @@
       <a class="feature-link" href="https://rutube.ru/video/private/676130074e425b1459b6992e9a8d78d6/?p=ypKnps-PblLMqOMMchLAbA" target="_blank" rel="noopener">Смотреть на Rutube ↗</a>
     </article>
   </section>
+
+  <nav class="sheet next" aria-label="Что дальше">
+    <h2>Что дальше</h2>
+    <div class="next-links">
+      <a class="btn" href="index.html#types">← Все типы сайтов</a>
+      <a class="btn btn-ghost" href="gotovyj-internet-magazin.html">Готовый Онлайн-Магазин →</a>
+    </div>
+  </nav>
 </main>
 <!--/BODY-->
 </body>

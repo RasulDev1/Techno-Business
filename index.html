@@ -5,72 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Автоматизация Бизнеса</title>
 <meta name="description" content="Готовые сайты и интернет-магазины с автоматизацией: заявки, CRM и оплата работают без ручной рутины.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@600;700&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <!--BODY-->
 <header class="wrap top">
-  <a class="logo" href="index.html"><span class="logo-mark">↗</span>Автоматизация Бизнеса</a>
+  <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">АБ</span>Автоматизация Бизнеса</a>
   <a class="top-link" href="#types">Выбрать сайт</a>
 </header>
 
 <main>
-  <section class="wrap hero">
-    <div>
-      <h1>Освободите до 70% времени и перестаньте платить за рутину</h1>
-      <p class="lead">Сайт собирает заявки, CRM мгновенно распределяет их и контролирует каждый шаг клиента. Автоматизация позволяет одному менеджеру делать работу пятерых без хаоса и упущенных лидов.</p>
-      <div class="hero-actions">
-        <a class="btn" href="#types">Посмотреть готовые сайты
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-        </a>
+  <section class="wrap hero" aria-labelledby="hero-title">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h1 id="hero-title">Освободите до 70% времени и перестаньте платить за рутину</h1>
+        <div class="hero-side">
+          <p class="lead">Сайт собирает заявки, CRM мгновенно распределяет их и контролирует каждый шаг клиента. Автоматизация позволяет одному менеджеру делать работу пятерых без хаоса и упущенных лидов.</p>
+          <a class="btn" href="#types">Посмотреть готовые сайты
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <div class="flow" role="img" aria-label="Схема: заявки с сайта попадают в CRM, один менеджер обрабатывает весь поток и доводит клиентов до оплаты">
-      <canvas></canvas>
-      <div class="flow-head"><span>Как это работает</span><span>1 менеджер вместо 5</span></div>
-      <div class="flow-counter">
-        <span>Заявок обработал один менеджер</span>
-        <strong id="flow-count">0</strong>
+      <div class="ledger" role="img" aria-label="Пример журнала заявок: заявки с сайта записываются сами, один менеджер отмечает каждую выполненной">
+        <div class="ledger-row ledger-cols" aria-hidden="true">
+          <span>№</span><span>Время</span><span>Клиент</span><span>Что нужно</span><span>Исполнитель</span><span>Отметка</span>
+        </div>
+        <div class="ledger-body" aria-hidden="true"></div>
+        <div class="ledger-foot" aria-hidden="true">
+          <span class="ledger-note">Пример заполнения</span>
+          <div class="ledger-total">
+            <span class="tally"><b id="ledger-count">0</b><small>заявок выполнено</small></span>
+            <span class="tally tally-one"><b>1</b><small>менеджер</small></span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="wrap benefits" aria-label="Преимущества автоматизации">
-    <article class="benefit">
-      <h2>Рост конверсии в 3–7 раз</h2>
-      <p>Лендинг бьёт точно в цель: снижает стоимость лида и выжимает максимум из каждого рекламного рубля.</p>
-    </article>
-    <article class="benefit">
-      <h2>0% упущенных клиентов</h2>
-      <p>Встроенная CRM фиксирует 100% обращений за 1 секунду. Никакого человеческого фактора и забытых заказов.</p>
-    </article>
-    <article class="benefit">
-      <h2>До 70% экономии времени</h2>
-      <p>Автоматический учёт остатков и аналитика заменяют ручную рутину, освобождая часы на реальное масштабирование.</p>
-    </article>
+  <section class="wrap results" aria-label="Преимущества автоматизации">
+    <ol class="results-list">
+      <li>
+        <h2>Рост конверсии в 3–7 раз</h2>
+        <p>Лендинг бьёт точно в цель: снижает стоимость лида и выжимает максимум из каждого рекламного рубля.</p>
+      </li>
+      <li>
+        <h2>0% упущенных клиентов</h2>
+        <p>Встроенная CRM фиксирует 100% обращений за 1 секунду. Никакого человеческого фактора и забытых заказов.</p>
+      </li>
+      <li>
+        <h2>До 70% экономии времени</h2>
+        <p>Автоматический учёт остатков и аналитика заменяют ручную рутину, освобождая часы на реальное масштабирование.</p>
+      </li>
+    </ol>
   </section>
 
   <section class="types" id="types">
     <div class="wrap">
       <div class="types-head">
         <h2>Выберите тип сайта</h2>
-        <p class="note">Это демо-версии: компании на них вымышленные, но весь функционал работает по-настоящему. Нажмите на сайт, чтобы узнать, что он умеет.</p>
+        <p class="note"><span class="note-mark">Пометка</span>Это демо-версии: компании на них вымышленные, но весь функционал работает по-настоящему. Нажмите на сайт, чтобы узнать, что он умеет.</p>
       </div>
 
       <div class="grid">
         <a class="card" href="odnostranichnyj-sajt.html">
-          <div class="preview">
-            <div class="browser">
-              <div class="browser-bar"><i></i><i></i><i></i><em>Сервис аренды инструментов</em></div>
-              <div class="shot">
-                <img src="images/tyaga.jpg" alt="Скриншот сайта «Тяга»">
-                <div class="shot-empty"><div><b>Скриншот сайта «Тяга»</b>Положите файл в images/tyaga.jpg</div></div>
-              </div>
-            </div>
+          <span class="card-label">Приложение 1</span>
+          <div class="shot">
+            <img src="images/tyaga.jpg" alt="Скриншот сайта «Тяга»">
+            <div class="shot-empty"><div><b>Скриншот сайта «Тяга»</b>Положите файл в images/tyaga.jpg</div></div>
           </div>
           <div class="card-body">
             <span class="tag">Сервис аренды инструментов</span>
@@ -89,14 +92,10 @@
         </a>
 
         <a class="card" href="gotovyj-internet-magazin.html">
-          <div class="preview">
-            <div class="browser">
-              <div class="browser-bar"><i></i><i></i><i></i><em>Онлайн-магазин спортивной одежды</em></div>
-              <div class="shot">
-                <img src="images/temp.jpg" alt="Скриншот магазина «Temp»">
-                <div class="shot-empty"><div><b>Скриншот магазина «Temp»</b>Положите файл в images/temp.jpg</div></div>
-              </div>
-            </div>
+          <span class="card-label">Приложение 2</span>
+          <div class="shot">
+            <img src="images/temp.jpg" alt="Скриншот магазина «Temp»">
+            <div class="shot-empty"><div><b>Скриншот магазина «Temp»</b>Положите файл в images/temp.jpg</div></div>
           </div>
           <div class="card-body">
             <span class="tag">Онлайн-магазин спортивной одежды</span>
