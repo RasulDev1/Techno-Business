@@ -1,4 +1,4 @@
-// Журнал заявок в hero: новые заявки появляются в таблице, один менеджер ведёт каждую до своего статуса.
+// Журнал заявок в hero: новые заявки появляются в таблице, менеджеры ведут каждую до своего статуса.
 (function () {
   const body = document.querySelector(".ledger-body");
   if (!body) return;
@@ -6,21 +6,34 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const VISIBLE = 6;
 
-  // Примеры заявок: подписаны на странице как «Пример заполнения»
-  const ENTRIES = [
-    ["Анна К.", "Перфоратор на 2 суток", "done"],
-    ["Игорь", "Футболка Airline, размер M", "pay"],
-    ["ООО «Ремстрой»", "Смета на ремонт офиса", "new"],
-    ["Марина", "Запись на консультацию", "done"],
-    ["Дмитрий", "Ветровка Tempo Shell, 2 шт.", "cancel"],
-    ["Сергей П.", "Бетономешалка на выходные", "pay"],
-    ["Ольга", "Курс по маникюру, оплата", "done"],
-    ["Тимур", "Шуруповёрт с доставкой", "new"],
-    ["Елена В.", "Беговые кроссовки, возврат", "done"],
-    ["Студия «Лайм»", "Лендинг под акцию", "pay"],
-    ["Павел", "Плиткорез на 3 суток", "new"],
-    ["Наталья", "Худи, 3 размера на выбор", "done"],
+  // Примеры заявок: подписаны на странице как «Пример заполнения». Клиент, запрос, менеджер и статус собираются случайно
+  const CLIENTS = [
+    "Анна К.", "Магомед А.", "Игорь", "Залина", "ООО «Ремстрой»", "Аслан Т.", "Марина", "Мадина",
+    "Хасан", "Дмитрий", "Амина Б.", "Рустам", "Ольга", "Фатима", "Ахмед", "Елена В.",
+    "Лейла", "Тамерлан", "Студия «Лайм»", "Диана Т.", "Сергей П.", "Заур", "Наталья", "Мурат К.",
   ];
+  const NEEDS = [
+    "Перфоратор на 2 суток", "Футболка Airline, размер M", "Смета на ремонт офиса", "Запись на консультацию",
+    "Ветровка Tempo Shell, 2 шт.", "Бетономешалка на выходные", "Курс по маникюру, оплата", "Шуруповёрт с доставкой",
+    "Беговые кроссовки, возврат", "Лендинг под акцию", "Плиткорез на 3 суток", "Худи, 3 размера на выбор",
+  ];
+  const MANAGERS = ["Руслан", "Алина", "Ислам", "Камила", "Тимур", "Ольга", "Арсен", "Милана"];
+  // Чаще заявки доходят до вручения, реже отменяются
+  const STATUSES = ["done", "done", "done", "done", "new", "new", "new", "pay", "pay", "cancel"];
+
+  // Случайный выбор без повторов подряд: перемешанная «колода», которая пополняется, когда кончается
+  function deck(list) {
+    let pile = [], last;
+    return function () {
+      if (!pile.length) {
+        pile = list.slice();
+        for (let i = pile.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pile[i], pile[j]] = [pile[j], pile[i]]; }
+        if (pile[pile.length - 1] === last && pile.length > 1) pile.unshift(pile.pop());
+      }
+      return (last = pile.pop());
+    };
+  }
+  const nextClient = deck(CLIENTS), nextNeed = deck(NEEDS), nextManager = deck(MANAGERS), nextStatus = deck(STATUSES);
 
   // Статусы заявки: подпись и значок
   const STATUS = {
@@ -39,20 +52,21 @@
   }
 
   function makeRow() {
-    const [client, need, st] = ENTRIES[n % ENTRIES.length];
+    const client = nextClient(), need = nextNeed(), manager = nextManager(), st = nextStatus();
     const [label, icon] = STATUS[st];
     n++;
     const row = document.createElement("div");
     row.className = "ledger-row";
     row.innerHTML =
       '<span class="num"></span><span class="hand c-time"></span><span class="hand c-client"></span>' +
-      '<span class="hand c-need"></span><span class="hand c-man">Менеджер 1</span>' +
+      '<span class="hand c-need"></span><span class="hand c-man"></span>' +
       '<span class="mark"><span class="stamp st-' + st + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icon + "</svg>" + label + "</span></span>";
     const cells = row.children;
     cells[0].textContent = n;
     cells[1].textContent = time();
     cells[2].textContent = client;
     cells[3].textContent = need;
+    cells[4].textContent = manager;
     return row;
   }
 
