@@ -45,8 +45,12 @@
 
   let n = 0, done = 0, minutes = 9 * 60 + 4;
   // Номера заявок идут не подряд: часть заявок ушла в другие статусы раньше
-  let id = 4800 + Math.floor(Math.random() * 400);
-  function nextId() { id += 1 + Math.floor(Math.random() * 6); return id; }
+  let id = Math.floor(Math.random() * 600);
+  function nextId() {
+    id += 1 + Math.floor(Math.random() * 6);
+    if (id > 1000) id = 1 + Math.floor(Math.random() * 6);
+    return String(id).padStart(4, "0");
+  }
   const byStatus = { new: 0, pay: 0, done: 0, cancel: 0 };
   const statOut = {};
   document.querySelectorAll("[data-st]").forEach((el) => { statOut[el.dataset.st] = el; });
@@ -66,7 +70,7 @@
     row.dataset.st = st;
     row.innerHTML =
       '<span class="num"></span><span class="hand c-time"></span><span class="hand c-client"></span>' +
-      '<span class="hand c-need"></span><span class="hand c-man">Султан</span>' +
+      '<span class="hand c-need"></span><span class="hand c-man">Менеджер Султан</span>' +
       '<span class="mark"><span class="stamp st-' + st + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icon + "</svg>" + label + "</span></span>";
     const cells = row.children;
     cells[0].textContent = nextId();

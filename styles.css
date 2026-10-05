@@ -328,7 +328,8 @@ img { max-width: 100%; display: block; }
   .hero { padding-top: 8px; }
   .sheet-head { padding: 32px 20px 28px; }
   .lead { font-size: 16.5px; }
-  .ledger { --cols: 44px minmax(0, 1fr) 64px 118px; }
+  .ledger { --cols: 42px minmax(0, 1fr) 84px 116px; }
+  .ledger-body .c-man { white-space: normal; line-height: 1.15; font-size: 12.5px; }
   .ledger-body .c-man { font-size: 13px; }
   .ledger-row > span:nth-child(2), .ledger-row > span:nth-child(4) { display: none; }
   .ledger-row > span { padding-inline: 10px; }
