@@ -84,7 +84,7 @@ img { max-width: 100%; display: block; }
   border-bottom: 1px solid var(--line);
 }
 .hero h1 {
-  font: 600 clamp(38px, 5.2vw, 72px)/1.04 var(--font-display);
+  font: 600 clamp(32px, 4.2vw, 56px)/1.08 var(--font-display);
   letter-spacing: -0.035em; margin: 0; text-wrap: balance;
   color: var(--ink);
 }
