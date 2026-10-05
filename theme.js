@@ -1,29 +1,34 @@
-// Переключатель темы: тёмная «Технологичный премиум» (styles.css) и светлая «Бизнес и надёжность»
+// Выбор темы: тёмная «Технологичный премиум», светлая «Синий океан» и «Технологичный графит»
 (function () {
-  var DARK = "styles.css?v=4", LIGHT = "themes/ocean-light.css?v=4";
+  var THEMES = {
+    dark: "styles.css?v=5",
+    ocean: "themes/ocean-light.css?v=5",
+    graphite: "themes/graphite.css?v=5",
+  };
   var link = document.getElementById("theme-css");
   var theme = "dark";
-  try { if (localStorage.getItem("theme") === "light") theme = "light"; } catch (e) {}
+  try {
+    var saved = localStorage.getItem("theme");
+    if (saved === "light") saved = "ocean";
+    if (THEMES[saved]) theme = saved;
+  } catch (e) {}
 
   function apply(t) {
     theme = t;
-    link.href = t === "light" ? LIGHT : DARK;
-    var btn = document.querySelector(".theme-toggle");
-    if (btn) {
-      btn.setAttribute("aria-pressed", t === "light" ? "true" : "false");
-      btn.querySelector("span").textContent = t === "light" ? "Тёмная тема" : "Светлая тема";
-    }
+    if (link.getAttribute("href") !== THEMES[t]) link.href = THEMES[t];
+    document.querySelectorAll(".theme-switch button").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.theme === t ? "true" : "false");
+    });
   }
-  if (theme === "light") apply("light");
+  if (theme !== "dark") apply(theme);
 
   document.addEventListener("DOMContentLoaded", function () {
-    var btn = document.querySelector(".theme-toggle");
-    if (!btn) return;
     apply(theme);
-    btn.addEventListener("click", function () {
-      var next = theme === "light" ? "dark" : "light";
-      apply(next);
-      try { localStorage.setItem("theme", next); } catch (e) {}
+    document.querySelectorAll(".theme-switch button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        apply(b.dataset.theme);
+        try { localStorage.setItem("theme", b.dataset.theme); } catch (e) {}
+      });
     });
   });
 })();

@@ -5,14 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Автоматизация Бизнеса</title>
 <link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" id="theme-css" href="styles.css?v=4">
+<link rel="stylesheet" id="theme-css" href="styles.css?v=5">
 <script src="theme.js"></script>
 </head>
 <body>
 <header class="wrap top">
   <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">АБ</span>Автоматизация Бизнеса</a>
   <div class="top-actions">
-    <button class="theme-toggle" type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg><span>Светлая тема</span></button>
+    <div class="theme-switch" role="group" aria-label="Тема сайта">
+      <button type="button" data-theme="dark" aria-pressed="true" title="Технологичный премиум"><i style="background:linear-gradient(135deg,#07080d 50%,#8b7bff 50%)"></i><span>Премиум</span></button>
+      <button type="button" data-theme="ocean" aria-pressed="false" title="Синий океан"><i style="background:linear-gradient(135deg,#f4f9fc 50%,#0369a1 50%)"></i><span>Океан</span></button>
+      <button type="button" data-theme="graphite" aria-pressed="false" title="Технологичный графит"><i style="background:linear-gradient(135deg,#202226 50%,#ff8a3d 50%)"></i><span>Графит</span></button>
+    </div>
   </div>
 </header>
 <main class="wrap stub">
