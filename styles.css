@@ -101,7 +101,7 @@ img { max-width: 100%; display: block; }
 .btn-ghost:hover { background: var(--surface); color: var(--accent); border-color: var(--accent); box-shadow: none; }
 
 /* Живая CRM-таблица заявок */
-.ledger { --cols: var(--margin-w) 80px minmax(0, 1.1fr) minmax(0, 1.7fr) minmax(0, 1fr) 150px; }
+.ledger { --cols: 76px 80px minmax(0, 1.1fr) minmax(0, 1.7fr) minmax(0, 1fr) 150px; }
 .ledger-row {
   display: grid; grid-template-columns: var(--cols); align-items: center;
   min-height: 52px; border-bottom: 1px solid var(--line);
@@ -139,13 +139,22 @@ img { max-width: 100%; display: block; }
 
 .ledger-foot {
   display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
-  padding: 18px 28px 20px calc(var(--margin-w) + 14px);
+  padding: 18px 28px 20px 90px;
 }
 .ledger-note { font: 500 11.5px/1 var(--font-mono); color: var(--faint); text-transform: uppercase; letter-spacing: .1em; }
-.ledger-total { display: flex; align-items: baseline; gap: 12px 36px; flex-wrap: wrap; }
+.ledger-total { display: flex; align-items: center; gap: 14px 40px; flex-wrap: wrap; }
 .tally { display: inline-flex; align-items: baseline; gap: 10px; }
 .tally b { font: 600 46px/0.95 var(--font-display); letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
-.tally small { font: 400 15px/1.1 var(--font-body); color: var(--muted); }
+.tally small { font: 400 15px/1.25 var(--font-body); color: var(--muted); }
+.ledger-stats { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+.ledger-stats li { display: inline-flex; align-items: center; gap: 7px; }
+.ledger-stats i { width: 9px; height: 9px; border-radius: 3px; flex: none; }
+.ledger-stats i.st-new { background: #b6dbf1; }
+.ledger-stats i.st-pay { background: #f2b75b; }
+.ledger-stats i.st-done { background: var(--grad); }
+.ledger-stats i.st-cancel { background: #c3ccd6; }
+.ledger-stats b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; min-width: 1.4em; }
+.tally small br { display: block; }
 .tally-one b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* Итоги */
@@ -302,7 +311,7 @@ img { max-width: 100%; display: block; }
 /* Адаптив */
 @media (max-width: 960px) {
   .sheet-head { grid-template-columns: minmax(0, 1fr); align-items: start; }
-  .ledger { --cols: var(--margin-w) minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, .9fr) 132px; }
+  .ledger { --cols: 72px minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, .9fr) 132px; }
   .ledger-row > span:nth-child(2) { display: none; }
   .results-list { grid-template-columns: minmax(0, 1fr); }
   .types-head, .grid { grid-template-columns: minmax(0, 1fr); }
@@ -319,7 +328,7 @@ img { max-width: 100%; display: block; }
   .hero { padding-top: 8px; }
   .sheet-head { padding: 32px 20px 28px; }
   .lead { font-size: 16.5px; }
-  .ledger { --cols: 24px minmax(0, 1fr) 92px 120px; }
+  .ledger { --cols: 44px minmax(0, 1fr) 64px 118px; }
   .ledger-body .c-man { font-size: 13px; }
   .ledger-row > span:nth-child(2), .ledger-row > span:nth-child(4) { display: none; }
   .ledger-row > span { padding-inline: 10px; }
@@ -330,7 +339,7 @@ img { max-width: 100%; display: block; }
   .ledger-body .hand { font-size: 14px; }
   .stamp { font-size: 12px; padding: 4px 7px 4px 5px; gap: 4px; }
   .stamp svg { width: 12px; height: 12px; }
-  .ledger-foot { padding: 16px 16px 18px calc(var(--margin-w) + 10px); }
+  .ledger-foot { padding: 16px 16px 18px 54px; }
   .tally b { font-size: 40px; }
   .results-list li { padding: 22px 22px 24px; }
   .card { padding: 10px; }

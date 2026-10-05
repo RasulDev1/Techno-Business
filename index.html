@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <div class="ledger" role="img" aria-label="Пример журнала заявок: заявки с сайта записываются сами, менеджеры ведут каждую: принимают, ждут оплату, вручают или отменяют">
+      <div class="ledger" role="img" aria-label="Пример журнала заявок: заявки с сайта записываются сами, менеджер Султан ведёт каждую: принимает, ждёт оплату, вручает или отменяет">
         <div class="ledger-row ledger-cols" aria-hidden="true">
           <span>№</span><span>Время</span><span>Клиент</span><span>Что нужно</span><span>Исполнитель</span><span>Отметка</span>
         </div>
@@ -36,7 +36,13 @@
         <div class="ledger-foot" aria-hidden="true">
           <span class="ledger-note">Пример заполнения</span>
           <div class="ledger-total">
-            <span class="tally"><b id="ledger-count">0</b><small>заявок обработано</small></span>
+            <ul class="ledger-stats">
+              <li><i class="st-new"></i>Принято <b data-st="new">0</b></li>
+              <li><i class="st-pay"></i>Ждёт оплаты <b data-st="pay">0</b></li>
+              <li><i class="st-done"></i>Вручено <b data-st="done">0</b></li>
+              <li><i class="st-cancel"></i>Отменено <b data-st="cancel">0</b></li>
+            </ul>
+            <span class="tally"><b id="ledger-count">0</b><small><span id="ledger-word">заявок</span> обработал<br>менеджер Султан</small></span>
           </div>
         </div>
       </div>
