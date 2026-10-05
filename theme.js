@@ -1,6 +1,6 @@
 // Выбор темы: «Океан» (основная, styles.css) или «Светлая» (themes/light.css)
 (function () {
-  var THEMES = { ocean: "styles.css?v=7", light: "themes/light.css?v=7" };
+  var THEMES = { ocean: "styles.css?v=8", light: "themes/light.css?v=8" };
   var link = document.getElementById("theme-css");
   var theme = "ocean";
   try { if (localStorage.getItem("theme2") === "light") theme = "light"; } catch (e) {}

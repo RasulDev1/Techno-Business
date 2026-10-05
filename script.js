@@ -150,3 +150,42 @@ document.querySelectorAll(".shot img").forEach((img) => {
   img.addEventListener("load", ok);
 });
 
+
+// Счётчики метрик под заголовком
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.querySelectorAll(".hero-metrics b[data-to]").forEach(function (el) {
+    const to = +el.dataset.to, sign = el.dataset.sign, t0 = performance.now() + 350, dur = 1600;
+    function tick(now) {
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
+      const e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      el.textContent = sign + Math.round(to * e) + "%";
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    el.textContent = sign + "0%";
+    requestAnimationFrame(tick);
+  });
+})();
+
+// Макет одностраничника: курсор ходит по полям формы и нажимает «Отправить»
+(function () {
+  const mock = document.querySelector(".mock");
+  if (!mock) return;
+  const start = mock.querySelector(".mk-hero em");
+  const targets = mock.querySelectorAll(".mk-form span, .mk-form em");
+  function at(el, i) {
+    let x = el.offsetWidth * .45, y = el.offsetHeight * .45;
+    for (let n = el; n && n !== mock; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; }
+    mock.style.setProperty("--cx" + i, Math.round(x) + "px");
+    if (i < 2) mock.style.setProperty("--cy" + i, Math.round(y) + "px");
+  }
+  function place() {
+    at(start, 0);
+    targets.forEach(function (el, i) { at(el, i + 1); });
+  }
+  place();
+  window.addEventListener("resize", place);
+  window.addEventListener("load", place);
+  if (document.fonts) document.fonts.ready.then(place);
+  mock.querySelector(".mock-cursor").addEventListener("animationiteration", place);
+})();
