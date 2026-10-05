@@ -1,9 +1,10 @@
-// Выбор темы: тёмная «Технологичный премиум», светлая «Синий океан» и «Технологичный графит»
+// Выбор темы: «Технологичный премиум», «Синий океан», «Технологичный графит» и «Светлая 2»
 (function () {
   var THEMES = {
     dark: "styles.css?v=5",
     ocean: "themes/ocean-light.css?v=5",
     graphite: "themes/graphite.css?v=5",
+    light2: "themes/light-2.css?v=5",
   };
   var link = document.getElementById("theme-css");
   var theme = "dark";
