@@ -374,6 +374,21 @@ img { max-width: 100%; display: block; }
   .flow-sheet { padding: 24px 16px 16px; }
   .flow { aspect-ratio: 1 / 1.05; }
 }
+/* Переключатель анимации у заголовка */
+.top-actions { display: flex; align-items: center; gap: 10px; }
+.anim-switch { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); }
+.anim-switch button {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border: 0; border-radius: 7px;
+  background: transparent; color: var(--muted); cursor: pointer; font: 500 14px/1 var(--font-body);
+  transition: background .2s, color .2s;
+}
+.anim-switch button:hover { color: var(--ink); }
+.anim-switch button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+@media (max-width: 620px) {
+  .top { flex-wrap: wrap; row-gap: 12px; padding-block: 16px; }
+  .top-actions { width: 100%; justify-content: space-between; gap: 8px; }
+  .anim-switch button { padding: 7px 10px; font-size: 13.5px; }
+}
 @media (max-width: 620px) {
   .page-head h1 { font-size: 34px; overflow-wrap: normal; hyphens: auto; }
 }

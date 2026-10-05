@@ -110,3 +110,22 @@ document.querySelectorAll(".shot img").forEach((img) => {
   img.addEventListener("error", fail);
   img.addEventListener("load", ok);
 });
+
+// Переключатель анимации у заголовка: таблица заявок или схема «Заявка → CRM → менеджер → оплата»
+(function () {
+  const btns = document.querySelectorAll(".anim-switch button");
+  if (!btns.length) return;
+  const views = document.querySelectorAll(".hero-v");
+  function show(a) {
+    views.forEach((v) => { v.hidden = v.dataset.anim !== a; });
+    btns.forEach((b) => b.setAttribute("aria-pressed", b.dataset.anim === a ? "true" : "false"));
+    window.dispatchEvent(new Event("resize")); // схема пересчитывает размер холста, когда становится видна
+  }
+  let current = "table";
+  try { if (localStorage.getItem("heroAnim") === "flow") current = "flow"; } catch (e) {}
+  show(current);
+  btns.forEach((b) => b.addEventListener("click", () => {
+    show(b.dataset.anim);
+    try { localStorage.setItem("heroAnim", b.dataset.anim); } catch (e) {}
+  }));
+})();
