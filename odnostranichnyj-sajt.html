@@ -5,12 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Автоматизация Бизнеса</title>
 <link rel="stylesheet" href="fonts/fonts.css">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" id="theme-css" href="styles.css?v=7">
+<script src="theme.js"></script>
 </head>
 <body>
 <header class="wrap top">
   <a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true">АБ</span>Автоматизация Бизнеса</a>
-  <a class="top-link" href="index.html">← На главную</a>
+  <div class="top-actions">
+    <div class="theme-switch" role="group" aria-label="Тема сайта">
+      <button type="button" data-theme="ocean" aria-pressed="true" title="Синий океан"><i style="background:linear-gradient(135deg,#f4f9fc 50%,#0369a1 50%)"></i><span>Океан</span></button>
+      <button type="button" data-theme="light" aria-pressed="false" title="Светлая"><i style="background:linear-gradient(135deg,#ffffff 50%,#f97316 50%)"></i><span>Светлая</span></button>
+    </div>
+    <a class="top-link" href="index.html">← На главную</a>
+  </div>
 </header>
 <!--BODY-->
 <main class="wrap tpl">
