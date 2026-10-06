@@ -901,3 +901,28 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .logo-mark { background: var(--accent); color: #fff; }
 .logo-mark svg { width: 100%; height: 100%; display: block; }
 .topbar .logo-mark, .site-foot .logo-mark { background: #fff; color: var(--accent); }
+
+/* Телефоны: шапка в одну строку, подписи, защита прокрутки у демо */
+@media (max-width: 620px) {
+  .topbar .top { column-gap: 8px; }
+  .topbar .top-actions { width: auto; margin-left: auto; }
+  .topbar .logo { font-size: 15px; gap: 7px; letter-spacing: -.01em; }
+  .topbar .logo-mark { width: 28px; height: 28px; }
+  .topbar .top-link { font-size: 13px; padding: 9px 10px; min-height: 40px; display: inline-flex; align-items: center; }
+  .promo-bar { justify-content: flex-start; text-align: left; gap: 8px; padding: 6px 12px; border-radius: 10px; background: rgb(255 255 255 / .12); }
+  .promo-text { flex: 1; text-wrap: balance; }
+  .card-label { display: inline-block; max-width: calc(100% - 8px); font-size: 12px; line-height: 1.3; letter-spacing: .06em; }
+  .note-mark { font-size: 12px; }
+  .live iframe, .live-crm iframe, .live-duo iframe { height: 70vh; height: 70svh; }
+  .foot-legal { margin-top: 0; } .foot-legal a { display: inline-block; padding-block: 12px; }
+}
+.demo-guard { display: none; }
+@media (max-width: 620px) {
+  .live-frame { position: relative; }
+  .demo-guard {
+    position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 18px;
+    border: 0; background: rgb(15 23 42 / .28); cursor: pointer; font: inherit;
+  }
+  .demo-guard span { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 600; font-size: 15px; box-shadow: 0 6px 20px rgb(15 23 42 / .25); }
+  .live-frame.is-live .demo-guard { display: none; }
+}

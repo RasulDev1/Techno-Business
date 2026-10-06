@@ -206,3 +206,22 @@ document.querySelectorAll(".shot img").forEach((img) => {
   };
   new ResizeObserver(fit).observe(box); wide.addEventListener("change", fit); fit();
 })();
+
+// Телефон: демо не перехватывает прокрутку, пока его не включили касанием
+(function () {
+  var frames = document.querySelectorAll('.live-frame');
+  if (!frames.length) return;
+  frames.forEach(function (f) {
+    if (!f.querySelector('iframe[src^="demo/"]')) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'demo-guard';
+    b.innerHTML = '<span>Нажмите, чтобы попробовать</span>';
+    b.addEventListener('click', function () { f.classList.add('is-live'); });
+    f.appendChild(b);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (!e.isIntersecting) f.classList.remove('is-live'); });
+      }).observe(f);
+    }
+  });
+})();
