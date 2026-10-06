@@ -826,7 +826,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 /* Сноска к цифрам: мелкий узкий шрифт */
 .stat-note { margin: 12px 0 0; max-width: 560px; font: 400 13px/1.35 "PT Sans Narrow", var(--font-body); letter-spacing: .01em; color: var(--faint); }
 .results .stat-note { max-width: none; margin-top: 14px; }
-.metric-top span::after, .results-list h2::after { content: "*"; margin-left: 1px; color: var(--faint); font-weight: 400; }
+.metric-top span::after { content: "*"; margin-left: 1px; color: var(--faint); font-weight: 400; }
 
 
 /* Верхний блок: одна синяя полоса — логотип, предложение, кнопки */
@@ -1068,4 +1068,41 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (max-width: 620px) {
   .types { padding-bottom: 0; }
   .site-foot { margin-top: 16px; }
+}
+
+/* Телефон, страница одностраничника: анимация-телефон напротив заголовка, 4 пункта по 2 */
+@media (max-width: 620px) {
+  .passport .page-head.has-mock:not(.crm-head) { grid-template-columns: minmax(0, 1fr) clamp(92px, 27vw, 120px); gap: 14px; align-items: center; padding: 26px 16px 22px; }
+  .passport .page-head.has-mock:not(.crm-head) h1 { font-size: clamp(18px, 6vw, 27px); line-height: 1.1; letter-spacing: -.02em; }
+  .passport .page-head.has-mock:not(.crm-head) .tpl-lead { font-size: 14px; line-height: 1.45; margin-top: 10px; }
+  .page-head.has-mock:not(.crm-head) .mock { max-width: none; border: 4px solid var(--ink); border-radius: 20px; padding-top: 12px; background: var(--bg); position: relative; }
+  .page-head.has-mock:not(.crm-head) .mock::before { content: ""; position: absolute; top: 4px; left: 50%; width: 30%; height: 4px; border-radius: 3px; background: var(--ink); transform: translateX(-50%); opacity: .85; }
+  .page-head.has-mock:not(.crm-head) .mock-bar { display: none; }
+  .page-head.has-mock:not(.crm-head) .mock-page { gap: 5px; padding: 5px; }
+  .page-head.has-mock:not(.crm-head) .mk { border-radius: 6px; }
+  .page-head.has-mock:not(.crm-head) .mk-nav { padding: 5px 6px; gap: 4px; }
+  .page-head.has-mock:not(.crm-head) .mk-nav b { width: 26px; height: 6px; }
+  .page-head.has-mock:not(.crm-head) .mk-nav s { width: 9px; height: 4px; }
+  .page-head.has-mock:not(.crm-head) .mk-nav s + s + s { display: none; }
+  .page-head.has-mock:not(.crm-head) .mk-hero { padding: 8px 6px; gap: 4px; }
+  .page-head.has-mock:not(.crm-head) .mk-hero b { height: 7px; }
+  .page-head.has-mock:not(.crm-head) .mk-hero s { height: 4px; }
+  .page-head.has-mock:not(.crm-head) .mk em { height: 13px; width: 50px; margin-top: 3px; border-radius: 4px; }
+  .page-head.has-mock:not(.crm-head) .mk-cards { grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 5px; }
+  .page-head.has-mock:not(.crm-head) .mk-cards i { height: 26px; }
+  .page-head.has-mock:not(.crm-head) .mk-cards i:nth-child(3) { grid-column: 1 / -1; height: 18px; }
+  .page-head.has-mock:not(.crm-head) .mk-form { grid-template-columns: 1fr 1fr 22px; gap: 3px; padding: 5px; }
+  .page-head.has-mock:not(.crm-head) .mk-form span { height: 13px; }
+  .page-head.has-mock:not(.crm-head) .mk-form span::after { left: 4px; top: 4px; height: 4px; }
+  .page-head.has-mock:not(.crm-head) .mk-form em { width: 22px; height: 13px; margin: 0; }
+  .page-head.has-mock:not(.crm-head) .mock-cursor { width: 14px; height: 14px; }
+  .page-head.has-mock:not(.crm-head) .mock-cursor svg { width: 14px; height: 14px; }
+
+  .passport-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .passport-rows > div { padding: 16px 14px 18px; }
+  .passport-rows > div:nth-child(odd) { border-right: 1px solid var(--line); }
+  .passport-rows > div:nth-last-child(2) { border-bottom: 0; }
+  .passport-rows dt { font-size: 15px; line-height: 1.25; gap: 7px; align-items: flex-start; }
+  .passport-rows dt::before { margin-top: .4em; width: 7px; height: 7px; }
+  .passport-rows dd { font-size: 13.5px; line-height: 1.45; margin-top: 4px; }
 }

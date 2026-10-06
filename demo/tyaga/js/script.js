@@ -2,8 +2,8 @@
 function demoFetch(){return new Promise(function(r){setTimeout(function(){r({status:200,text:function(){return Promise.resolve('{"success":true}');}});},900);});}
 // ===== НАСТРОЙКИ =====
 // Адрес скрипта (SHEET_URL) и каталог по умолчанию — в js/catalog.js. Товары правятся в admin.html.
-var PHONE_DISPLAY = '+7 (900) 000-00-00';
-var PHONE_LINK = 'tel:+79000000000';
+var PHONE_DISPLAY = '+7 *** *** ** **';
+var PHONE_LINK = '#';
 
 // Доставка: null — «рассчитаем при звонке», 0 — «бесплатно», число — фиксированная цена в рублях
 var DELIVERY_PRICE = null;
@@ -230,6 +230,19 @@ var DELIVERY_PRICE = null;
     })
     .then(function () { clearTimeout(timer); btn.disabled = false; btn.textContent = 'Забронировать'; });
   });
+
+  // Кнопки звонка и мессенджеров пока не активны: нажимаются, но никуда не ведут
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-off], #msg a[href="#"]');
+    if (a) e.preventDefault();
+  });
+
+  // Мобильное меню
+  var menu = $('menu'), burger = $('burger');
+  function setMenu(open) { menu.classList.toggle('open', open); burger.classList.toggle('open', open); burger.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  burger.addEventListener('click', function () { setMenu(!menu.classList.contains('open')); });
+  menu.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('click', function (e) { if (!e.target.closest('header')) setMenu(false); });
 
   // Плавающие кнопки мессенджеров прячем, пока на экране форма бронирования и подвал — чтобы не закрывали кнопки
   if ('IntersectionObserver' in window) {

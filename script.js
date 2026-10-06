@@ -233,11 +233,16 @@ document.querySelectorAll(".shot img").forEach((img) => {
     var more = card.querySelector('.more'), label = card.querySelector('.more-text');
     if (!more) return;
     if (mq.matches) more.setAttribute('role', 'button');
+    var setLabel = function () {
+      if (label && !card.classList.contains('is-open')) label.textContent = mq.matches ? 'Раскрыть' : 'Подробнее';
+    };
+    setLabel();
+    if (mq.addEventListener) mq.addEventListener('change', setLabel);
     more.addEventListener('click', function (e) {
       if (!mq.matches) return;
       e.preventDefault();
       var open = card.classList.toggle('is-open');
-      if (label) label.textContent = open ? 'Свернуть' : 'Подробнее';
+      if (label) label.textContent = open ? 'Свернуть' : 'Раскрыть';
       more.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (!open) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     });
