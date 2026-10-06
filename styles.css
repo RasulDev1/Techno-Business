@@ -926,3 +926,64 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .demo-guard span { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 600; font-size: 15px; box-shadow: 0 6px 20px rgb(15 23 42 / .25); }
   .live-frame.is-live .demo-guard { display: none; }
 }
+
+/* Телефон: два типа сайтов в одну линию */
+@media (max-width: 620px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .grid .card { padding: 6px; }
+  .grid .card-label { margin: 2px 2px 8px; padding: 4px 6px; font-size: 10.5px; letter-spacing: .04em; }
+  .grid .shot { border-radius: 8px; }
+  .grid .card-body { padding: 12px 4px 4px; gap: 6px; }
+  .grid .tag { font-size: 12.5px; line-height: 1.25; }
+  .grid .card h3 { font-size: 18px; line-height: 1.15; letter-spacing: -.015em; hyphens: auto; }
+  .grid .card-body > p, .grid .fit, .grid .price small { display: none; }
+  .grid .card-foot { margin-top: auto; padding-top: 8px; display: grid; gap: 6px; }
+  .grid .price b { font-size: 19px; }
+  .grid .more { font-size: 14px; gap: 4px; }
+  .grid .more svg { width: 15px; height: 15px; }
+}
+
+/* Телефон: журнал заявок целиком, каждая заявка — карточка из трёх строк */
+@media (max-width: 620px) {
+  .ledger .ledger-cols { display: none; }
+  .ledger-body { height: calc(4 * 79px); display: flex; flex-direction: column; justify-content: flex-end; }
+  .ledger-body .ledger-row {
+    flex: none; height: 79px; min-height: 0; padding: 10px 12px 10px 0;
+    grid-template-columns: 40px minmax(0, 1fr) auto; grid-template-rows: auto auto auto; column-gap: 8px; row-gap: 3px; align-content: center;
+  }
+  .ledger-body .ledger-row > span { display: flex; padding: 0; white-space: nowrap; }
+  .ledger-body .num { grid-column: 1; grid-row: 1 / 4; align-self: center; font-size: 11.5px; }
+  .ledger-body .c-client { grid-column: 2; grid-row: 1; font-size: 15.5px; }
+  .ledger-body .c-need { grid-column: 2 / 4; grid-row: 2; font-size: 14px; }
+  .ledger-body .c-time { grid-column: 2; grid-row: 3; font-size: 12.5px; }
+  .ledger-body .c-time::after { content: "·"; margin-left: 6px; }
+  .ledger-body .c-man { grid-column: 2 / 4; grid-row: 3; padding-left: 52px !important; font-size: 13px; white-space: nowrap; line-height: 1.2; }
+  .ledger-body .mark { grid-column: 3; grid-row: 1; justify-content: flex-end; }
+  .ledger-foot { padding: 14px 14px 16px 14px; }
+}
+
+/* Телефон: компактный футер */
+@media (max-width: 620px) {
+  .site-foot { margin-top: 40px; }
+  .site-foot .foot-in { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding-block: 24px 20px; }
+  .site-foot .foot-cta { order: 0; }
+  .site-foot .foot-cta h2 { font-size: 23px; }
+  .site-foot .foot-cta p { margin-top: 6px; font-size: 15px; line-height: 1.45; }
+  .site-foot .foot-contacts { order: 1; }
+  .site-foot .foot-contacts h3 { display: none; }
+  .site-foot .foot-contacts ul { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .site-foot .foot-contacts li:first-child { flex-basis: 100%; }
+  .site-foot .foot-contacts a { font-size: 15px; gap: 9px; min-height: 40px; }
+  .site-foot .fc-ic { width: 34px; height: 34px; }
+  .site-foot .foot-brand { order: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 14px; padding-top: 14px; border-top: 1px solid rgb(255 255 255 / .25); }
+  .site-foot .foot-brand .logo { font-size: 14px; flex-basis: 100%; }
+  .site-foot .foot-brand .logo-mark { width: 26px; height: 26px; }
+  .site-foot .foot-copy { margin: 0; font-size: 12.5px; }
+  .site-foot .foot-legal { margin: 0; font-size: 12.5px; }
+  .site-foot .foot-legal a { padding-block: 10px; }
+}
+@media (min-width: 621px) and (max-width: 960px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .grid .card h3 { font-size: 24px; }
+  .grid .fit ul { font-size: 14.5px; }
+}
