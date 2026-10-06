@@ -1015,3 +1015,57 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .site-foot .fc-ic svg { width: 21px; height: 21px; }
   .site-foot .foot-brand { grid-column: 1 / -1; grid-row: 2; }
 }
+
+/* Телефон и планшет: два преимущества в строку, третье растянуто под ними */
+@media (max-width: 960px) {
+  .results-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .results-list li:nth-child(3) { grid-column: 1 / -1; }
+}
+@media (max-width: 620px) {
+  .results { padding-bottom: 64px; }
+  .results-list { gap: 10px; }
+  .results-list li { padding: 16px 14px 18px; }
+  .results-list li::before { margin-bottom: 12px; font-size: 11.5px; }
+  .results-list h2 { font-size: 19px; line-height: 1.15; margin-bottom: 8px; hyphens: auto; }
+  .results-list p { font-size: 14px; line-height: 1.45; }
+  .results-list li:nth-child(3) h2 { font-size: 21px; }
+}
+@media (max-width: 620px) {
+  .grid .card:not(.is-open) .price { display: none; }
+}
+
+/* Телефон: журнал заявок — аккуратная карточка с отступами, в пропорциях экрана */
+@media (max-width: 620px) {
+  .sheet > .ledger { margin: 0 16px 16px; border: 1px solid var(--line-strong); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 1px 2px rgb(15 23 42 / .04); }
+  .ledger .ledger-cols { display: grid; grid-template-columns: 1fr auto; min-height: 36px; padding: 0 12px; }
+  .ledger .ledger-cols > span { display: none; padding: 0; font-size: 10.5px; letter-spacing: .08em; }
+  .ledger .ledger-cols > span:nth-child(3), .ledger .ledger-cols > span:nth-child(6) { display: flex; }
+  .ledger-body { height: calc(4 * 71px); }
+  .ledger-body .ledger-row { height: 71px; padding: 9px 12px; grid-template-columns: minmax(0, 1fr) auto; column-gap: 10px; row-gap: 2px; }
+  .ledger-body .ledger-row > span:last-child { border: 0; }
+  .ledger-body .num { display: none !important; }
+  .ledger-body .c-client { grid-column: 1; grid-row: 1; font-size: 15px; }
+  .ledger-body .c-need { grid-column: 1 / 3; grid-row: 2; font-size: 13.5px; }
+  .ledger-body .c-time { grid-column: 1; grid-row: 3; font-size: 12px; }
+  .ledger-body .c-man { grid-column: 1 / 3; grid-row: 3; padding-left: 50px !important; font-size: 12.5px; }
+  .ledger-body .mark { grid-column: 2; grid-row: 1; }
+  .ledger-body .stamp { font-size: 12px; padding: 4px 7px 4px 5px; }
+  .ledger-foot { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px 16px; padding: 12px 12px 14px; background: #f8f9fb; border-top: 1px solid var(--line); }
+  .ledger-note { grid-column: 1 / -1; font-size: 10.5px; }
+  .ledger-total { display: contents; }
+  .ledger-total .tally { order: -1; grid-column: 1; gap: 8px; }
+  .ledger-total .ledger-stats { grid-column: 2; display: grid; grid-template-columns: repeat(2, auto); gap: 4px 12px; font-size: 12.5px; justify-content: end; }
+  .tally b { font-size: 34px; }
+  .tally small { font-size: 12.5px; line-height: 1.2; }
+}
+@media (max-width: 620px) {
+  .ledger-foot { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .ledger-note { order: -2; }
+  .ledger-total .tally { order: -1; grid-column: 1; }
+  .ledger-total .ledger-stats { grid-column: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; gap: 5px 12px; }
+  .ledger-stats li { white-space: nowrap; }
+}
+@media (max-width: 620px) {
+  .types { padding-bottom: 0; }
+  .site-foot { margin-top: 16px; }
+}
