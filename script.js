@@ -225,3 +225,21 @@ document.querySelectorAll(".shot img").forEach((img) => {
     }
   });
 })();
+
+// Телефон: «Подробнее» раскрывает карточку, а не открывает страницу
+(function () {
+  var mq = window.matchMedia('(max-width: 620px)');
+  document.querySelectorAll('.grid .card').forEach(function (card) {
+    var more = card.querySelector('.more'), label = card.querySelector('.more-text');
+    if (!more) return;
+    if (mq.matches) more.setAttribute('role', 'button');
+    more.addEventListener('click', function (e) {
+      if (!mq.matches) return;
+      e.preventDefault();
+      var open = card.classList.toggle('is-open');
+      if (label) label.textContent = open ? 'Свернуть' : 'Подробнее';
+      more.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!open) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  });
+})();

@@ -987,3 +987,31 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .grid .card h3 { font-size: 24px; }
   .grid .fit ul { font-size: 14.5px; }
 }
+
+/* Телефон: «Подробнее» раскрывает карточку на месте */
+.grid .go { display: none; }
+@media (max-width: 620px) {
+  .grid .more { min-height: 40px; }
+  .grid .card.is-open { grid-column: 1 / -1; }
+  .grid .card.is-open .card-body > p, .grid .card.is-open .fit, .grid .card.is-open .price small { display: grid; }
+  .grid .card.is-open .card-body > p { display: block; font-size: 15px; }
+  .grid .card.is-open .fit ul { font-size: 14.5px; }
+  .grid .card.is-open h3 { font-size: 22px; }
+  .grid .card.is-open .price b { font-size: 24px; }
+  .grid .card.is-open .go { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; border-radius: 10px; background: var(--cta); color: var(--ink); font-weight: 600; font-size: 15px; }
+  .grid .card.is-open .more svg { transform: rotate(-90deg); }
+  .grid .card:not(.is-open) .more svg { transform: rotate(90deg); }
+}
+
+/* Телефон: в футере контакты столбиком справа от заголовка */
+@media (max-width: 620px) {
+  .site-foot .foot-in { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; align-items: start; }
+  .site-foot .foot-cta { grid-column: 1; grid-row: 1; }
+  .site-foot .foot-contacts { grid-column: 2; grid-row: 1; }
+  .site-foot .foot-contacts ul { display: grid; gap: 10px; }
+  .site-foot .foot-contacts li:first-child { flex-basis: auto; }
+  .site-foot .foot-contacts a { font-size: 0; gap: 0; min-height: 0; }
+  .site-foot .fc-ic { width: 46px; height: 46px; border-radius: 12px; }
+  .site-foot .fc-ic svg { width: 21px; height: 21px; }
+  .site-foot .foot-brand { grid-column: 1 / -1; grid-row: 2; }
+}
