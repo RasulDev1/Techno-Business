@@ -143,7 +143,9 @@
 // Если скриншот шаблона ещё не загружен, показываем заглушку
 document.querySelectorAll(".shot img").forEach((img) => {
   const empty = img.parentElement.querySelector(".shot-empty");
-  const fail = () => { img.hidden = true; };
+  // Заглушку показываем только при ошибке: картинки грузятся лениво, и до загрузки её видно быть не должно
+  if (empty) empty.hidden = true;
+  const fail = () => { img.hidden = true; if (empty) empty.hidden = false; };
   const ok = () => { if (empty) empty.hidden = true; };
   if (img.complete) (img.naturalWidth ? ok : fail)();
   img.addEventListener("error", fail);
@@ -172,6 +174,7 @@ document.querySelectorAll(".shot img").forEach((img) => {
   const mock = document.querySelector(".mock");
   if (!mock) return;
   const start = mock.querySelector(".mk-hero em");
+  if (!start) return; // на странице CRM другой макет, без формы
   const targets = mock.querySelectorAll(".mk-form span, .mk-form em");
   function at(el, i) {
     let x = el.offsetWidth * .45, y = el.offsetHeight * .45;
@@ -188,4 +191,18 @@ document.querySelectorAll(".shot img").forEach((img) => {
   window.addEventListener("load", place);
   if (document.fonts) document.fonts.ready.then(place);
   mock.querySelector(".mock-cursor").addEventListener("animationiteration", place);
+})();
+
+/* CRM в демо: рисуем её как на экране ноутбука и уменьшаем под ширину колонки, чтобы меню слева не пропадало */
+(() => {
+  const box = document.querySelector(".live-zoom"); if (!box) return;
+  const f = box.querySelector("iframe"), W = +box.dataset.w, wide = matchMedia("(min-width: 961px)");
+  const fit = () => {
+    f.style.cssText = "";
+    if (!wide.matches) return;
+    const w = box.clientWidth, h = f.offsetHeight, k = Math.min(1, w / W);
+    if (k === 1) return;
+    f.style.cssText = `width:${W}px;height:${h / k}px;transform:scale(${k});margin-bottom:${h - h / k}px`;
+  };
+  new ResizeObserver(fit).observe(box); wide.addEventListener("change", fit); fit();
 })();
