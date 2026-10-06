@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru" class="staff-mode" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<meta name="robots" content="noindex">
+<title>ТЕМП · CRM (демо)</title>
+<link rel="stylesheet" href="css/app.css?v=20261006m">
+<link rel="stylesheet" href="css/chat.css?v=20261006m">
+<link rel="stylesheet" href="css/orders.css?v=20261006m">
+<link rel="stylesheet" href="css/demo.css?v=20261006n">
+<link rel="stylesheet" href="css/staff.css?v=20261006m">
+<!-- Шрифты грузятся без блокировки: пока их нет, работает системный шрифт -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Manrope:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<!-- Страница сотрудников (директор и менеджеры). Магазин для покупателей — index.html.
+     Свежие версии скриптов: модули ссылаются друг на друга с ?v=20261001b, а карта подменяет адрес на новый.
+     При следующем обновлении сайта достаточно поменять версию справа (и у main.js ниже) — браузер и Telegram скачают файлы заново. -->
+<script type="importmap">
+{
+  "imports": {
+    "./js/admin-analytics.js?v=20261001b": "./js/admin-analytics.js?v=20261006m",
+    "./js/admin-customers.js?v=20261001b": "./js/admin-customers.js?v=20261006m",
+    "./js/admin-tasks.js?v=20261001b": "./js/admin-tasks.js?v=20261006m",
+    "./js/admin-reviews.js?v=20261001b": "./js/admin-reviews.js?v=20261006m",
+    "./js/admin-warehouse.js?v=20261001b": "./js/admin-warehouse.js?v=20261006m",
+    "./js/reviews.js?v=20261001b": "./js/reviews.js?v=20261006m",
+    "./js/crm.js?v=20261001b": "./js/crm.js?v=20261006m",
+    "./js/admin-dashboard.js?v=20261001b": "./js/admin-dashboard.js?v=20261006m",
+    "./js/admin-export.js?v=20261001b": "./js/admin-export.js?v=20261006m",
+    "./js/admin-bar-sort.js?v=20261001b": "./js/admin-bar-sort.js?v=20261006m",
+    "./js/admin-orders.js?v=20261001b": "./js/admin-orders.js?v=20261006m",
+    "./js/admin-products.js?v=20261001b": "./js/admin-products.js?v=20261006m",
+    "./js/admin-staff.js?v=20261001b": "./js/admin-staff.js?v=20261006m",
+    "./js/cart.js?v=20261001b": "./js/cart.js?v=20261006m",
+    "./js/catalog.js?v=20261001b": "./js/catalog.js?v=20261006m",
+    "./js/chat.js?v=20261001b": "./js/chat.js?v=20261006m",
+    "./js/config.js?v=20261001b": "./js/config.js?v=20261006m",
+    "./js/core.js?v=20261001b": "./js/core.js?v=20261006m",
+    "./js/demo.js?v=20261001b": "./js/demo.js?v=20261006m",
+    "./js/data.js?v=20261001b": "./js/data.js?v=20261006m",
+    "./js/github.js?v=20261001b": "./js/github.js?v=20261006m",
+    "./js/main.js?v=20261001b": "./js/main.js?v=20261006m",
+    "./js/nav.js?v=20261001b": "./js/nav.js?v=20261006m",
+    "./js/photos.js?v=20261001b": "./js/photos.js?v=20261006m",
+    "./js/roles.js?v=20261001b": "./js/roles.js?v=20261006m",
+    "./js/shop.js?v=20261001b": "./js/shop.js?v=20261006m",
+    "./js/sort.js?v=20261001b": "./js/sort.js?v=20261006m",
+    "./js/staff-access.js?v=20261001b": "./js/staff-access.js?v=20261006m",
+    "./js/staff-login.js?v=20261001b": "./js/staff-login.js?v=20261006m",
+    "./js/state.js?v=20261001b": "./js/state.js?v=20261006m",
+    "./js/supabase.js?v=20261001b": "./js/supabase.js?v=20261006m"
+  }
+}
+</script>
+<script type="module" src="js/crm.js?v=20261006m"></script>
+<link rel="modulepreload" href="js/config.js?v=20261006m">
+<link rel="modulepreload" href="js/core.js?v=20261006m">
+<link rel="modulepreload" href="js/data.js?v=20261006m">
+<link rel="modulepreload" href="js/state.js?v=20261006m">
+<link rel="modulepreload" href="js/catalog.js?v=20261006m">
+<link rel="modulepreload" href="js/photos.js?v=20261006m">
+<link rel="modulepreload" href="js/nav.js?v=20261006m">
+<link rel="modulepreload" href="js/shop.js?v=20261006m">
+<link rel="modulepreload" href="js/cart.js?v=20261006m">
+<link rel="modulepreload" href="js/admin-products.js?v=20261006m">
+<link rel="modulepreload" href="js/admin-orders.js?v=20261006m">
+<link rel="modulepreload" href="js/github.js?v=20261006m">
+<link rel="modulepreload" href="js/roles.js?v=20261006m">
+<link rel="modulepreload" href="js/staff-access.js?v=20261006m">
+<link rel="modulepreload" href="js/admin-staff.js?v=20261006m">
+<link rel="modulepreload" href="js/supabase.js?v=20261006m">
+<link rel="modulepreload" href="js/demo.js?v=20261006m">
+<link rel="modulepreload" href="js/chat.js?v=20261006m">
+<link rel="modulepreload" href="js/staff-login.js?v=20261006m">
+</head>
+<body>
+<!-- Демо-версия: данные только в этом браузере (js/demo.js) -->
+<div class="demo-bar" role="note"><span class="demo-bar-text"><b>Демо-версия.</b> Данные хранятся только в вашем браузере.</span>
+  <span class="demo-bar-actions"><a href="index.html">← К магазину</a><button id="demoReset" type="button">Сбросить демо</button></span></div>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-top">
+      <h1 class="brand">ТЕМП<span class="men">MEN</span></h1>
+      <div class="staff-badge" id="staffBadge" hidden></div>
+    </div>
+    <div class="lanes" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p class="tag" id="greeting">Мужская одежда для бега, зала и улицы</p>
+    <div class="admin-bar" id="adminBar" hidden>
+      <button class="admin-btn" id="adminHomeButton" hidden>Главная</button>
+      <button class="admin-btn" id="adminOrdersButton">Заказы</button>
+      <button class="admin-btn" id="adminCustomersButton" hidden>Клиенты</button>
+      <button class="admin-btn" id="adminTasksButton" hidden>Задачи</button>
+      <button class="admin-btn" id="adminReviewsButton" hidden>Отзывы</button>
+      <button class="admin-btn" id="adminProductsButton">Товары</button>
+      <button class="admin-btn" id="adminWarehouseButton" hidden>Склад</button>
+      <button class="admin-btn" id="adminAnalyticsButton" hidden>Аналитика</button>
+      <button class="admin-btn" id="adminStaffButton" hidden>Сотрудники</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Разделы">
+    <button class="tab" data-tab="cart" aria-pressed="false">Корзина<span id="cartTabCount"></span></button>
+    <button class="tab" data-tab="orders" aria-pressed="false">Мои заказы</button>
+    <button class="tab" data-tab="shop" aria-pressed="true">Товары</button>
+  </nav>
+  <div id="shopPage">
+    <div class="cats-bar">
+      <nav class="cats" id="categories" aria-label="Категории"></nav>
+      <div class="cat-tools">
+        <button class="ghost" id="hiddenProductsButton" hidden>Удалённые</button>
+        <button class="primary" id="addProductButton" hidden>+ Добавить</button>
+      </div>
+    </div>
+    <main class="grid" id="grid"></main>
+  </div>
+  <section class="page" id="cartPage" hidden></section>
+  <section class="page" id="ordersPage" hidden></section>
+</div>
+
+<div class="cartbar" id="cartBar"><button id="cartBarButton"><span id="cartBarText">Корзина</span><span id="cartBarTotal"></span></button></div>
+
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <button class="close" id="closeSheet" aria-label="Закрыть">✕</button>
+  <div class="sheet-inner" id="sheetBody"></div>
+</section>
+<div class="toast" id="toast" role="status"></div>
+</body>
+</html>
