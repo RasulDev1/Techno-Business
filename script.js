@@ -321,6 +321,7 @@ document.querySelectorAll(".shot img").forEach((img) => {
       it.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
     close.addEventListener('click', function () {
+      var v = it.querySelector('video'); if (v) v.pause();
       it.classList.remove('is-open');
       it.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     });
@@ -346,3 +347,9 @@ document.querySelectorAll(".shot img").forEach((img) => {
   window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
   mq.addEventListener('change', upd); upd();
 })();
+
+// Видео: одновременно играет только одно
+document.addEventListener('play', function (e) {
+  if (!(e.target instanceof HTMLVideoElement)) return;
+  document.querySelectorAll('.feature-media video').forEach(function (v) { if (v !== e.target) v.pause(); });
+}, true);
