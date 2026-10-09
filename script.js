@@ -247,12 +247,6 @@ document.querySelectorAll(".shot img").forEach((img) => {
       if (!open) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     };
     more.addEventListener('click', function (e) { e.stopPropagation(); toggle(e); });
-    // на телефоне нажатие в любом месте карточки раскрывает её; переход — только по ссылке «Открыть страницу»
-    card.addEventListener('click', function (e) {
-      if (!mq.matches) return;
-      if (card.classList.contains('is-open') && e.target.closest('.go')) return;
-      toggle(e);
-    });
   });
 })();
 
