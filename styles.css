@@ -1312,3 +1312,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .site-foot .foot-legal a { padding-block: 6px; }
   .site-foot .foot-copy { padding-block: 6px; }
 }
+@media (max-width: 620px) {
+  .passport .page-head.has-mock:not(.crm-head) { padding: 18px 16px 16px; }
+  .page-head.has-mock:not(.crm-head) .mk-form { display: none; }
+}
