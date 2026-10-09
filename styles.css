@@ -1435,3 +1435,4 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .sheet > .ledger .ledger-body .ledger-row *, .sheet > .ledger .ledger-foot * { color: #fff; }
   .sheet > .ledger .ledger-body .c-time, .sheet > .ledger .ledger-body .num { color: rgb(255 255 255 / .85); }
 }
+@media (max-width: 620px) { .sheet > .ledger { margin-top: 6px; border-radius: 18px 18px 0 0; overflow: hidden; } }
