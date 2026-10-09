@@ -1338,3 +1338,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .next .btn-forward { grid-column: 1 / -1; grid-row: 2; width: 100%; justify-content: center; }
 }
 @media (max-width: 620px) { .next .btn-forward { font-size: clamp(12.5px, 3.6vw, 14.5px); padding-inline: 10px; white-space: nowrap; } }
+@media (max-width: 620px) {
+  .live-link { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; font-size: clamp(11.5px, 3.3vw, 14px); overflow-wrap: normal; }
+  .live-link a { min-height: 40px; gap: 4px; }
+}
