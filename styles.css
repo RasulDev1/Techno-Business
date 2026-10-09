@@ -1199,3 +1199,4 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .btn-back:hover { color: #1e293b; border-color: #94a3b8; }
 .btn-forward { background: var(--accent); color: #fff; box-shadow: none; }
 .btn-forward:hover { background: #1d4ed8; box-shadow: 0 6px 16px -8px rgb(37 99 235 / .7); }
+@media (max-width: 620px) { .next .btn-forward { padding-left: 16px; padding-right: 16px; font-size: 15px; } }
