@@ -327,3 +327,20 @@ document.querySelectorAll(".shot img").forEach((img) => {
     });
   });
 })();
+
+// Телефон: журнал заявок рисуется в ширину компьютерной версии и уменьшается под экран
+(function () {
+  var L = document.querySelector('.ledger'); if (!L) return;
+  var host = L.parentElement, W = 640, mq = window.matchMedia('(max-width: 620px)');
+  function fit() {
+    L.style.cssText = '';
+    if (!mq.matches) return;
+    var k = host.clientWidth / W;
+    if (k >= 1) return;
+    L.style.width = W + 'px';
+    var h = L.offsetHeight;
+    L.style.cssText = 'width:' + W + 'px;transform:scale(' + k + ');transform-origin:0 0;margin-bottom:' + (h * k - h) + 'px';
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(host);
+  mq.addEventListener('change', fit); fit();
+})();
