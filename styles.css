@@ -377,6 +377,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .passport-rows.has-icons > div:nth-child(2) dt::before { content: "\26A1\FE0F"; }
 .passport-rows.has-icons > div:nth-child(3) dt::before { content: "\26A1\FE0F"; }
 .passport-rows.has-icons > div:nth-child(4) dt::before { content: "📱"; }
+.passport-rows.icons-crm > div:nth-child(1) dt::before { content: "📥"; }
+.passport-rows.icons-crm > div:nth-child(2) dt::before { content: "🔑"; }
+.passport-rows.icons-crm > div:nth-child(3) dt::before { content: "📦"; }
+.passport-rows.icons-crm > div:nth-child(4) dt::before { content: "📊"; }
 .passport-rows dd { margin: 0; font: 400 15.5px/1.55 var(--font-body); color: var(--muted); }
 .next { margin-top: 56px; padding: 32px 36px; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
 .next h2 { margin: 0; font: 600 30px/1.1 var(--font-display); letter-spacing: -.02em; }
