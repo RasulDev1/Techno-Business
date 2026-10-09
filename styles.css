@@ -1153,3 +1153,13 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 /* Одностраничник: отступы вокруг блока функций вдвое меньше */
 .features + .next { margin-top: 28px; }
 .sheet.live + .tabs { margin-top: -32px; }
+
+/* Телефон: нижняя панель связи прячется на первом экране и при прокрутке вниз; крупные области нажатия */
+@media (max-width: 620px) {
+  .m-contact { transition: transform .25s ease; }
+  .m-contact.is-hidden { transform: translateY(110%); }
+  .live-open { display: inline-flex; align-items: center; min-height: 44px; margin-block: -14px; padding-block: 0; }
+  .feature-link { display: inline-flex; align-items: center; min-height: 44px; }
+  .live-link a { display: inline-flex; align-items: center; min-height: 44px; }
+  .top-home, .top-link { min-height: 44px; }
+}

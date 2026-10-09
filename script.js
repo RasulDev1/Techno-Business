@@ -351,3 +351,20 @@ document.querySelectorAll(".shot img").forEach((img) => {
   if ('ResizeObserver' in window) new ResizeObserver(fit).observe(host);
   mq.addEventListener('change', fit); fit();
 })();
+
+// Телефон: нижняя панель связи прячется на первом экране и при прокрутке вниз, возвращается при прокрутке вверх
+(function () {
+  var bar = document.querySelector('.m-contact'); if (!bar) return;
+  var mq = window.matchMedia('(max-width: 620px)'), last = window.pageYOffset, ticking = false;
+  function upd() {
+    ticking = false;
+    var y = window.pageYOffset, nearEnd = y + innerHeight >= document.documentElement.scrollHeight - 80;
+    if (!mq.matches) { bar.classList.remove('is-hidden'); last = y; return; }
+    if (y < innerHeight * 0.8) bar.classList.add('is-hidden');
+    else if (y < last - 4 || nearEnd) bar.classList.remove('is-hidden');
+    else if (y > last + 4) bar.classList.add('is-hidden');
+    last = y;
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+  mq.addEventListener('change', upd); upd();
+})();
