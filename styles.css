@@ -881,6 +881,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .card-foot .more { margin-top: 0; padding-top: 0; padding-bottom: 4px; }
 .price { margin: 0; display: grid; gap: 4px; }
 .price b { font: 600 26px/1 var(--font-display); letter-spacing: -.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.price .term { font: 500 15px/1.2 var(--font-body); color: var(--muted); }
 .price small { font-size: 13px; line-height: 1.35; color: var(--faint); }
 
 /* Логотип «Код»: </> в синей плитке, оранжевая точка-акцент. На синем фоне полос плитка белая */
