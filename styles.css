@@ -1305,3 +1305,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (max-width: 620px) { .results-list li { padding-inline: 12px; } .results-list li:nth-child(2) > h2 { hyphens: none; margin-right: -10px; letter-spacing: -.04em; } }
 .t-short { display: none; }
 @media (max-width: 620px) { .t-full { display: none; } .t-short { display: inline; } }
+@media (max-width: 620px) {
+  .site-foot .foot-in { gap: 10px; padding-block: 22px 8px; }
+  .site-foot .foot-brand { border-top: 0; padding-top: 0; justify-content: center; text-align: center; gap: 0 14px; margin-top: -2px; }
+  .site-foot .foot-brand .logo { justify-content: center; }
+  .site-foot .foot-legal a { padding-block: 6px; }
+  .site-foot .foot-copy { padding-block: 6px; }
+}
