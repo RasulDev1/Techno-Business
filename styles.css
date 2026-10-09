@@ -1248,3 +1248,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (max-width: 620px) { .lead-full { display: none; } .lead-short { display: inline; } }
 .note-short { display: none; }
 @media (max-width: 620px) { .note-full { display: none; } .note-short { display: inline; } }
+@keyframes hero-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+@media (max-width: 620px) {
+  .hero-down { display: flex; width: 44px; height: 44px; min-height: 0; padding: 0; margin: 4px auto 0; justify-content: center; align-items: center; background: none; border: 0; box-shadow: none; color: var(--accent); }
+  .hero-down .btn-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .hero-down svg { width: 30px; height: 30px; stroke-width: 1.8; animation: hero-bounce 1.8s ease-in-out infinite; }
+}
+@media (max-width: 620px) and (prefers-reduced-motion: reduce) { .hero-down svg { animation: none; } }
