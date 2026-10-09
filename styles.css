@@ -372,6 +372,11 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   font: 600 19px/1.25 var(--font-display); letter-spacing: -.01em; color: var(--ink);
 }
 .passport-rows dt::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.passport-rows.has-icons dt::before { content: "•"; width: 1.5em; height: auto; border-radius: 0; background: none; text-align: center; font: 400 20px/1 "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; }
+.passport-rows.has-icons > div:nth-child(1) dt::before { content: "🎯"; }
+.passport-rows.has-icons > div:nth-child(2) dt::before { content: "\26A1\FE0F"; }
+.passport-rows.has-icons > div:nth-child(3) dt::before { content: "\26A1\FE0F"; }
+.passport-rows.has-icons > div:nth-child(4) dt::before { content: "📱"; }
 .passport-rows dd { margin: 0; font: 400 15.5px/1.55 var(--font-body); color: var(--muted); }
 .next { margin-top: 56px; padding: 32px 36px; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
 .next h2 { margin: 0; font: 600 30px/1.1 var(--font-display); letter-spacing: -.02em; }
@@ -1030,6 +1035,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .passport-rows > div:nth-last-child(2) { border-bottom: 0; }
   .passport-rows dt { font-size: 15px; line-height: 1.25; gap: 7px; align-items: flex-start; }
   .passport-rows dt::before { margin-top: .4em; width: 7px; height: 7px; }
+  .passport-rows.has-icons dt::before { margin-top: 0; width: 1.3em; height: auto; font-size: 15px; }
   .passport-rows dd { font-size: 13.5px; line-height: 1.45; margin-top: 4px; }
 }
 
@@ -1185,7 +1191,6 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .grid .price .term { box-shadow: none; }
 
 /* Одностраничник: бейджик скорости и порядок акцентов в «Что дальше» */
-.tag-speed { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #E0F2FE; color: #0284C7; font-weight: 700; white-space: nowrap; }
 .btn-back { color: #475569; border-color: var(--line-strong); }
 .btn-back:hover { color: #1e293b; border-color: #94a3b8; }
 .btn-forward { background: var(--accent); color: #fff; box-shadow: none; }
