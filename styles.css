@@ -1406,3 +1406,11 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (max-width: 620px) {
   .grid.has-tabs .card:not(.is-open) .more svg { box-sizing: content-box; width: 18px; height: 18px; padding: 6px; border-radius: 50%; background: var(--cta); color: #fff; }
 }
+
+/* Phone: promo text always two lines */
+@media (max-width: 620px) {
+  .topbar .promo-text .t-short { display: inline-block; }
+  .topbar .promo-text { font-size: clamp(9.5px, 3.05vw, 11px); text-wrap: nowrap; }
+  .topbar .promo-text .t-short::before { content: none; }
+}
+@media (max-width: 340px) { .topbar .top { gap: 6px; } .topbar .promo-bar { padding-inline: 6px; gap: 3px; } .topbar .top-link { font-size: 11px; padding-inline: 6px; } }
