@@ -1169,3 +1169,6 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .grid .more { position: relative; }
   .grid .more::before { content: ""; position: absolute; inset: -14px -18px; }
 }
+
+/* CRM, ПК: пояснение под заголовком на всю ширину блока демо */
+@media (min-width: 961px) { .variant-head.wide { max-width: none; } }
