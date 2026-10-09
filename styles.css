@@ -1383,7 +1383,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .topbar .top-actions { grid-column: 3; grid-row: 1; }
   .topbar .top-link { font-size: 12.5px; padding: 8px 9px; min-height: 36px; }
 }
-@media (max-width: 375px) { .topbar .promo-bar > [aria-hidden="true"] { display: none; } .topbar .promo-bar { padding-inline: 8px; } .topbar .top-link { font-size: 12px; padding-inline: 7px; } }
+@media (max-width: 375px) { .topbar .promo-bar { padding-inline: 8px; } .topbar .top-link { font-size: 12px; padding-inline: 7px; } }
 @media (max-width: 620px) {
   .grid.has-tabs .price { align-items: center; }
   .grid.has-tabs .card.is-open .price b { font-size: 24px; }
