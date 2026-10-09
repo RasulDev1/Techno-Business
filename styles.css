@@ -1415,3 +1415,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .hero-down { width: 48px; height: 48px; border-radius: 10px; background: var(--cta); color: #fff; }
   .hero-down svg { width: 28px; height: 28px; stroke-width: 2.2; }
 }
+
+/* Phone: tactile press feedback on hero arrow */
+@media (max-width: 620px) {
+  .hero-down { box-shadow: 0 6px 14px -4px rgb(249 115 22 / .55); transition: transform .15s cubic-bezier(.2,.8,.2,1), box-shadow .15s, background-color .15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .hero-down:active { transform: scale(.92); box-shadow: 0 2px 6px -2px rgb(249 115 22 / .5); background: var(--cta-hover); }
+}
+@media (max-width: 620px) and (prefers-reduced-motion: reduce) { .hero-down { transition: none; } }
