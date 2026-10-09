@@ -353,3 +353,37 @@ document.addEventListener('play', function (e) {
   if (!(e.target instanceof HTMLVideoElement)) return;
   document.querySelectorAll('.feature-media video').forEach(function (v) { if (v !== e.target) v.pause(); });
 }, true);
+
+// Появление блоков при прокрутке и «набегание» чисел (не работает при «уменьшить движение»)
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+  var root = document.documentElement; root.classList.add('js-reveal');
+  var sel = '.results-list li, .types-head, .grid .card, .passport-rows > div, .features .feature, .live-col, .sheet.next, .foot-cta, .variant-head, .tabs, .policy h2';
+  var groups = new Map();
+  document.querySelectorAll(sel).forEach(function (el) {
+    var p = el.parentElement, n = groups.get(p) || 0; groups.set(p, n + 1);
+    el.classList.add('reveal'); el.style.setProperty('--rd', Math.min(n, 4) * 90 + 'ms');
+  });
+  function countUp(el) {
+    if (el.dataset.counted) return; el.dataset.counted = '1';
+    var txt = el.textContent, re = /\d+/g, nums = txt.match(re); if (!nums) return;
+    var t0 = performance.now(), dur = 900;
+    function ease(x) { return 1 - Math.pow(1 - x, 3); }
+    (function tick(now) {
+      var k = Math.min(1, (now - t0) / dur), i = 0;
+      el.textContent = txt.replace(re, function () { return Math.round(+nums[i++] * ease(k)); });
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target; io.unobserve(el);
+      el.classList.add('in');
+      el.querySelectorAll('.results-list .fig').forEach(countUp);
+      if (el.matches('.fig')) countUp(el);
+      setTimeout(function () { el.classList.remove('reveal', 'in'); el.style.removeProperty('--rd'); }, 900);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+})();
