@@ -1363,3 +1363,6 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .live-duo .live-steps { display: none; }
   .live-duo .live-steps-short { display: block; margin: 14px 0 0; padding: 0 4px; font-size: 15px; line-height: 1.45; font-weight: 600; color: var(--ink); text-wrap: balance; }
 }
+@media (max-width: 620px) {
+  .live-duo .live-steps-short { padding: 0; text-wrap: wrap; font-size: clamp(11.5px, 3.45vw, 14.5px); letter-spacing: -.01em; }
+}
