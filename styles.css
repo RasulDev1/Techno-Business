@@ -1321,3 +1321,12 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .site-foot .foot-brand { justify-content: flex-start; text-align: left; }
   .site-foot .foot-brand .logo { justify-content: flex-start; }
 }
+@media (max-width: 620px) {
+  .site-foot .foot-copy .copy-name { display: none; }
+  .site-foot .foot-brand { flex-wrap: wrap; align-items: center; gap: 0 16px; }
+  .site-foot .foot-brand .logo { flex-basis: 100%; }
+  .passport-rows.has-icons:not(.icons-crm) > div { padding: 11px 12px 12px; }
+  .passport-rows.has-icons:not(.icons-crm) dt { font-size: 14px; line-height: 1.2; gap: 6px; }
+  .passport-rows.has-icons:not(.icons-crm) dt::before { font-size: 14px; }
+  .passport-rows.has-icons:not(.icons-crm) dd { font-size: 12.5px; line-height: 1.38; margin-top: 3px; }
+}
