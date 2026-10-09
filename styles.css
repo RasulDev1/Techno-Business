@@ -1339,16 +1339,16 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 }
 @media (max-width: 620px) { .next .btn-forward { font-size: clamp(12.5px, 3.6vw, 14.5px); padding-inline: 10px; white-space: nowrap; } }
 @media (max-width: 620px) {
-  .live-link { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; font-size: clamp(11.5px, 3.3vw, 14px); overflow-wrap: normal; }
-  .live-link a { min-height: 40px; gap: 4px; }
+  .live:not(.live-duo) .live-link { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; font-size: clamp(11.5px, 3.3vw, 14px); overflow-wrap: normal; }
+  .live:not(.live-duo) .live-link a { min-height: 40px; gap: 4px; }
 }
 @media (max-width: 620px) {
-  .live-link { margin-top: -2px; padding-inline: 0; font-size: clamp(11px, 3.7vw, 15px); }
-  .live-link a { min-height: 32px; }
+  .live:not(.live-duo) .live-link { margin-top: -2px; padding-inline: 0; font-size: clamp(11px, 3.7vw, 15px); }
+  .live:not(.live-duo) .live-link a { min-height: 32px; }
 }
 @media (max-width: 620px) {
-  .live-link { font-size: 15px; }
-  .live-link a { font-size: clamp(10.5px, 3.45vw, 13.5px); }
+  .live:not(.live-duo) .live-link { font-size: 15px; }
+  .live:not(.live-duo) .live-link a { font-size: clamp(10.5px, 3.45vw, 13.5px); }
 }
 @media (max-width: 620px) {
   .passport .page-head.crm-head { padding: 18px 16px 16px; row-gap: 6px; }
