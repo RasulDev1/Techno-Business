@@ -1231,3 +1231,14 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .grid.has-tabs .card-foot { display: block; }
 }
 @media (prefers-reduced-motion: reduce) { .grid.has-tabs .card, .type-tabs button { transition: none; } }
+
+/* Телефон: результаты 01–03 — горизонтальная лента со снэпом, следующая карточка выглядывает справа */
+@media (max-width: 620px) {
+  .results-list { display: flex; grid-template-columns: none; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; margin-inline: -14px; padding: 2px 14px 6px; scroll-padding-inline: 14px; scrollbar-width: none; }
+  .results-list::-webkit-scrollbar { display: none; }
+  .results-list li, .results-list li:nth-child(3) { flex: 0 0 78%; grid-column: auto; scroll-snap-align: start; }
+  .results-list li:nth-child(3) h2 { font-size: 19px; }
+  .results-list h2 { font-size: 21px; }
+  .results-list p { font-size: 14.5px; }
+}
+@media (max-width: 620px) { .grid.has-tabs { overflow-x: clip; } }
