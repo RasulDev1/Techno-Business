@@ -156,6 +156,7 @@ document.querySelectorAll(".shot img").forEach((img) => {
 // Счётчики метрик под заголовком
 (function () {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (window.matchMedia("(max-width: 620px)").matches) return; // на телефоне числа сразу итоговые
   document.querySelectorAll(".hero-metrics b[data-to]").forEach(function (el) {
     const to = +el.dataset.to, sign = el.dataset.sign, t0 = performance.now() + 350, dur = 1600;
     function tick(now) {

@@ -1422,3 +1422,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .hero-down:active { transform: scale(.92); box-shadow: 0 2px 6px -2px rgb(249 115 22 / .5); background: var(--cta-hover); }
 }
 @media (max-width: 620px) and (prefers-reduced-motion: reduce) { .hero-down { transition: none; } }
+
+/* Phone: hero arrow removed */
+@media (max-width: 620px) { .hero-down { display: none; } }
+@media (max-width: 620px) { .hero .sheet-head .lead { margin-bottom: 0; } .hero .sheet-head { padding-bottom: 22px; } }
