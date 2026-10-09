@@ -238,13 +238,20 @@ document.querySelectorAll(".shot img").forEach((img) => {
     };
     setLabel();
     if (mq.addEventListener) mq.addEventListener('change', setLabel);
-    more.addEventListener('click', function (e) {
+    var toggle = function (e) {
       if (!mq.matches) return;
       e.preventDefault();
       var open = card.classList.toggle('is-open');
       if (label) label.textContent = open ? 'Свернуть' : 'Раскрыть';
       more.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (!open) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    };
+    more.addEventListener('click', function (e) { e.stopPropagation(); toggle(e); });
+    // на телефоне нажатие в любом месте карточки раскрывает её; переход — только по ссылке «Открыть страницу»
+    card.addEventListener('click', function (e) {
+      if (!mq.matches) return;
+      if (card.classList.contains('is-open') && e.target.closest('.go')) return;
+      toggle(e);
     });
   });
 })();
