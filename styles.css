@@ -1232,13 +1232,14 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 }
 @media (prefers-reduced-motion: reduce) { .grid.has-tabs .card, .type-tabs button { transition: none; } }
 
-/* Телефон: результаты 01–03 — горизонтальная лента со снэпом, следующая карточка выглядывает справа */
+/* Телефон: результаты 01–03 — короткие фразы, пирамидка 2 + 1 */
+.results-list .short { display: none; }
 @media (max-width: 620px) {
-  .results-list { display: flex; grid-template-columns: none; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; margin-inline: -14px; padding: 2px 14px 6px; scroll-padding-inline: 14px; scrollbar-width: none; }
-  .results-list::-webkit-scrollbar { display: none; }
-  .results-list li, .results-list li:nth-child(3) { flex: 0 0 78%; grid-column: auto; scroll-snap-align: start; }
-  .results-list li:nth-child(3) h2 { font-size: 19px; }
-  .results-list h2 { font-size: 21px; }
-  .results-list p { font-size: 14.5px; }
+  .results-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .results-list li:nth-child(3) { grid-column: 1 / -1; }
+  .results-list li { padding: 14px 14px 16px; }
+  .results-list li::before { margin-bottom: 8px; }
+  .results-list li > h2, .results-list li > p:not(.short) { display: none; }
+  .results-list .short { display: block; margin: 0; color: var(--ink); font: 700 15.5px/1.25 var(--font-body); letter-spacing: -.01em; text-wrap: balance; }
 }
 @media (max-width: 620px) { .grid.has-tabs { overflow-x: clip; } }
