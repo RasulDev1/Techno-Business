@@ -5,7 +5,7 @@
   const counter = document.getElementById("ledger-count");
   const word = document.getElementById("ledger-word");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const VISIBLE = window.matchMedia("(max-width: 620px)").matches ? 3 : 6;
+  const VISIBLE = window.matchMedia("(max-width: 620px)").matches ? 1 : 6;
 
   // Примеры заявок: подписаны на странице как «Пример заполнения». Клиент, запрос, менеджер и статус собираются случайно
   const MEN = ["Магомед А.", "Игорь", "Аслан Т.", "Хасан", "Дмитрий", "Рустам", "Ахмед", "Тамерлан", "Сергей П.", "Заур", "Мурат К."];
@@ -92,7 +92,7 @@
   }
 
   // Сразу показываем уже заполненную часть страницы, без анимации остаются все строки
-  for (let i = 0; i < (reduce ? VISIBLE : VISIBLE - 2); i++) {
+  for (let i = 0; i < Math.max(1, reduce ? VISIBLE : VISIBLE - 2); i++) {
     const row = makeRow();
     row.querySelectorAll(".hand").forEach((c) => c.classList.add("is-written"));
     row.querySelector(".stamp").classList.add("is-down");
