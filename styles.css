@@ -1075,7 +1075,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 /* Телефон, страница CRM: анимация справа от заголовка */
 @media (max-width: 620px) {
   .passport .page-head.crm-head { grid-template-columns: minmax(0, 1fr) 122px; gap: 12px; align-items: center; padding: 26px 16px 22px; }
-  .passport .page-head.crm-head h1 { font-size: clamp(19px, 6vw, 27px); line-height: 1.1; letter-spacing: -.02em; overflow-wrap: normal; }
+  .passport .page-head.crm-head .ph-text { display: contents; }
+  .passport .page-head.crm-head h1 { grid-column: 1 / -1; font-size: clamp(22px, 7vw, 28px); line-height: 1.1; letter-spacing: -.02em; overflow-wrap: normal; }
+  .passport .page-head.crm-head .tpl-lead { grid-column: 1; grid-row: 2; }
+  .crm-head .combo { grid-column: 2; grid-row: 2; align-self: start; }
   .passport .page-head.crm-head .tpl-lead { font-size: 14px; line-height: 1.45; margin-top: 10px; }
   .crm-head .combo { width: 340px; max-width: none; zoom: .3588; }
   /* 4 пункта по 2 в ряд — как на одностраничнике */
@@ -1132,7 +1135,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .teaser { display: none; }
 @media (max-width: 620px) {
   .lead-more { display: none; }
-  .grid .card-body > p.teaser { display: block; margin: 0; font-size: 13px; line-height: 1.35; color: var(--muted); }
+  .grid .card-body > p.teaser { display: block; margin: 0; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
   .grid .card.is-open .card-body > p.teaser { display: none; }
 }
 
@@ -1200,3 +1203,6 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .btn-forward { background: var(--accent); color: #fff; box-shadow: none; }
 .btn-forward:hover { background: #1d4ed8; box-shadow: 0 6px 16px -8px rgb(37 99 235 / .7); }
 @media (max-width: 620px) { .next .btn-forward { padding-left: 16px; padding-right: 16px; font-size: 15px; } }
+.nb { white-space: nowrap; }
+.teaser { text-wrap: balance; }
+.grid .card-body > p { text-wrap: pretty; }
