@@ -1295,3 +1295,8 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .ledger-foot { padding: 12px 16px 14px; gap: 8px; }
   .hero-down { margin: -26px auto -14px; }
 }
+@media (max-width: 620px) {
+  .hero .stat-note { margin-top: 6px; font-size: 13px; line-height: 1.3; }
+  .hero .stat-note .note-tail { display: none; }
+}
+@media (max-width: 620px) { .hero .stat-note { margin-top: -8px; margin-bottom: -14px; } }
