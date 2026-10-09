@@ -870,7 +870,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .price { margin: 0; display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: baseline; column-gap: 16px; row-gap: 6px; }
 .price small { grid-column: 1 / -1; }
 .price b { font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #333333; font-variant-numeric: tabular-nums; }
-.price .term { text-align: right; font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #0066CC; }
+.price .term { text-align: right; font: 700 17px/1 var(--font-display); letter-spacing: 0; color: #fff; background: #0066CC; padding: 8px 14px; border-radius: 999px; white-space: nowrap; align-self: center; }
 .price small { font-size: 13px; line-height: 1.35; color: var(--faint); }
 
 /* Логотип «Код»: </> в синей плитке, оранжевая точка-акцент. На синем фоне полос плитка белая */
@@ -1174,3 +1174,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (min-width: 961px) { .variant-head.wide { max-width: none; } }
 
 /* Условия под кнопкой на первом экране */
+
+/* Плашка со стоимостью — «слоистый» вид: светлая панель внутри карточки */
+.grid .card-foot { margin-top: auto; padding: 16px 18px; border-radius: 16px; background: linear-gradient(180deg, #f8fafc, #f1f5f9); border: 1px solid rgba(15, 23, 42, .05); box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(15, 23, 42, .05); }
+.grid .price .term { box-shadow: 0 6px 14px -4px rgba(0, 102, 204, .5); }
