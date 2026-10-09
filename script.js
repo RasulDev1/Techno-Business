@@ -304,7 +304,7 @@ document.querySelectorAll(".shot img").forEach((img) => {
 // Телефон, одностраничник: два видео рядом, нажатие раскрывает видео до удобного размера
 (function () {
   var items = document.querySelectorAll('.features .feature');
-  if (items.length < 2) return;
+  if (items.length < 1) return;
   items.forEach(function (it) {
     var media = it.querySelector('.feature-media'), title = it.querySelector('h2');
     if (!media) return;
