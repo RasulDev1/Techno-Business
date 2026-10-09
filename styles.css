@@ -867,10 +867,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 /* Цена на карточках */
 .card-foot { margin-top: auto; padding-top: 20px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; }
 .card-foot .more { margin-top: 0; padding-top: 0; padding-bottom: 4px; }
-.price { margin: 0; display: grid; gap: 4px; }
-.price .term { margin-bottom: 16px; }
-.price b { font: 700 21px/1 var(--font-display); letter-spacing: -.01em; color: #1D3557; font-variant-numeric: tabular-nums; }
-.price .term { order: -1; font: 800 30px/1 var(--font-display); letter-spacing: -.02em; color: #0096B4; }
+.price { margin: 0; display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: baseline; column-gap: 16px; row-gap: 6px; }
+.price small { grid-column: 1 / -1; }
+.price b { font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #1D3557; font-variant-numeric: tabular-nums; }
+.price .term { text-align: right; font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #0096B4; }
 .price small { font-size: 13px; line-height: 1.35; color: var(--faint); }
 
 /* Логотип «Код»: </> в синей плитке, оранжевая точка-акцент. На синем фоне полос плитка белая */
@@ -954,8 +954,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .grid .card.is-open .card-body > p { display: block; font-size: 15px; }
   .grid .card.is-open .fit ul { font-size: 14.5px; }
   .grid .card.is-open h3 { font-size: 22px; }
-  .grid .card.is-open .price b { font-size: 18px; }
-  .grid .card.is-open .price .term { font-size: 24px; }
+  .grid .card.is-open .price b, .grid .card.is-open .price .term { font-size: 20px; }
   .grid .card.is-open .go { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; border-radius: 10px; background: var(--cta); color: var(--ink); font-weight: 600; font-size: 15px; }
   .grid .card.is-open .more svg { transform: rotate(-90deg); }
   .grid .card:not(.is-open) .more svg { transform: rotate(90deg); }
