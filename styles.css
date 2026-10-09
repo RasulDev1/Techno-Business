@@ -870,7 +870,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .price { margin: 0; display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: baseline; column-gap: 16px; row-gap: 6px; }
 .price small { grid-column: 1 / -1; }
 .price b { font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #333333; font-variant-numeric: tabular-nums; }
-.price .term { text-align: right; font: 700 17px/1 var(--font-display); letter-spacing: 0; color: #fff; background: #0066CC; padding: 8px 14px; border-radius: 999px; white-space: nowrap; align-self: center; }
+.price .term { text-align: right; font: 700 17px/1 var(--font-display); letter-spacing: 0; color: #fff; background: #0066CC; padding: 7px 12px; border-radius: 999px; white-space: nowrap; align-self: center; justify-self: end; }
 .price small { font-size: 13px; line-height: 1.35; color: var(--faint); }
 
 /* Логотип «Код»: </> в синей плитке, оранжевая точка-акцент. На синем фоне полос плитка белая */
