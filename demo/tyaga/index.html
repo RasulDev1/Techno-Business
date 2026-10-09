@@ -8,11 +8,11 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap">
 <link rel="preload" as="image" href="images/perforator.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=12">
+<link rel="stylesheet" href="css/style.css?v=22">
 <script src="js/catalog.js?v=1" defer></script>
-<script src="js/script.js?v=7" defer></script>
+<script src="js/script.js?v=11" defer></script>
 <script src="js/demo.js" defer></script>
 </head>
 <body>
@@ -95,6 +95,7 @@
       <label>Имя<input type="text" id="name" placeholder="Ваше имя" autocomplete="name" maxlength="60" required><small class="ferr" id="e-name"></small></label>
       <label>Телефон<input type="tel" id="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" required><small class="ferr" id="e-phone"></small></label>
       <label class="wide">Адрес доставки<input type="text" id="address" placeholder="Улица, дом, корпус" autocomplete="street-address" maxlength="200" required><small class="ferr" id="e-address"></small></label>
+      <button type="button" id="calcBtn" class="calc-btn">Узнать стоимость / Забронировать</button>
       <label class="consent"><input type="checkbox" id="agree"><span>Я даю <a href="consent.html" target="_blank">согласие на обработку персональных данных</a> и подтверждаю, что ознакомлен(а) с <a href="privacy.html" target="_blank">Политикой обработки персональных данных</a></span></label>
       <small class="ferr consent-err" id="e-agree"></small>
       <input type="text" id="honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -103,7 +104,9 @@
     <p class="note">Сутки считаются от даты получения до даты возврата. Получили и вернули в один день — одни сутки.</p>
   </div>
 
-  <div class="calc">
+  <div class="calc-backdrop" id="calcBackdrop"></div>
+  <div class="calc" id="calcModal" role="dialog" aria-modal="true" aria-label="Стоимость">
+    <button type="button" class="calc-close" id="calcClose" aria-label="Закрыть">&times;</button>
     <b>Стоимость</b>
     <div class="row"><span>Срок аренды</span><span id="days">—</span></div>
     <div class="row"><span>Цена за сутки</span><span id="price">—</span></div>
@@ -134,5 +137,6 @@
   <a href="#" data-off class="fc-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg><span>WhatsApp</span></a>
   <a href="#" data-off class="fc-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg><span>Telegram</span></a>
 </div>
+<div class="fiction-note" aria-label="Примечание">Компания вымышленная.<br>Сайт сделан в информационных целях.</div>
 </body>
 </html>
