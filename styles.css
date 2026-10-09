@@ -1412,6 +1412,6 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 
 /* Phone: hero down arrow on an orange disc */
 @media (max-width: 620px) {
-  .hero-down { width: 48px; height: 48px; border-radius: 50%; background: var(--cta); color: #fff; }
+  .hero-down { width: 48px; height: 48px; border-radius: 10px; background: var(--cta); color: #fff; }
   .hero-down svg { width: 28px; height: 28px; stroke-width: 2.2; }
 }
