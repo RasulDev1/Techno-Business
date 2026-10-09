@@ -1316,3 +1316,8 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .passport .page-head.has-mock:not(.crm-head) { padding: 18px 16px 16px; }
   .page-head.has-mock:not(.crm-head) .mk-form { display: none; }
 }
+@media (max-width: 620px) {
+  .site-foot .foot-cta .foot-sub { font-size: clamp(12px, 3.5vw, 13.5px); line-height: 1.4; }
+  .site-foot .foot-brand { justify-content: flex-start; text-align: left; }
+  .site-foot .foot-brand .logo { justify-content: flex-start; }
+}
