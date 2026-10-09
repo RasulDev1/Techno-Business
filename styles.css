@@ -1372,3 +1372,4 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 }
 @media (max-width: 620px) { .live-duo .live-steps-short { padding: 10px 6px; letter-spacing: -.025em; font-size: clamp(10px, 3.25vw, 13.5px); } }
 @media (max-width: 620px) { .live-duo .live-steps-short { background: linear-gradient(180deg, #ffffff 0%, #E3EEFF 100%); border-color: #C7D9F5; } }
+@media (max-width: 620px) { .promo-bar { gap: 4px; padding: 6px 8px; } .promo-text { white-space: nowrap; text-wrap: nowrap; letter-spacing: -.02em; flex: 1 1 auto; text-align: center; font-size: calc((100vw - 80px) / 31); } }
