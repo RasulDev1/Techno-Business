@@ -1427,9 +1427,11 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (max-width: 620px) { .hero-down { display: none; } }
 @media (max-width: 620px) { .hero .sheet-head .lead { margin-bottom: 0; } .hero .sheet-head { padding-bottom: 22px; } }
 
-/* Phone: ledger block gets a clearly blue backdrop */
+/* Phone: ledger block on orange backdrop */
 @media (max-width: 620px) {
-  .sheet > .ledger { background: #dce8ff; border-top: 1px solid #bcd0fa; }
+  .sheet > .ledger { background: var(--cta); border-top: 0; }
   .sheet > .ledger .ledger-body .ledger-row:last-child { background: transparent; }
-  .sheet > .ledger .ledger-foot { background: #cfdffd; border-top: 1px solid #bcd0fa; }
+  .sheet > .ledger .ledger-foot { background: var(--cta-hover); border-top: 1px solid rgb(255 255 255 / .3); }
+  .sheet > .ledger .ledger-body .ledger-row *, .sheet > .ledger .ledger-foot * { color: #fff; }
+  .sheet > .ledger .ledger-body .c-time, .sheet > .ledger .ledger-body .num { color: rgb(255 255 255 / .85); }
 }
