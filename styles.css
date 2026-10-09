@@ -1149,3 +1149,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .ledger-foot { padding: 18px 20px 20px 44px; }
   .tally b { font-size: 46px; }
 }
+
+/* Одностраничник: отступы вокруг блока функций вдвое меньше */
+.features + .next { margin-top: 28px; }
+.sheet.live + .tabs { margin-top: -32px; }
