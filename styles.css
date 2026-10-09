@@ -1374,3 +1374,13 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (max-width: 620px) { .live-duo .live-steps-short { background: linear-gradient(180deg, #ffffff 0%, #E3EEFF 100%); border-color: #C7D9F5; } }
 @media (max-width: 620px) { .promo-bar { gap: 4px; padding: 6px 8px; } .promo-text { white-space: nowrap; text-wrap: nowrap; letter-spacing: -.02em; flex: 1 1 auto; text-align: center; font-size: calc((100vw - 80px) / 31); } }
 @media (max-width: 620px) { .live-duo .live-steps-short { background: linear-gradient(135deg, #0066CC 0%, #2563EB 100%); border-color: transparent; color: #fff; box-shadow: 0 4px 12px rgb(0 102 204 / .25); } }
+@media (max-width: 620px) {
+  .topbar .top { grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 8px; row-gap: 0; }
+  .topbar .logo .logo-name { display: none; }
+  .topbar .logo { grid-column: 1; grid-row: 1; }
+  .topbar .promo-bar { grid-column: 2; grid-row: 1; min-height: 40px; padding: 4px 8px; gap: 5px; font-size: 11px; line-height: 1.2; align-items: center; justify-content: center; }
+  .topbar .promo-text { white-space: normal; text-wrap: balance; font-size: 11px; letter-spacing: 0; flex: 1 1 auto; text-align: left; }
+  .topbar .top-actions { grid-column: 3; grid-row: 1; }
+  .topbar .top-link { font-size: 12.5px; padding: 8px 9px; min-height: 36px; }
+}
+@media (max-width: 375px) { .topbar .promo-bar > [aria-hidden="true"] { display: none; } .topbar .promo-bar { padding-inline: 8px; } .topbar .top-link { font-size: 12px; padding-inline: 7px; } }
