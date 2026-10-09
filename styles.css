@@ -1243,3 +1243,4 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .results-list .short { display: block; margin: 0; color: var(--ink); font: 700 15.5px/1.25 var(--font-body); letter-spacing: -.01em; text-wrap: balance; }
 }
 @media (max-width: 620px) { .grid.has-tabs { overflow-x: clip; } }
+@media (max-width: 620px) { .hero { padding-bottom: 40px; } .results { padding-bottom: 32px; } }
