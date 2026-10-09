@@ -1,3 +1,4 @@
+@font-face { font-family: 'Montserrat'; font-style: normal; font-weight: 800; font-display: swap; src: url(fonts/montserrat-cyrillic-800-normal.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
 @font-face { font-family: 'Montserrat'; font-style: normal; font-weight: 800; font-display: swap; src: url(fonts/montserrat-latin-800-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/inter-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/inter-cyrillic-400-normal.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
@@ -1366,3 +1367,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 @media (max-width: 620px) {
   .live-duo .live-steps-short { padding: 0; text-wrap: wrap; font-size: clamp(11.5px, 3.45vw, 14.5px); letter-spacing: -.01em; }
 }
+@media (max-width: 620px) {
+  .live-duo .live-steps-short { margin-top: 14px; padding: 10px 12px; border-radius: 12px; background: #FFF1E8; border: 1px solid #FFD2B3; color: #F26419; font: 800 clamp(11px, 3.2vw, 13.5px)/1.35 'Montserrat', var(--font-body); letter-spacing: -.01em; text-align: center; }
+}
+@media (max-width: 620px) { .live-duo .live-steps-short { padding: 10px 6px; letter-spacing: -.025em; font-size: clamp(10px, 3.25vw, 13.5px); } }
