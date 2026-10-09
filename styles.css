@@ -1384,3 +1384,19 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .topbar .top-link { font-size: 12.5px; padding: 8px 9px; min-height: 36px; }
 }
 @media (max-width: 375px) { .topbar .promo-bar > [aria-hidden="true"] { display: none; } .topbar .promo-bar { padding-inline: 8px; } .topbar .top-link { font-size: 12px; padding-inline: 7px; } }
+@media (max-width: 620px) {
+  .grid.has-tabs .price { align-items: center; }
+  .grid.has-tabs .card.is-open .price b { font-size: 24px; }
+  .grid.has-tabs .card.is-open .price .term { font-size: 18px; padding: 7px 14px; line-height: 1; }
+  .grid.has-tabs .card.is-open .price small { margin-top: 2px; }
+}
+@media (max-width: 620px) {
+  .grid.has-tabs .price b { white-space: nowrap; }
+  .grid.has-tabs .card.is-open .price b { font-size: 22px; }
+  .grid.has-tabs .card.is-open .price .term { font-size: 17px; padding: 7px 12px; }
+}
+@media (max-width: 620px) {
+  .grid.has-tabs .card-foot { display: grid; gap: 10px; }
+  .grid.has-tabs .card.is-open .go { width: 100%; box-sizing: border-box; }
+  .grid.has-tabs .card.is-open .more { justify-self: start; margin-top: 0; }
+}

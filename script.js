@@ -370,7 +370,17 @@ document.addEventListener('play', function (e) {
     btns.forEach(function (b, i) { b.classList.toggle('is-active', i === cur); b.setAttribute('aria-selected', i === cur ? 'true' : 'false'); });
   }
   btns.forEach(function (b, i) {
-    b.addEventListener('click', function () { if (i === cur) return; cur = i; apply(); });
+    b.addEventListener('click', function () {
+      if (i === cur) return;
+      cards.forEach(function (c) {
+        if (!c.classList.contains('is-open')) return;
+        c.classList.remove('is-open');
+        var t = c.querySelector('.more-text'), m = c.querySelector('.more');
+        if (t) t.textContent = 'Раскрыть решение';
+        if (m) m.setAttribute('aria-expanded', 'false');
+      });
+      cur = i; apply();
+    });
   });
   if (mq.addEventListener) mq.addEventListener('change', apply);
   apply();
