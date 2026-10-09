@@ -869,7 +869,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .card-foot .more { margin-top: 0; padding-top: 0; padding-bottom: 4px; }
 .price { margin: 0; display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: baseline; column-gap: 16px; row-gap: 6px; }
 .price small { grid-column: 1 / -1; }
-.price b { font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #2D3748; font-variant-numeric: tabular-nums; }
+.price b { font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #333333; font-variant-numeric: tabular-nums; }
 .price .term { text-align: right; font: 700 25px/1 var(--font-display); letter-spacing: -.01em; color: #0066CC; }
 .price small { font-size: 13px; line-height: 1.35; color: var(--faint); }
 
