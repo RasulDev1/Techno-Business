@@ -1208,3 +1208,26 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .nb { white-space: nowrap; }
 .teaser { text-wrap: balance; }
 .grid .card-body > p { text-wrap: pretty; }
+
+/* Умные табы: на телефоне показываем одну карточку, переключатель сверху */
+.type-tabs { display: none; }
+@media (max-width: 620px) {
+  .type-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; margin: 0 0 14px; border-radius: 14px; background: #E8ECF1; }
+  .type-tabs button { min-height: 44px; padding: 0 8px; border: 0; border-radius: 10px; background: transparent; color: #64748B; font: 700 14.5px/1.1 var(--font-body); cursor: pointer; transition: background .2s, color .2s; }
+  .type-tabs button.is-active { background: #0066CC; color: #fff; box-shadow: 0 2px 6px rgba(0, 102, 204, .3); }
+  .grid.has-tabs { grid-template-columns: minmax(0, 1fr); }
+  .grid.has-tabs .card { grid-area: 1 / 1; transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s; }
+  .grid.has-tabs .card.tab-off { opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(-18px); }
+  .grid.has-tabs .card.tab-off.from-right { transform: translateX(18px); }
+  .grid.has-tabs .card.tab-on { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .grid.has-tabs .card { padding: 8px; }
+  .grid.has-tabs .card-body > p.teaser { font-size: 14px; }
+  .grid.has-tabs .tag { font-size: 13.5px; }
+  .grid.has-tabs .card h3 { font-size: 21px; }
+  .grid.has-tabs .price b { font-size: 22px; }
+  .grid.has-tabs .price .term { font-size: 16px; }
+  .grid.has-tabs .more { min-height: 48px; font-size: 16px; }
+  .grid.has-tabs .card:not(.is-open) .price { display: grid; justify-self: stretch; }
+  .grid.has-tabs .card-foot { display: block; }
+}
+@media (prefers-reduced-motion: reduce) { .grid.has-tabs .card, .type-tabs button { transition: none; } }

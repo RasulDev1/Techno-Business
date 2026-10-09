@@ -234,7 +234,7 @@ document.querySelectorAll(".shot img").forEach((img) => {
     if (!more) return;
     if (mq.matches) more.setAttribute('role', 'button');
     var setLabel = function () {
-      if (label && !card.classList.contains('is-open')) label.textContent = mq.matches ? 'Раскрыть' : 'Подробнее';
+      if (label && !card.classList.contains('is-open')) label.textContent = mq.matches ? 'Раскрыть решение' : 'Подробнее';
     };
     setLabel();
     if (mq.addEventListener) mq.addEventListener('change', setLabel);
@@ -242,7 +242,7 @@ document.querySelectorAll(".shot img").forEach((img) => {
       if (!mq.matches) return;
       e.preventDefault();
       var open = card.classList.toggle('is-open');
-      if (label) label.textContent = open ? 'Свернуть' : 'Раскрыть';
+      if (label) label.textContent = open ? 'Свернуть' : 'Раскрыть решение';
       more.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (!open) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     };
@@ -353,3 +353,25 @@ document.addEventListener('play', function (e) {
   if (!(e.target instanceof HTMLVideoElement)) return;
   document.querySelectorAll('.feature-media video').forEach(function (v) { if (v !== e.target) v.pause(); });
 }, true);
+
+// Телефон: «умные табы» — показана одна карточка, смена с плавным сдвигом
+(function () {
+  var tabs = document.querySelector('.type-tabs'), grid = document.querySelector('.grid');
+  if (!tabs || !grid) return;
+  var btns = tabs.querySelectorAll('button'), cards = grid.querySelectorAll('.card'), cur = 0;
+  var mq = window.matchMedia('(max-width: 620px)');
+  function apply() {
+    grid.classList.toggle('has-tabs', mq.matches);
+    cards.forEach(function (c, i) {
+      c.classList.toggle('tab-on', mq.matches && i === cur);
+      c.classList.toggle('tab-off', mq.matches && i !== cur);
+      c.classList.toggle('from-right', i > cur);
+    });
+    btns.forEach(function (b, i) { b.classList.toggle('is-active', i === cur); b.setAttribute('aria-selected', i === cur ? 'true' : 'false'); });
+  }
+  btns.forEach(function (b, i) {
+    b.addEventListener('click', function () { if (i === cur) return; cur = i; apply(); });
+  });
+  if (mq.addEventListener) mq.addEventListener('change', apply);
+  apply();
+})();
