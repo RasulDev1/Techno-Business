@@ -278,7 +278,6 @@ document.querySelectorAll(".shot img").forEach((img) => {
     col.appendChild(close);
     frame.addEventListener('demo-open', function () {
       if (!phone.matches || col.classList.contains('is-open')) return;
-      cols.forEach(function (c) { if (c !== col) { c.classList.remove('is-open'); c.querySelector('.live-frame').classList.remove('is-live'); } });
       col.classList.add('is-open'); fitAll();
       col.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
@@ -318,7 +317,6 @@ document.querySelectorAll(".shot img").forEach((img) => {
     close.type = 'button'; close.className = 'feature-close'; close.textContent = 'Свернуть ↑';
     it.appendChild(close);
     cover.addEventListener('click', function () {
-      items.forEach(function (o) { o.classList.remove('is-open'); });
       it.classList.add('is-open');
       it.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
