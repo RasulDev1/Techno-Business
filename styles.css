@@ -1358,3 +1358,8 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .passport-rows.icons-crm dt::before { font-size: 14px; }
   .passport-rows.icons-crm dd { font-size: 12.5px; line-height: 1.38; margin-top: 3px; }
 }
+.live-steps-short { display: none; }
+@media (max-width: 620px) {
+  .live-duo .live-steps { display: none; }
+  .live-duo .live-steps-short { display: block; margin: 14px 0 0; padding: 0 4px; font-size: 15px; line-height: 1.45; font-weight: 600; color: var(--ink); text-wrap: balance; }
+}
