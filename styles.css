@@ -1244,3 +1244,5 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 }
 @media (max-width: 620px) { .grid.has-tabs { overflow-x: clip; } }
 @media (max-width: 620px) { .hero { padding-bottom: 40px; } .results { padding-bottom: 32px; } }
+.lead-short { display: none; }
+@media (max-width: 620px) { .lead-full { display: none; } .lead-short { display: inline; } }
