@@ -1,52 +1,40 @@
 /* Шрифты лежат рядом с сайтом, чтобы не зависеть от Google Fonts */
 @font-face {
-  font-family: 'Golos Text';
+  font-family: 'Manrope';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(fonts/golos-text-cyrillic-2.woff2) format('woff2');
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  src: url(fonts/manrope-400.woff2) format('woff2');
 }
 @font-face {
-  font-family: 'Golos Text';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(fonts/golos-text-latin-3.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Golos Text';
+  font-family: 'Manrope';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(fonts/golos-text-cyrillic-2.woff2) format('woff2');
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  src: url(fonts/manrope-500.woff2) format('woff2');
 }
 @font-face {
-  font-family: 'Golos Text';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(fonts/golos-text-latin-3.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Golos Text';
+  font-family: 'Manrope';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(fonts/golos-text-cyrillic-2.woff2) format('woff2');
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  src: url(fonts/manrope-600.woff2) format('woff2');
 }
 @font-face {
-  font-family: 'Golos Text';
+  font-family: 'Manrope';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   font-display: swap;
-  src: url(fonts/golos-text-latin-3.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url(fonts/manrope-700.woff2) format('woff2');
 }
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(fonts/manrope-800.woff2) format('woff2');
+}
+
 @font-face {
   font-family: 'PT Sans Narrow';
   font-style: normal;
@@ -100,9 +88,9 @@
   --glow: 0 1px 2px rgb(15 23 42 / .12);
   --shadow: 0 1px 2px rgb(15 23 42 / .04), 0 8px 24px -12px rgb(15 23 42 / .12);
   --radius: 12px;
-  --font-display: "Golos Text", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Golos Text", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "Golos Text", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Manrope", "Segoe UI", system-ui, sans-serif;
   --margin-w: 56px;
   color-scheme: light;
 }
@@ -768,7 +756,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .foot-cta h2 { margin: 0; font: 600 clamp(26px, 2.6vw, 36px)/1.15 var(--font-display); letter-spacing: -.02em; color: var(--ink); }
 .foot-cta p { margin: 10px 0 0; color: var(--muted); font-size: 16px; line-height: 1.5; }
 @media (max-width: 960px) { .foot-in { grid-template-columns: 1fr 1fr; } .foot-cta { grid-column: 1 / -1; grid-row: 1; } }
-@media (max-width: 620px) { .foot-in { display: flex; } .foot-cta { text-align: left; order: -1; } .foot-contacts { justify-self: auto; } }
+@media (max-width: 620px) { .foot-in { display: flex; } .foot-cta { text-align: left; } .foot-contacts { justify-self: auto; } }
 .foot-copy { margin: 12px 0 0; color: var(--faint); font-size: 13px; }
 .foot-contacts h3 { margin: 0 0 12px; font: 600 13px/1 var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
 .foot-contacts ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
@@ -810,7 +798,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 }
 
 /* Сноска к цифрам: мелкий узкий шрифт */
-.stat-note { margin: 12px 0 0; max-width: 560px; font: 400 13px/1.45 var(--font-body); color: var(--faint); }
+.stat-note { margin: 12px 0 0; max-width: 560px; font: 400 13px/1.35 "PT Sans Narrow", var(--font-body); letter-spacing: .01em; color: var(--faint); }
 .results .stat-note { max-width: none; margin-top: 14px; }
 .metric-top span::after { content: "*"; margin-left: 1px; color: var(--faint); font-weight: 400; }
 
@@ -880,8 +868,9 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .card-foot { margin-top: auto; padding-top: 20px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; }
 .card-foot .more { margin-top: 0; padding-top: 0; padding-bottom: 4px; }
 .price { margin: 0; display: grid; gap: 4px; }
-.price b { font: 600 26px/1 var(--font-display); letter-spacing: -.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
-.price .term { font: 500 15px/1.2 var(--font-body); color: var(--muted); }
+.price .term { margin-bottom: 16px; }
+.price b { font: 700 21px/1 var(--font-display); letter-spacing: -.01em; color: #1D3557; font-variant-numeric: tabular-nums; }
+.price .term { order: -1; font: 800 30px/1 var(--font-display); letter-spacing: -.02em; color: #0096B4; }
 .price small { font-size: 13px; line-height: 1.35; color: var(--faint); }
 
 /* Логотип «Код»: </> в синей плитке, оранжевая точка-акцент. На синем фоне полос плитка белая */
@@ -925,7 +914,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .grid .card h3 { font-size: 18px; line-height: 1.15; letter-spacing: -.015em; hyphens: auto; }
   .grid .card-body > p, .grid .fit, .grid .price small { display: none; }
   .grid .card-foot { margin-top: auto; padding-top: 8px; display: grid; gap: 6px; }
-  .grid .price b { font-size: 19px; }
+  .grid .price b { font-size: 17px; }
   .grid .more { font-size: 14px; gap: 4px; }
   .grid .more svg { width: 15px; height: 15px; }
 }
@@ -965,7 +954,8 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .grid .card.is-open .card-body > p { display: block; font-size: 15px; }
   .grid .card.is-open .fit ul { font-size: 14.5px; }
   .grid .card.is-open h3 { font-size: 22px; }
-  .grid .card.is-open .price b { font-size: 24px; }
+  .grid .card.is-open .price b { font-size: 18px; }
+  .grid .card.is-open .price .term { font-size: 24px; }
   .grid .card.is-open .go { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; border-radius: 10px; background: var(--cta); color: var(--ink); font-weight: 600; font-size: 15px; }
   .grid .card.is-open .more svg { transform: rotate(-90deg); }
   .grid .card:not(.is-open) .more svg { transform: rotate(90deg); }
@@ -1045,7 +1035,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 }
 
 /* Подпись над демо: на телефоне показана мобильная версия */
-.m-version-note { display: flex; align-items: center; gap: 6px; margin: 0 4px 10px; font: 400 14px/1.35 var(--font-body); color: var(--muted); }
+.m-version-note { display: flex; align-items: center; gap: 6px; margin: 0 4px 10px; font: 400 14px/1.3 "PT Sans Narrow", var(--font-body); letter-spacing: .01em; color: var(--muted); }
 .m-version-note svg { flex: none; color: var(--accent); }
 .m-version-note.phone-note { display: none; }
 @media (max-width: 620px) {
@@ -1093,7 +1083,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .live-duo .live-col:not(.is-open) iframe { position: absolute; left: 0; top: 0; width: 390px; height: 780px; transform-origin: 0 0; pointer-events: none; }
   .live-duo .live-col:not(.is-open) .demo-guard { padding: 10px; }
   .live-duo .live-col:not(.is-open) .demo-guard span { min-height: 38px; padding: 0 14px; font-size: 13.5px; }
-  .live-duo .live-col.is-open { grid-column: 1 / -1; order: -1; }
+  .live-duo .live-col.is-open { grid-column: 1 / -1; }
   .live-duo .live-col.is-open iframe { height: 70vh; height: 70svh; }
   .live-duo .live-col.is-open .duo-close { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin-top: 10px; min-height: 40px; padding: 0 4px; border: 0; background: none; color: var(--accent); font: 600 15px/1 var(--font-body); cursor: pointer; }
 }
@@ -1116,7 +1106,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .feature:not(.is-open) .feature-media iframe { pointer-events: none; }
   .feature-cover { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; border: 0; background: rgb(15 23 42 / .35); cursor: pointer; }
   .feature-cover span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--accent); box-shadow: 0 4px 14px rgb(15 23 42 / .3); }
-  .feature.is-open { grid-column: 1 / -1; order: -1; padding: 10px; }
+  .feature.is-open { grid-column: 1 / -1; padding: 10px; }
   .feature.is-open h2 { font-size: 20px; }
   .feature.is-open .feature-cover { display: none; }
   .feature.is-open .feature-close { display: inline-flex; align-items: center; align-self: flex-start; min-height: 40px; padding: 0 4px; border: 0; background: none; color: var(--accent); font: 600 15px/1 var(--font-body); cursor: pointer; }
