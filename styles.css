@@ -1350,3 +1350,11 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .live-link { font-size: 15px; }
   .live-link a { font-size: clamp(10.5px, 3.45vw, 13.5px); }
 }
+@media (max-width: 620px) {
+  .passport .page-head.crm-head { padding: 18px 16px 16px; row-gap: 6px; }
+  .passport .page-head.crm-head h1 { margin: 0; }
+  .passport-rows.icons-crm > div { padding: 11px 12px 12px; }
+  .passport-rows.icons-crm dt { font-size: 14px; line-height: 1.2; gap: 6px; }
+  .passport-rows.icons-crm dt::before { font-size: 14px; }
+  .passport-rows.icons-crm dd { font-size: 12.5px; line-height: 1.38; margin-top: 3px; }
+}
