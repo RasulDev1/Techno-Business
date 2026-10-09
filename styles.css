@@ -1400,3 +1400,4 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .grid.has-tabs .card.is-open .go { width: 100%; box-sizing: border-box; }
   .grid.has-tabs .card.is-open .more { justify-self: start; margin-top: 0; }
 }
+@media (max-width: 620px) { .grid.has-tabs .card:not(.is-open) .price small { display: block; grid-column: 1 / -1; font-size: 12.5px; line-height: 1.35; } }
