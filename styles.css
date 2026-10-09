@@ -1371,3 +1371,4 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .live-duo .live-steps-short { margin-top: 14px; padding: 10px 12px; border-radius: 12px; background: #FFF1E8; border: 1px solid #FFD2B3; color: #F26419; font: 800 clamp(11px, 3.2vw, 13.5px)/1.35 'Montserrat', var(--font-body); letter-spacing: -.01em; text-align: center; }
 }
 @media (max-width: 620px) { .live-duo .live-steps-short { padding: 10px 6px; letter-spacing: -.025em; font-size: clamp(10px, 3.25vw, 13.5px); } }
+@media (max-width: 620px) { .live-duo .live-steps-short { background: linear-gradient(180deg, #ffffff 0%, #E3EEFF 100%); border-color: #C7D9F5; } }
