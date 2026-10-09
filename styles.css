@@ -1342,3 +1342,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .live-link { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; font-size: clamp(11.5px, 3.3vw, 14px); overflow-wrap: normal; }
   .live-link a { min-height: 40px; gap: 4px; }
 }
+@media (max-width: 620px) {
+  .live-link { margin-top: -2px; padding-inline: 0; font-size: clamp(11px, 3.7vw, 15px); }
+  .live-link a { min-height: 32px; }
+}
