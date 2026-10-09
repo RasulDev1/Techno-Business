@@ -196,10 +196,10 @@ document.querySelectorAll(".shot img").forEach((img) => {
 /* CRM в демо: рисуем её как на экране ноутбука и уменьшаем под ширину колонки, чтобы меню слева не пропадало */
 (() => {
   const box = document.querySelector(".live-zoom"); if (!box) return;
-  const f = box.querySelector("iframe"), W = +box.dataset.w, wide = matchMedia("(min-width: 961px)");
+  const f = box.querySelector("iframe"), W = +box.dataset.w, wide = matchMedia("(min-width: 961px)"), phone = matchMedia("(max-width: 620px)");
   const fit = () => {
+    if (!wide.matches) { if (!phone.matches) f.style.cssText = ""; return; }
     f.style.cssText = "";
-    if (!wide.matches) return;
     const w = box.clientWidth, h = f.offsetHeight, k = Math.min(1, w / W);
     if (k === 1) return;
     f.style.cssText = `width:${W}px;height:${h / k}px;transform:scale(${k});margin-bottom:${h - h / k}px`;
@@ -216,11 +216,11 @@ document.querySelectorAll(".shot img").forEach((img) => {
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'demo-guard';
     b.innerHTML = '<span>Нажмите, чтобы попробовать</span>';
-    b.addEventListener('click', function () { f.classList.add('is-live'); });
+    b.addEventListener('click', function () { f._t = Date.now(); f.classList.add('is-live'); f.dispatchEvent(new CustomEvent('demo-open')); });
     f.appendChild(b);
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (!e.isIntersecting) f.classList.remove('is-live'); });
+        es.forEach(function (e) { if (!e.isIntersecting && Date.now() - (f._t || 0) > 1500) f.classList.remove('is-live'); });
       }).observe(f);
     }
   });
@@ -245,6 +245,85 @@ document.querySelectorAll(".shot img").forEach((img) => {
       if (label) label.textContent = open ? 'Свернуть' : 'Раскрыть';
       more.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (!open) card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  });
+})();
+
+// Телефон, страница CRM: магазин и CRM рядом уменьшенными; по нажатию демо раскрывается на всю ширину
+(function () {
+  var grid = document.querySelector('.live-duo-grid'); if (!grid) return;
+  var phone = window.matchMedia('(max-width: 620px)');
+  var W = 390, H = 780;
+  var cols = grid.querySelectorAll('.live-col');
+  function fit(col) {
+    var frame = col.querySelector('.live-frame'), ifr = frame.querySelector('iframe'), g = frame.querySelector('.demo-guard span');
+    var reset = function () { frame.style.height = ''; if (ifr.dataset.duo) { ifr.style.transform = ''; delete ifr.dataset.duo; } };
+    if (!phone.matches) { reset(); return; }
+    if (col.classList.contains('is-open')) { reset(); if (g) g.textContent = 'Нажмите, чтобы попробовать'; return; }
+    var k = frame.clientWidth / W;
+    ifr.style.cssText = ''; ifr.style.transform = 'scale(' + k + ')'; ifr.dataset.duo = '1';
+    frame.style.height = Math.round(H * k) + 'px';
+    if (g) g.textContent = 'Попробовать';
+  }
+  function fitAll() { cols.forEach(fit); }
+  cols.forEach(function (col) {
+    var frame = col.querySelector('.live-frame');
+    var close = document.createElement('button');
+    close.type = 'button'; close.className = 'duo-close'; close.textContent = 'Свернуть ↑';
+    close.addEventListener('click', function () {
+      col.classList.remove('is-open'); frame.classList.remove('is-live'); fitAll();
+      grid.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+    col.appendChild(close);
+    frame.addEventListener('demo-open', function () {
+      if (!phone.matches || col.classList.contains('is-open')) return;
+      cols.forEach(function (c) { if (c !== col) { c.classList.remove('is-open'); c.querySelector('.live-frame').classList.remove('is-live'); } });
+      col.classList.add('is-open'); fitAll();
+      col.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+  });
+  if ('ResizeObserver' in window) new ResizeObserver(fitAll).observe(grid);
+  phone.addEventListener('change', fitAll); fitAll();
+})();
+
+// Телефон, одностраничник: макет сайта рисуется в ширину настоящего телефона и уменьшается под колонку
+(function () {
+  var box = document.querySelector('.live-frame[data-phone-w]'); if (!box) return;
+  var f = box.querySelector('iframe'), W = +box.dataset.phoneW, mq = window.matchMedia('(max-width: 620px)');
+  function fit() {
+    f.style.cssText = '';
+    if (!mq.matches) return;
+    var w = box.clientWidth, h = f.offsetHeight, k = Math.min(1, w / W);
+    if (k === 1) return;
+    f.style.cssText = 'width:' + W + 'px;height:' + (h / k) + 'px;transform:scale(' + k + ');transform-origin:0 0;margin-bottom:' + (h - h / k) + 'px';
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(box);
+  mq.addEventListener('change', fit); fit();
+})();
+
+// Телефон, одностраничник: два видео рядом, нажатие раскрывает видео до удобного размера
+(function () {
+  var items = document.querySelectorAll('.features .feature');
+  if (items.length < 2) return;
+  items.forEach(function (it) {
+    var media = it.querySelector('.feature-media'), title = it.querySelector('h2');
+    if (!media) return;
+    var cover = document.createElement('button');
+    cover.type = 'button'; cover.className = 'feature-cover';
+    cover.setAttribute('aria-label', 'Раскрыть видео: ' + (title ? title.textContent : ''));
+    cover.innerHTML = '<span><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>';
+    media.appendChild(cover);
+    var close = document.createElement('button');
+    close.type = 'button'; close.className = 'feature-close'; close.textContent = 'Свернуть ↑';
+    it.appendChild(close);
+    cover.addEventListener('click', function () {
+      items.forEach(function (o) { o.classList.remove('is-open'); });
+      it.classList.add('is-open');
+      it.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+    close.addEventListener('click', function () {
+      it.classList.remove('is-open');
+      it.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     });
   });
 })();

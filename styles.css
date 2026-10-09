@@ -1132,3 +1132,59 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .topbar .logo-mark { width: 26px; height: 26px; }
   .topbar .top-link { font-size: 12px; padding: 9px 8px; }
 }
+
+/* Телефон, страница CRM: анимация справа от заголовка */
+@media (max-width: 620px) {
+  .passport .page-head.crm-head { grid-template-columns: minmax(0, 1fr) 122px; gap: 12px; align-items: center; padding: 26px 16px 22px; }
+  .passport .page-head.crm-head h1 { font-size: clamp(19px, 6vw, 27px); line-height: 1.1; letter-spacing: -.02em; overflow-wrap: normal; }
+  .passport .page-head.crm-head .tpl-lead { font-size: 14px; line-height: 1.45; margin-top: 10px; }
+  .crm-head .combo { width: 340px; max-width: none; zoom: .3588; }
+  /* 4 пункта по 2 в ряд — как на одностраничнике */
+  .crm-head + .passport-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Телефон: магазин и CRM рядом уменьшенными, по нажатию раскрываются */
+.duo-close { display: none; }
+@media (max-width: 620px) {
+  .live-duo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .live-duo .live-col .card-label { margin-bottom: 8px; font-size: 10.5px; letter-spacing: .04em; padding: 4px 6px; }
+  .live-duo .live-col:not(.is-open) .live-bar { display: none; }
+  .live-duo .live-col:not(.is-open) .live-frame { flex: none; position: relative; overflow: hidden; border-radius: 12px; }
+  .live-duo .live-col:not(.is-open) iframe { position: absolute; left: 0; top: 0; width: 390px; height: 780px; transform-origin: 0 0; pointer-events: none; }
+  .live-duo .live-col:not(.is-open) .demo-guard { padding: 10px; }
+  .live-duo .live-col:not(.is-open) .demo-guard span { min-height: 38px; padding: 0 14px; font-size: 13.5px; }
+  .live-duo .live-col.is-open { grid-column: 1 / -1; order: -1; }
+  .live-duo .live-col.is-open iframe { height: 70vh; height: 70svh; }
+  .live-duo .live-col.is-open .duo-close { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin-top: 10px; min-height: 40px; padding: 0 4px; border: 0; background: none; color: var(--accent); font: 600 15px/1 var(--font-body); cursor: pointer; }
+}
+
+/* Телефон: одинаковый отступ перед футером на всех страницах */
+@media (max-width: 620px) {
+  main, main.wrap { padding-bottom: 0; }
+  .types { padding-bottom: 0; }
+  .site-foot { margin-top: 40px; }
+}
+
+/* Телефон, одностраничник: два видео в одну линию, по нажатию раскрываются */
+.feature-cover, .feature-close { display: none; }
+@media (max-width: 620px) {
+  .features { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .feature { padding: 8px; gap: 8px; }
+  .feature .card-label { font-size: 10.5px; letter-spacing: .04em; padding: 4px 6px; }
+  .feature h2 { font-size: 15px; line-height: 1.2; margin: 0 2px; }
+  .feature:not(.is-open) .feature-link { display: none; }
+  .feature:not(.is-open) .feature-media iframe { pointer-events: none; }
+  .feature-cover { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; border: 0; background: rgb(15 23 42 / .35); cursor: pointer; }
+  .feature-cover span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--accent); box-shadow: 0 4px 14px rgb(15 23 42 / .3); }
+  .feature.is-open { grid-column: 1 / -1; order: -1; padding: 10px; }
+  .feature.is-open h2 { font-size: 20px; }
+  .feature.is-open .feature-cover { display: none; }
+  .feature.is-open .feature-close { display: inline-flex; align-items: center; align-self: flex-start; min-height: 40px; padding: 0 4px; border: 0; background: none; color: var(--accent); font: 600 15px/1 var(--font-body); cursor: pointer; }
+}
+
+/* Телефон: «Выбрать систему» шире прежней кнопки — название в шапке при нехватке места переносится на две строки */
+@media (max-width: 620px) {
+  .topbar .logo { white-space: normal; line-height: 1.08; font-size: clamp(13px, 3.7vw, 15px); gap: 8px; }
+  .topbar .logo-mark { flex: none; }
+}
+@media (max-width: 380px) { .topbar .top-link { font-size: 12.5px; padding: 9px 9px; } }
