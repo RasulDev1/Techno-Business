@@ -353,23 +353,3 @@ document.addEventListener('play', function (e) {
   if (!(e.target instanceof HTMLVideoElement)) return;
   document.querySelectorAll('.feature-media video').forEach(function (v) { if (v !== e.target) v.pause(); });
 }, true);
-
-// «Набегание» чисел в карточках с цифрами при появлении на экране (не работает при «уменьшить движение»)
-(function () {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
-  function countUp(el) {
-    if (el.dataset.counted) return; el.dataset.counted = '1';
-    var txt = el.textContent, re = /\d+/g, nums = txt.match(re); if (!nums) return;
-    var t0 = performance.now(), dur = 900;
-    function ease(x) { return 1 - Math.pow(1 - x, 3); }
-    (function tick(now) {
-      var k = Math.min(1, (now - t0) / dur), i = 0;
-      el.textContent = txt.replace(re, function () { return Math.round(+nums[i++] * ease(k)); });
-      if (k < 1) requestAnimationFrame(tick);
-    })(t0);
-  }
-  var io = new IntersectionObserver(function (es) {
-    es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); countUp(e.target); } });
-  }, { threshold: 0.6 });
-  document.querySelectorAll('.results-list .fig').forEach(function (el) { io.observe(el); });
-})();
