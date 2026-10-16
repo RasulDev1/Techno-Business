@@ -1444,3 +1444,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .live-duo .live-link a { min-height: 40px; gap: 4px; }
 }
 @media (max-width: 340px) { .live-duo .live-link a svg { display: none; } .live-duo .live-link { font-size: 10.5px; gap: 4px; } }
+
+/* Phone: one-pager demo link fits on one line */
+@media (max-width: 620px) {
+  body .live:not(.live-duo) .live-link { font-size: clamp(10px, 3.05vw, 14px); gap: 4px; padding-inline: 0; }
+  body .live:not(.live-duo) .live-link a { font-size: clamp(10px, 3.05vw, 14px); gap: 3px; }
+}
+@media (max-width: 340px) { body .live:not(.live-duo) .live-link a svg { display: none; } }
