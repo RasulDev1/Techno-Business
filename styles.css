@@ -1451,3 +1451,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   body .live:not(.live-duo) .live-link a { font-size: clamp(10px, 3.05vw, 14px); gap: 3px; }
 }
 @media (max-width: 340px) { body .live:not(.live-duo) .live-link a svg { display: none; } }
+
+/* Logo: exact app icon as the mark */
+.logo-mark, .topbar .logo-mark, .site-foot .logo-mark, .site-foot .foot-brand .logo-mark { background: none; border-radius: 25%; overflow: hidden; box-shadow: 0 0 0 1.5px rgb(255 255 255 / .55); position: relative; }
+.logo-mark img { position: absolute; left: -7.15%; top: -7.15%; width: 114.3%; height: 114.3%; max-width: none; display: block; }
