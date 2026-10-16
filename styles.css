@@ -1437,3 +1437,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
   .sheet > .ledger .ledger-body .c-time, .sheet > .ledger .ledger-body .num { color: rgb(255 255 255 / .85); }
 }
 @media (max-width: 620px) { .sheet > .ledger { margin-top: 6px; border-radius: 18px 18px 0 0; overflow: hidden; } }
+
+/* Phone: demo link under the CRM mockup on one line */
+@media (max-width: 620px) {
+  .live-duo .live-link { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; font-size: clamp(10.5px, 3.3vw, 15px); padding-inline: 0; }
+  .live-duo .live-link a { min-height: 40px; gap: 4px; }
+}
+@media (max-width: 340px) { .live-duo .live-link a svg { display: none; } .live-duo .live-link { font-size: 10.5px; gap: 4px; } }
