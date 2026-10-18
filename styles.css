@@ -1455,3 +1455,8 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 /* Logo: exact app icon as the mark */
 .logo-mark, .topbar .logo-mark, .site-foot .logo-mark, .site-foot .foot-brand .logo-mark { background: none; border-radius: 25%; overflow: hidden; box-shadow: 0 0 0 1.5px rgb(255 255 255 / .55); position: relative; }
 .logo-mark img { position: absolute; left: -7.15%; top: -7.15%; width: 114.3%; height: 114.3%; max-width: none; display: block; }
+
+/* demo embedded from the vexa page */
+.live-embed { margin-bottom: 4px; }
+.live-embed iframe { display: block; width: 100%; height: min(86vh, 860px); border: 0; background: var(--bg-2); }
+@media (max-width: 620px) { .live-embed iframe { height: 80vh; } }
