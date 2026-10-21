@@ -1460,3 +1460,8 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .live-embed { margin-bottom: 4px; }
 .live-embed iframe { display: block; width: 100%; height: min(86vh, 860px); border: 0; background: var(--bg-2); }
 @media (max-width: 620px) { .live-embed iframe { height: 80vh; } }
+
+/* Длинная плашка у цены: на узком экране переносится под сумму */
+@media (max-width: 640px) {
+  .grid .price .term { white-space: normal; text-align: center; line-height: 1.2; grid-column: 1 / -1; justify-self: start; }
+}
