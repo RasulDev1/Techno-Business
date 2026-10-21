@@ -381,8 +381,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .passport-rows.has-icons > div:nth-child(1) dt::before { content: "\26A1\FE0F"; }
 .passport-rows.has-icons > div:nth-child(2) dt::before { content: "\1F50C"; }
 .passport-rows.has-icons > div:nth-child(3) dt::before { content: "📱"; }
-.passport-rows.has-icons > div:nth-child(4) dt::before { content: "\1F680"; }
-.passport-rows.has-icons > div:nth-child(5) dt::before { content: "\1F4F2"; }
+.passport-rows.has-icons > div:nth-child(4) dt::before { content: "\1F4F2"; }
 .passport-rows.icons-crm > div:nth-child(1) dt::before { content: "📥"; }
 .passport-rows.icons-crm > div:nth-child(2) dt::before { content: "🔑"; }
 .passport-rows.icons-crm > div:nth-child(3) dt::before { content: "📦"; }
