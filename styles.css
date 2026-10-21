@@ -1460,3 +1460,42 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .live-embed { margin-bottom: 4px; }
 .live-embed iframe { display: block; width: 100%; height: min(86vh, 860px); border: 0; background: var(--bg-2); }
 @media (max-width: 620px) { .live-embed iframe { height: 80vh; } }
+
+/* Конструктор приложения для заявок */
+.builder { margin: 0 0 48px; padding: 36px 40px 40px; }
+.builder-head { max-width: 44em; margin-bottom: 26px; }
+.builder-head h2 { margin: 0 0 10px; font: 600 clamp(28px, 3.4vw, 40px)/1.1 var(--font-display); letter-spacing: -.025em; }
+.builder-head p { margin: 0; color: var(--muted); }
+.builder-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 28px 36px; align-items: start; }
+.builder-steps { display: grid; gap: 22px; }
+.bstep { margin: 0; padding: 0; border: 0; min-width: 0; }
+.bstep legend { display: flex; align-items: center; gap: 10px; padding: 0; margin-bottom: 12px; font: 600 18px/1.2 var(--font-display); letter-spacing: -.01em; }
+.bnum { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 700 13px/1 var(--font-body); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.chip span { display: block; padding: 10px 16px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); font: 500 15px/1.2 var(--font-body); color: var(--ink); transition: border-color .15s, background .15s, color .15s; }
+.chip:hover span { border-color: var(--accent); }
+.chip input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip input:focus-visible + span { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+.builder-sum { position: sticky; top: 16px; padding: 22px 22px 24px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--bg); display: grid; gap: 12px; }
+.bsum-tag { justify-self: start; padding: 4px 9px; border-radius: 999px; border: 1px solid #c7d7fb; background: var(--accent-soft); color: var(--accent); font: 500 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; }
+.bsum-text { margin: 0; font: 500 18px/1.4 var(--font-display); letter-spacing: -.01em; color: var(--ink); }
+.bsum-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; color: var(--muted); }
+.bsum-list li { padding-left: 22px; position: relative; }
+.bsum-list li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.bsum-count { margin: 0; font-size: 14px; color: var(--faint); }
+.builder-sum .btn { justify-content: center; border: 0; cursor: pointer; }
+.bform { display: grid; gap: 8px; margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
+.bform label { font: 600 15px/1.3 var(--font-body); }
+.bform label span { font-weight: 400; color: var(--faint); }
+.bform textarea, .bform input { width: 100%; padding: 11px 13px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); font: 400 16px/1.4 var(--font-body); color: var(--ink); resize: vertical; }
+.bform textarea:focus, .bform input:focus { outline: 2px solid var(--accent-2); outline-offset: 1px; border-color: var(--accent); }
+.bform-err { margin: 0; color: #b42318; font-size: 14px; }
+.bform-note { margin: 0; font-size: 13px; line-height: 1.45; color: var(--faint); }
+.bdone { padding: 14px 16px; border-radius: 10px; background: #ecfdf3; border: 1px solid #abefc6; color: #067647; }
+.bdone b { display: block; margin-bottom: 4px; }
+.bdone p { margin: 0; font-size: 14.5px; color: #1d4d36; }
+.bdone a { color: inherit; font-weight: 600; }
+@media (max-width: 960px) { .builder-grid { grid-template-columns: minmax(0, 1fr); } .builder-sum { position: static; } }
+@media (max-width: 620px) { .builder { padding: 24px 18px 26px; } .chip span { padding: 9px 13px; font-size: 14.5px; } }
