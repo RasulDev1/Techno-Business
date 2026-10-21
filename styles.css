@@ -378,10 +378,10 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 }
 .passport-rows dt::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 .passport-rows.has-icons dt::before { content: "•"; width: 1.5em; height: auto; border-radius: 0; background: none; text-align: center; font: 400 20px/1 "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; }
-.passport-rows.has-icons > div:nth-child(1) dt::before { content: "🎯"; }
-.passport-rows.has-icons > div:nth-child(2) dt::before { content: "\26A1\FE0F"; }
-.passport-rows.has-icons > div:nth-child(3) dt::before { content: "\26A1\FE0F"; }
-.passport-rows.has-icons > div:nth-child(4) dt::before { content: "📱"; }
+.passport-rows.has-icons > div:nth-child(1) dt::before { content: "\26A1\FE0F"; }
+.passport-rows.has-icons > div:nth-child(2) dt::before { content: "\1F50C"; }
+.passport-rows.has-icons > div:nth-child(3) dt::before { content: "📱"; }
+.passport-rows.has-icons > div:nth-child(4) dt::before { content: "\1F680"; }
 .passport-rows.icons-crm > div:nth-child(1) dt::before { content: "📥"; }
 .passport-rows.icons-crm > div:nth-child(2) dt::before { content: "🔑"; }
 .passport-rows.icons-crm > div:nth-child(3) dt::before { content: "📦"; }
