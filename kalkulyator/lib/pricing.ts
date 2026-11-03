@@ -4,7 +4,6 @@
 
 export type TeamSize = "s" | "m" | "l" | "xl";
 export type ModuleId = "crm" | "stock" | "finance" | "production" | "cabinet";
-export type PlatformId = "web" | "mobile" | "desktop";
 
 export const TEAM_OPTIONS: { id: TeamSize; label: string; users: number }[] = [
   { id: "s", label: "до 10", users: 7 },
@@ -26,19 +25,8 @@ export const MODULE_OPTIONS: {
   { id: "cabinet", label: "Личный кабинет клиента / курьера", hint: "Статусы заказов, маршруты, оплата", price: [20_000, 38_000] },
 ];
 
-export const PLATFORM_OPTIONS: {
-  id: PlatformId;
-  label: string;
-  hint: string;
-  /** Надбавка к стоимости модулей, доля */
-  extra: number;
-}[] = [
-  { id: "web", label: "Браузер (Web)", hint: "Работает на любом компьютере", extra: 0 },
-  { id: "mobile", label: "Смартфоны (iOS / Android)", hint: "Приложение для сотрудников в поле", extra: 0.35 },
-  { id: "desktop", label: "Windows / Mac", hint: "Отдельная программа на компьютер", extra: 0.2 },
-];
-
-/** Каркас системы: авторизация, роли и права, админка, деплой */
+/** Каркас системы: авторизация, роли и права, админка, деплой. Веб и мобильная версия
+ * входят всегда — кроссплатформенность не отдельная опция, а часть базового предложения. */
 export const BASE_PRICE: [number, number] = [12_000, 20_000];
 
 /** Чем больше пользователей, тем больше ролей, прав и нагрузки */
@@ -67,7 +55,6 @@ export const SLIDER_MAX = 100_000;
 export type QuizAnswers = {
   team: TeamSize | null;
   modules: ModuleId[];
-  platforms: PlatformId[];
   /** Своими словами: что ещё должна уметь система */
   wishes: string;
 };
@@ -112,8 +99,7 @@ export function averageBox(a: QuizAnswers): { monthly: number; setup: number } {
 
 export function estimateDev(a: QuizAnswers): DevEstimate {
   const team = a.team ?? "s";
-  const platformExtra = a.platforms.reduce((s, id) => s + (PLATFORM_OPTIONS.find((p) => p.id === id)?.extra ?? 0), 0);
-  const k = TEAM_FACTOR[team] * (1 + platformExtra);
+  const k = TEAM_FACTOR[team];
   const breakdown = [
     { label: "Каркас: вход, роли и права, админка, запуск на сервере", min: BASE_PRICE[0] * k, max: BASE_PRICE[1] * k },
     ...a.modules.map((id) => {

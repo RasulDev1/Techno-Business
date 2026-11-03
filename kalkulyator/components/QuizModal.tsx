@@ -1,36 +1,28 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { APPROX_STEP, CONTACT_STEP, QUIZ_LAST_QUESTION, RESULT_STEP, useQuiz } from "./QuizContext";
+import { CONTACT_STEP, QUIZ_LAST_QUESTION, RESULT_STEP, useQuiz } from "./QuizContext";
 import { Arrow } from "./Card";
 import PaybackChart from "./PaybackChart";
 import {
   BOX_SETUP_RANGE_NOTE,
   DEV_MONTHS,
   MODULE_OPTIONS,
-  PLATFORM_OPTIONS,
-  SLIDER_MAX,
   TEAM_OPTIONS,
   monthsWord,
   rub,
   type ModuleId,
-  type PlatformId,
 } from "@/lib/pricing";
 
 const QUESTIONS = [
   { q: "Сколько сотрудников будут работать в системе?", hint: "" },
   { q: "Какие модули вам реально нужны?", hint: "Можно выбрать несколько" },
-  { q: "Где должна работать система?", hint: "Можно выбрать несколько" },
   { q: "Что ещё должна уметь система?", hint: "Необязательно. Опишите своими словами — учтём в смете" },
 ];
 /** Прогресс показываем только по вопросам квиза, не по экранам результата/контактов */
 const TOTAL_QUESTIONS = QUIZ_LAST_QUESTION + 1;
 
 const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(n).replace(/ /g, " ");
-const parseNum = (v: string) => {
-  const d = v.replace(/\D/g, "").slice(0, 9);
-  return d ? Number(d) : null;
-};
 
 function formatPhone(raw: string) {
   let d = raw.replace(/\D/g, "");
@@ -99,8 +91,7 @@ export default function QuizModal() {
   const questionValid =
     (step === 0 && answers.team !== null) ||
     (step === 1 && answers.modules.length > 0) ||
-    (step === 2 && answers.platforms.length > 0) ||
-    step === 3;
+    step === 2;
 
   const next = () => {
     if (!questionValid) {
@@ -190,21 +181,6 @@ export default function QuizModal() {
                   )}
 
                   {step === 2 && (
-                    <div className="grid gap-2.5">
-                      {PLATFORM_OPTIONS.map((p) => {
-                        const on = answers.platforms.includes(p.id);
-                        return (
-                          <button key={p.id} type="button" role="checkbox" aria-checked={on} className="opt"
-                            onClick={() => { setAnswers((a) => ({ ...a, platforms: toggle<PlatformId>(a.platforms, p.id) })); setError(""); }}>
-                            <Tick on={on} />
-                            <OptText title={p.label} hint={p.hint} />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {step === 3 && (
                     <div className="fw">
                       <textarea
                         id="wishes"
@@ -234,9 +210,8 @@ export default function QuizModal() {
               </>
             )}
 
-            {step === APPROX_STEP && <ApproxResultStep onNext={() => setStep(CONTACT_STEP)} onBack={() => setStep(QUIZ_LAST_QUESTION)} />}
-            {step === CONTACT_STEP && <ContactStep onBack={() => setStep(APPROX_STEP)} />}
-            {step === RESULT_STEP && <ResultStep onClose={closeModal} />}
+            {step === RESULT_STEP && <ResultStep onBack={() => setStep(QUIZ_LAST_QUESTION)} onSubmit={() => setStep(CONTACT_STEP)} />}
+            {step === CONTACT_STEP && <ContactStep onBack={() => setStep(RESULT_STEP)} />}
           </div>
         </div>
       </div>
@@ -244,123 +219,13 @@ export default function QuizModal() {
   );
 }
 
-/* ───────────── Примерный результат ───────────── */
+/* ───────────── Результат: цена и разница с коробкой ───────────── */
 
-function ApproxResultStep({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
-  const { dev } = useQuiz();
-  return (
-    <div className="step-in flex flex-col gap-7 pr-10">
-      <div>
-        <p className="m-0 text-[13px] font-medium uppercase tracking-[0.14em] text-faint">Ориентировочная стоимость вашего софта</p>
-        <p className="m-0 mt-3 font-[family-name:var(--font-display)] text-[clamp(30px,7vw,44px)] font-medium leading-[1.05] tracking-[-0.02em] [font-variant-numeric:lining-nums]">
-          <Money>от {rub(dev.devMin)}</Money> <span className="text-faint">до</span> <Money>{rub(dev.devMax)}</Money>
-        </p>
-        <p className="m-0 mt-3 text-[15px] text-muted">
-          Это приблизительный диапазон по вашим ответам. Оставьте контакты — пришлём точную смету с разбивкой по модулям,
-          сравнением с готовой коробкой и графиком окупаемости.
-        </p>
-      </div>
-
-      <button type="button" onClick={onNext}
-        className="btn-primary inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold leading-none text-white">
-        Получить точную смету и график
-        <span className="nudge"><Arrow /></span>
-      </button>
-      <button type="button" onClick={onBack} className="btn-back -mt-3 inline-flex cursor-pointer items-center gap-2 self-start text-[15px] font-medium text-faint hover:text-accent">
-        <span className="nudge"><Arrow dir="left" /></span>
-        Назад
-      </button>
-    </div>
-  );
-}
-
-/* ───────────── Контакты ───────────── */
-
-function ContactStep({ onBack }: { onBack: () => void }) {
-  const { name, setName, phone, setPhone, boxMonthly, setBoxMonthly, submitContact } = useQuiz();
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState<null | "wa" | "tg">(null);
-  const pct = Math.min(100, ((boxMonthly ?? 0) / SLIDER_MAX) * 100);
-
-  const go = (via: "wa" | "tg") => {
-    setPending(via);
-    const ok = submitContact(via);
-    if (!ok) {
-      setError("Проверьте имя и номер телефона");
-      setPending(null);
-    }
-  };
+function ResultStep({ onBack, onSubmit }: { onBack: () => void; onSubmit: () => void }) {
+  const { dev, answers, comparison: c } = useQuiz();
 
   return (
     <div className="step-in flex flex-col gap-7 pr-10">
-      <div>
-        <h3 className="m-0 text-[22px] font-semibold leading-[1.25] tracking-[-0.02em] sm:text-[26px]">Куда прислать расчёт?</h3>
-        <p className="m-0 mt-1.5 text-[15px] text-faint">Сразу после этого на экране появится стоимость разработки и график окупаемости.</p>
-      </div>
-
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="lead-name" className="text-[16px] font-semibold leading-snug">Ваше имя</label>
-          <div className="fw"><input id="lead-name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Как к вам обращаться" className="field" /></div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="lead-phone" className="text-[16px] font-semibold leading-snug">Номер телефона (WhatsApp / Telegram)</label>
-          <div className="fw"><input id="lead-phone" type="tel" autoComplete="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} placeholder="+7 (___) ___-__-__" className="field" /></div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="box-monthly" className="text-[16px] font-semibold leading-snug">Сколько сейчас платите за готовый софт?</label>
-          <span className="-mt-1 text-[14px] leading-snug text-faint">Необязательно. Подписка и платные интеграции вместе, ₽/мес</span>
-          <div className="fw">
-            <input id="box-monthly" inputMode="numeric" className="field pr-16 text-[18px] tabular-nums"
-              placeholder="не знаю — учтём средний тариф" value={boxMonthly === null ? "" : fmt(boxMonthly)}
-              onChange={(e) => setBoxMonthly(parseNum(e.target.value))} />
-            <span className="pointer-events-none absolute inset-y-0 right-5 flex items-center text-[15px] text-faint">₽/мес</span>
-          </div>
-          <input type="range" className="range mt-1" min={0} max={SLIDER_MAX} step={1000}
-            value={Math.min(boxMonthly ?? 0, SLIDER_MAX)} aria-label="Сколько сейчас платите за готовый софт в месяц"
-            style={{ ["--p" as string]: `${pct}%` }} onChange={(e) => setBoxMonthly(Number(e.target.value))} />
-        </div>
-      </div>
-
-      {error && <p role="alert" className="m-0 text-sm font-medium text-error">{error}</p>}
-
-      <div className="flex flex-col gap-3">
-        <button type="button" onClick={() => go("wa")} disabled={pending !== null}
-          className="btn-primary inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold leading-none text-white disabled:cursor-progress disabled:opacity-65">
-          Показать расчёт и получить смету
-          <span className="nudge"><Arrow /></span>
-        </button>
-        <button type="button" onClick={() => go("tg")} disabled={pending !== null}
-          className="btn-back cursor-pointer rounded-xl px-4 py-3 text-[15px] font-medium text-faint hover:text-accent disabled:opacity-65">
-          Удобнее в Telegram
-        </button>
-      </div>
-      <div className="flex items-center justify-between">
-        <button type="button" onClick={onBack} className="btn-back inline-flex cursor-pointer items-center gap-2 text-[15px] font-medium text-faint hover:text-accent">
-          <span className="nudge"><Arrow dir="left" /></span>
-          Назад
-        </button>
-        <p className="m-0 text-[13px] text-faint">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
-      </div>
-    </div>
-  );
-}
-
-/* ───────────── Результат ───────────── */
-
-function ResultStep({ onClose }: { onClose: () => void }) {
-  const { dev, answers, comparison: c, leadSent } = useQuiz();
-
-  return (
-    <div className="step-in flex flex-col gap-7 pr-10">
-      {leadSent && (
-        <p className="m-0 rounded-xl bg-good-soft px-4 py-3 text-[14px] font-medium text-good">
-          {leadSent === "wa"
-            ? "Открыли WhatsApp с готовым сообщением — осталось нажать «Отправить»."
-            : "Скопировали сообщение и открыли Telegram — вставьте его в чат и отправьте."}
-        </p>
-      )}
-
       <div>
         <p className="m-0 text-[13px] font-medium uppercase tracking-[0.14em] text-faint">Расчётная стоимость вашего софта</p>
         <p className="m-0 mt-3 font-[family-name:var(--font-display)] text-[clamp(30px,7vw,44px)] font-medium leading-[1.05] tracking-[-0.02em] [font-variant-numeric:lining-nums]">
@@ -409,16 +274,93 @@ function ResultStep({ onClose }: { onClose: () => void }) {
         </div>
         <PaybackChart estimate={c} />
         {c.monthlyIsAverage && (
-          <p className="m-0 mt-3 text-[13px] text-faint">Вы не указали, сколько платите сейчас — взяли средний тариф по рынку для вашей команды.</p>
+          <p className="m-0 mt-3 text-[13px] text-faint">Взяли средний тариф готовой коробки по рынку для вашей команды.</p>
         )}
       </div>
 
       {answers.wishes.trim() && <p className="m-0 text-[14px] text-faint">Ваши пожелания учтём в точной смете.</p>}
 
-      <button type="button" onClick={onClose}
+      <button type="button" onClick={onSubmit}
         className="btn-primary inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold leading-none text-white">
-        Готово
+        Отправить заявку
+        <span className="nudge"><Arrow /></span>
       </button>
+      <button type="button" onClick={onBack} className="btn-back -mt-3 inline-flex cursor-pointer items-center gap-2 self-start text-[15px] font-medium text-faint hover:text-accent">
+        <span className="nudge"><Arrow dir="left" /></span>
+        Назад
+      </button>
+    </div>
+  );
+}
+
+/* ───────────── Контакты: финальный шаг — отправка заявки ───────────── */
+
+function ContactStep({ onBack }: { onBack: () => void }) {
+  const { name, setName, phone, setPhone, submitContact, leadSent } = useQuiz();
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState<null | "wa" | "tg">(null);
+
+  const go = (via: "wa" | "tg") => {
+    setPending(via);
+    const ok = submitContact(via);
+    if (!ok) {
+      setError("Проверьте имя и номер телефона");
+      setPending(null);
+    }
+  };
+
+  if (leadSent) {
+    return (
+      <div className="step-in flex flex-col gap-5 pr-10">
+        <p className="m-0 rounded-xl bg-good-soft px-4 py-3 text-[14px] font-medium text-good">
+          {leadSent === "wa"
+            ? "Открыли WhatsApp с готовым сообщением — осталось нажать «Отправить»."
+            : "Скопировали сообщение и открыли Telegram — вставьте его в чат и отправьте."}
+        </p>
+        <h3 className="m-0 text-[22px] font-semibold leading-[1.25] tracking-[-0.02em] sm:text-[26px]">Заявка готова к отправке</h3>
+        <p className="m-0 text-[15px] text-muted">Расул свяжется с вами и пришлёт точную смету с примерами интерфейсов.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="step-in flex flex-col gap-7 pr-10">
+      <div>
+        <h3 className="m-0 text-[22px] font-semibold leading-[1.25] tracking-[-0.02em] sm:text-[26px]">Отправим заявку Расулу</h3>
+        <p className="m-0 mt-1.5 text-[15px] text-faint">Оставьте имя и номер — расчёт выше придёт вам же в мессенджер вместе с заявкой.</p>
+      </div>
+
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="lead-name" className="text-[16px] font-semibold leading-snug">Ваше имя</label>
+          <div className="fw"><input id="lead-name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Как к вам обращаться" className="field" /></div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="lead-phone" className="text-[16px] font-semibold leading-snug">Номер телефона (WhatsApp / Telegram)</label>
+          <div className="fw"><input id="lead-phone" type="tel" autoComplete="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(formatPhone(e.target.value))} placeholder="+7 (___) ___-__-__" className="field" /></div>
+        </div>
+      </div>
+
+      {error && <p role="alert" className="m-0 text-sm font-medium text-error">{error}</p>}
+
+      <div className="flex flex-col gap-3">
+        <button type="button" onClick={() => go("wa")} disabled={pending !== null}
+          className="btn-primary inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold leading-none text-white disabled:cursor-progress disabled:opacity-65">
+          Отправить заявку в WhatsApp
+          <span className="nudge"><Arrow /></span>
+        </button>
+        <button type="button" onClick={() => go("tg")} disabled={pending !== null}
+          className="btn-back cursor-pointer rounded-xl px-4 py-3 text-[15px] font-medium text-faint hover:text-accent disabled:opacity-65">
+          Удобнее в Telegram
+        </button>
+      </div>
+      <div className="flex items-center justify-between">
+        <button type="button" onClick={onBack} className="btn-back inline-flex cursor-pointer items-center gap-2 text-[15px] font-medium text-faint hover:text-accent">
+          <span className="nudge"><Arrow dir="left" /></span>
+          Назад
+        </button>
+        <p className="m-0 text-[13px] text-faint">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
+      </div>
     </div>
   );
 }
