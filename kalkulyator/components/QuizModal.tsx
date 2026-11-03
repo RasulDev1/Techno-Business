@@ -223,6 +223,7 @@ export default function QuizModal() {
 
 function ResultStep({ onBack, onSubmit }: { onBack: () => void; onSubmit: () => void }) {
   const { dev, answers, comparison: c } = useQuiz();
+  const [showComparison, setShowComparison] = useState(false);
 
   return (
     <div className="step-in flex flex-col gap-7 pr-10">
@@ -245,44 +246,55 @@ function ResultStep({ onBack, onSubmit }: { onBack: () => void; onSubmit: () => 
         </ul>
       </div>
 
-      <div className="rounded-2xl bg-bg/70 p-5">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <p className="m-0 text-[13px] font-medium text-box">Готовая коробка за 3 года</p>
-            <p className="m-0 mt-1 text-[24px] font-semibold tracking-[-0.02em] text-ink"><Money>{rub(c.box3y)}</Money></p>
-            <p className="m-0 mt-1 text-[13px] leading-relaxed text-muted">
-              включая внедрение у интегратора <Money>{rub(c.setup)}</Money> (в среднем по СНГ {BOX_SETUP_RANGE_NOTE})
-            </p>
-          </div>
-          <div>
-            <p className="m-0 text-[13px] font-medium text-accent">Свой софт за 3 года</p>
-            <p className="m-0 mt-1 text-[24px] font-semibold tracking-[-0.02em] text-ink"><Money>{rub(c.own3y)}</Money></p>
-            <p className="m-0 mt-1 text-[13px] leading-relaxed text-muted">разработка + хостинг и поддержка, без внедрения и подписок</p>
-          </div>
-        </div>
+      {!showComparison && (
+        <button type="button" onClick={() => setShowComparison(true)}
+          className="btn-back inline-flex cursor-pointer items-center justify-center gap-2.5 self-start rounded-xl border border-line-strong px-6 py-3.5 text-[15px] font-semibold leading-none text-accent hover:bg-bg">
+          Сравнить с готовыми сервисами
+          <span className="nudge"><Arrow /></span>
+        </button>
+      )}
 
-        <div className="mt-5 mb-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h4 className="m-0 text-[17px] font-semibold tracking-[-0.02em]">График окупаемости</h4>
-          {c.breakEvenMonth ? (
-            <p className="m-0 text-[14px] font-semibold text-good">
-              Окупится за {c.breakEvenMonth} {monthsWord(c.breakEvenMonth)}
-              {c.savings3y > 0 && <> · экономия <Money>{rub(c.savings3y)}</Money></>}
-            </p>
-          ) : (
-            <p className="m-0 text-[14px] font-semibold text-muted">При таких затратах окупаемость дольше 5 лет</p>
+      {showComparison && (
+        <div className="step-in rounded-2xl bg-bg/70 p-5">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <p className="m-0 text-[13px] font-medium text-box">Готовая коробка за 3 года</p>
+              <p className="m-0 mt-1 text-[24px] font-semibold tracking-[-0.02em] text-ink"><Money>{rub(c.box3y)}</Money></p>
+              <p className="m-0 mt-1 text-[13px] leading-relaxed text-muted">
+                включая внедрение у интегратора <Money>{rub(c.setup)}</Money> (в среднем по СНГ {BOX_SETUP_RANGE_NOTE})
+              </p>
+            </div>
+            <div>
+              <p className="m-0 text-[13px] font-medium text-accent">Свой софт за 3 года</p>
+              <p className="m-0 mt-1 text-[24px] font-semibold tracking-[-0.02em] text-ink"><Money>{rub(c.own3y)}</Money></p>
+              <p className="m-0 mt-1 text-[13px] leading-relaxed text-muted">разработка + хостинг и поддержка, без внедрения и подписок</p>
+            </div>
+          </div>
+
+          <div className="mt-5 mb-3 flex flex-wrap items-baseline justify-between gap-2">
+            <h4 className="m-0 text-[17px] font-semibold tracking-[-0.02em]">График окупаемости</h4>
+            {c.breakEvenMonth ? (
+              <p className="m-0 text-[14px] font-semibold text-good">
+                Окупится за {c.breakEvenMonth} {monthsWord(c.breakEvenMonth)}
+                {c.savings3y > 0 && <> · экономия <Money>{rub(c.savings3y)}</Money></>}
+              </p>
+            ) : (
+              <p className="m-0 text-[14px] font-semibold text-muted">При таких затратах окупаемость дольше 5 лет</p>
+            )}
+          </div>
+          <PaybackChart estimate={c} />
+          {c.monthlyIsAverage && (
+            <p className="m-0 mt-3 text-[13px] text-faint">Взяли средний тариф готовой коробки по рынку для вашей команды.</p>
           )}
         </div>
-        <PaybackChart estimate={c} />
-        {c.monthlyIsAverage && (
-          <p className="m-0 mt-3 text-[13px] text-faint">Взяли средний тариф готовой коробки по рынку для вашей команды.</p>
-        )}
-      </div>
+      )}
 
       {answers.wishes.trim() && <p className="m-0 text-[14px] text-faint">Ваши пожелания учтём в точной смете.</p>}
 
+      <p className="m-0 text-[15px] font-medium text-muted">Мы помогаем построить систему исходя из процессов бизнеса</p>
       <button type="button" onClick={onSubmit}
         className="btn-primary inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold leading-none text-white">
-        Отправить заявку
+        Аудит бизнеса
         <span className="nudge"><Arrow /></span>
       </button>
       <button type="button" onClick={onBack} className="btn-back -mt-3 inline-flex cursor-pointer items-center gap-2 self-start text-[15px] font-medium text-faint hover:text-accent">
