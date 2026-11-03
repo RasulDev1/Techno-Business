@@ -1,4 +1,5 @@
 // Все цены и коэффициенты калькулятора собраны здесь.
+// Уровень цен — средний по СНГ для небольшой студии / сильного фрилансера (2026).
 // Меняйте цифры в этом файле — лендинг пересчитается сам.
 
 export type TeamSize = "s" | "m" | "l" | "xl";
@@ -18,11 +19,11 @@ export const MODULE_OPTIONS: {
   hint: string;
   price: [number, number];
 }[] = [
-  { id: "crm", label: "CRM / Продажи", hint: "Сделки, воронка, задачи менеджеров", price: [80_000, 140_000] },
-  { id: "stock", label: "Склад / Учёт остатков", hint: "Приход, расход, остатки, инвентаризация", price: [70_000, 120_000] },
-  { id: "finance", label: "Управленческие финансы", hint: "ДДС, P&L, прибыль по направлениям", price: [60_000, 110_000] },
-  { id: "production", label: "Производство", hint: "Техкарты, заказы в работу, себестоимость", price: [100_000, 180_000] },
-  { id: "cabinet", label: "Личный кабинет клиента / курьера", hint: "Статусы заказов, маршруты, оплата", price: [70_000, 130_000] },
+  { id: "crm", label: "CRM / Продажи", hint: "Сделки, воронка, задачи менеджеров", price: [45_000, 80_000] },
+  { id: "stock", label: "Склад / Учёт остатков", hint: "Приход, расход, остатки, инвентаризация", price: [40_000, 70_000] },
+  { id: "finance", label: "Управленческие финансы", hint: "ДДС, P&L, прибыль по направлениям", price: [35_000, 60_000] },
+  { id: "production", label: "Производство", hint: "Техкарты, заказы в работу, себестоимость", price: [60_000, 110_000] },
+  { id: "cabinet", label: "Личный кабинет клиента / курьера", hint: "Статусы заказов, маршруты, оплата", price: [40_000, 75_000] },
 ];
 
 export const PLATFORM_OPTIONS: {
@@ -33,28 +34,31 @@ export const PLATFORM_OPTIONS: {
   extra: number;
 }[] = [
   { id: "web", label: "Браузер (Web)", hint: "Работает на любом компьютере", extra: 0 },
-  { id: "mobile", label: "Смартфоны (iOS / Android)", hint: "Приложение для сотрудников в поле", extra: 0.45 },
-  { id: "desktop", label: "Windows / Mac", hint: "Отдельная программа на компьютер", extra: 0.25 },
+  { id: "mobile", label: "Смартфоны (iOS / Android)", hint: "Приложение для сотрудников в поле", extra: 0.35 },
+  { id: "desktop", label: "Windows / Mac", hint: "Отдельная программа на компьютер", extra: 0.2 },
 ];
 
 /** Каркас системы: авторизация, роли и права, админка, деплой */
-export const BASE_PRICE: [number, number] = [40_000, 70_000];
+export const BASE_PRICE: [number, number] = [25_000, 40_000];
 
 /** Чем больше пользователей, тем больше ролей, прав и нагрузки */
-export const TEAM_FACTOR: Record<TeamSize, number> = { s: 1, m: 1.15, l: 1.3, xl: 1.5 };
+export const TEAM_FACTOR: Record<TeamSize, number> = { s: 1, m: 1.1, l: 1.2, xl: 1.35 };
 
 /** Хостинг в РФ-облаке + техподдержка своего софта, ₽/мес */
-export const OWN_MONTHLY: Record<TeamSize, number> = { s: 3_000, m: 5_000, l: 8_000, xl: 12_000 };
+export const OWN_MONTHLY: Record<TeamSize, number> = { s: 2_000, m: 3_000, l: 5_000, xl: 8_000 };
 
-/** Средний тариф коробочной CRM за одного пользователя, ₽/мес (если человек не указал свою сумму) */
-export const BOX_PER_USER = 1_200;
-/** Платные приложения/интеграции из маркетплейса на каждый модуль, ₽/мес */
-export const BOX_PER_MODULE = 2_500;
+/** Средний тариф коробочной CRM (amoCRM, Битрикс24 и т.п.) за одного пользователя, ₽/мес */
+export const BOX_PER_USER = 1_000;
+/** Платные виджеты и интеграции из маркетплейса (Telegram, Авито, телефония…) на каждый модуль, ₽/мес */
+export const BOX_INTEGRATIONS_PER_MODULE = 1_500;
+/** Разовое внедрение коробки у интегратора: настройка воронок, полей, прав, обучение, ₽ */
+export const BOX_SETUP_BASE = 30_000;
+export const BOX_SETUP_PER_MODULE = 20_000;
 /** Ежегодное повышение тарифов у вендоров */
 export const BOX_YEARLY_INDEX = 0.1;
 
 /** Разработка оплачивается по этапам — столько месяцев занимает проект */
-export const DEV_MONTHS = 3;
+export const DEV_MONTHS = 2;
 
 export const SLIDER_MAX = 100_000;
 
@@ -62,17 +66,32 @@ export type QuizAnswers = {
   team: TeamSize | null;
   modules: ModuleId[];
   platforms: PlatformId[];
-  boxMonthly: number;
+  /** Своими словами: что ещё должна уметь система */
+  wishes: string;
 };
 
-export type Estimate = {
+/** Затраты на готовую коробку — вводятся после расчёта стоимости. null — «не знаю», подставляем средние */
+export type BoxCosts = {
+  subscription: number | null;
+  integrations: number | null;
+  setup: number | null;
+};
+
+export type DevEstimate = {
   devMin: number;
   devMax: number;
   devMid: number;
-  boxMonthly: number;
-  boxMonthlyIsEstimate: boolean;
-  box3y: number;
   ownMonthly: number;
+  breakdown: { label: string; min: number; max: number }[];
+};
+
+export type Comparison = {
+  subscription: number;
+  integrations: number;
+  setup: number;
+  /** Какие суммы подставлены средними, а не введены человеком */
+  estimated: (keyof BoxCosts)[];
+  box3y: number;
   own3y: number;
   savings3y: number;
   /** Месяц, когда своя система становится дешевле коробки (null — не окупается за 5 лет) */
@@ -81,59 +100,62 @@ export type Estimate = {
 };
 
 const roundK = (n: number) => Math.round(n / 1000) * 1000;
+const usersOf = (a: QuizAnswers) => TEAM_OPTIONS.find((t) => t.id === a.team)?.users ?? 10;
 
-export function estimateBoxMonthly(a: QuizAnswers): number {
-  const users = TEAM_OPTIONS.find((t) => t.id === a.team)?.users ?? 10;
-  return roundK(users * BOX_PER_USER + a.modules.length * BOX_PER_MODULE);
+export function averageBox(a: QuizAnswers): Required<{ [K in keyof BoxCosts]: number }> {
+  const n = Math.max(1, a.modules.length);
+  return {
+    subscription: roundK(usersOf(a) * BOX_PER_USER),
+    integrations: roundK(n * BOX_INTEGRATIONS_PER_MODULE),
+    setup: roundK(BOX_SETUP_BASE + n * BOX_SETUP_PER_MODULE),
+  };
 }
 
-export function boxCostForMonth(monthly: number, month: number) {
-  const year = Math.floor((month - 1) / 12);
-  return monthly * Math.pow(1 + BOX_YEARLY_INDEX, year);
-}
-
-export function calculate(a: QuizAnswers, horizon = 36): Estimate {
+export function estimateDev(a: QuizAnswers): DevEstimate {
   const team = a.team ?? "s";
-  const modulesMin = a.modules.reduce((s, id) => s + (MODULE_OPTIONS.find((m) => m.id === id)?.price[0] ?? 0), 0);
-  const modulesMax = a.modules.reduce((s, id) => s + (MODULE_OPTIONS.find((m) => m.id === id)?.price[1] ?? 0), 0);
   const platformExtra = a.platforms.reduce((s, id) => s + (PLATFORM_OPTIONS.find((p) => p.id === id)?.extra ?? 0), 0);
   const k = TEAM_FACTOR[team] * (1 + platformExtra);
+  const breakdown = [
+    { label: "Каркас: вход, роли и права, админка, запуск на сервере", min: BASE_PRICE[0] * k, max: BASE_PRICE[1] * k },
+    ...a.modules.map((id) => {
+      const m = MODULE_OPTIONS.find((x) => x.id === id)!;
+      return { label: m.label, min: m.price[0] * k, max: m.price[1] * k };
+    }),
+  ].map((b) => ({ ...b, min: roundK(b.min), max: roundK(b.max) }));
+  const devMin = breakdown.reduce((s, b) => s + b.min, 0);
+  const devMax = breakdown.reduce((s, b) => s + b.max, 0);
+  return { devMin, devMax, devMid: roundK((devMin + devMax) / 2), ownMonthly: OWN_MONTHLY[team], breakdown };
+}
 
-  const devMin = roundK((BASE_PRICE[0] + modulesMin) * k);
-  const devMax = roundK((BASE_PRICE[1] + modulesMax) * k);
-  const devMid = roundK((devMin + devMax) / 2);
+export function compare(a: QuizAnswers, dev: DevEstimate, costs: BoxCosts, horizon = 36): Comparison {
+  const avg = averageBox(a);
+  const estimated = (Object.keys(costs) as (keyof BoxCosts)[]).filter((k) => costs[k] === null);
+  const subscription = costs.subscription ?? avg.subscription;
+  const integrations = costs.integrations ?? avg.integrations;
+  const setup = costs.setup ?? avg.setup;
+  const monthly = subscription + integrations;
 
-  const boxMonthlyIsEstimate = a.boxMonthly <= 0;
-  const boxMonthly = boxMonthlyIsEstimate ? estimateBoxMonthly(a) : a.boxMonthly;
-  const ownMonthly = OWN_MONTHLY[team];
-
-  // Накопленные затраты по месяцам. Разработка — равными этапами за DEV_MONTHS,
-  // поддержка начинается после запуска. Коробка — подписка с ежегодной индексацией.
-  const series: Estimate["series"] = [{ month: 0, box: 0, own: 0 }];
-  let box = 0;
+  // Накопленные затраты. Коробка: разовое внедрение + подписка и интеграции с ежегодной индексацией.
+  // Свой софт: разработка равными этапами за DEV_MONTHS, дальше только хостинг и поддержка.
+  const series: Comparison["series"] = [{ month: 0, box: setup, own: 0 }];
+  let box = setup;
   let own = 0;
   let breakEvenMonth: number | null = null;
-  const maxMonth = Math.max(horizon, 60);
-  for (let m = 1; m <= maxMonth; m++) {
-    box += boxCostForMonth(boxMonthly, m);
-    own += m <= DEV_MONTHS ? devMid / DEV_MONTHS : ownMonthly;
-    if (breakEvenMonth === null && m > DEV_MONTHS && box >= own) breakEvenMonth = m;
+  for (let m = 1; m <= Math.max(horizon, 60); m++) {
+    box += monthly * Math.pow(1 + BOX_YEARLY_INDEX, Math.floor((m - 1) / 12));
+    own += m <= DEV_MONTHS ? dev.devMid / DEV_MONTHS : dev.ownMonthly;
+    if (breakEvenMonth === null && m >= DEV_MONTHS && box >= own) breakEvenMonth = m;
     if (m <= horizon) series.push({ month: m, box: Math.round(box), own: Math.round(own) });
   }
-
-  const box3y = series[Math.min(36, horizon)]?.box ?? 0;
-  const own3y = series[Math.min(36, horizon)]?.own ?? 0;
-
+  const at36 = series[Math.min(36, horizon)];
   return {
-    devMin,
-    devMax,
-    devMid,
-    boxMonthly,
-    boxMonthlyIsEstimate,
-    box3y,
-    ownMonthly,
-    own3y,
-    savings3y: box3y - own3y,
+    subscription,
+    integrations,
+    setup,
+    estimated,
+    box3y: roundK(at36.box),
+    own3y: roundK(at36.own),
+    savings3y: roundK(at36.box - at36.own),
     breakEvenMonth,
     series,
   };
