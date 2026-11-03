@@ -4,7 +4,6 @@ import { createContext, useContext, useMemo, useState, type Dispatch, type React
 import { tgLink, waLink } from "@/lib/contacts";
 import {
   MODULE_OPTIONS,
-  PLATFORM_OPTIONS,
   TEAM_OPTIONS,
   compare,
   estimateDev,
@@ -15,28 +14,24 @@ import {
   type QuizAnswers,
 } from "@/lib/pricing";
 
-/** Шаги модального квиза: 0 команда, 1 модули, 2 платформы, 3 пожелания,
- * 4 примерный результат, 5 контакты, 6 точный результат с графиком */
-export const QUIZ_LAST_QUESTION = 3;
-export const APPROX_STEP = 4;
-export const CONTACT_STEP = 5;
-export const RESULT_STEP = 6;
+/** Шаги модального квиза: 0 команда, 1 модули, 2 пожелания,
+ * 3 результат (цена, разница с коробкой, график), 4 контакты — заявка отправляется в конце */
+export const QUIZ_LAST_QUESTION = 2;
+export const RESULT_STEP = 3;
+export const CONTACT_STEP = 4;
 
 type Ctx = {
   answers: QuizAnswers;
   setAnswers: Dispatch<SetStateAction<QuizAnswers>>;
   dev: DevEstimate;
-
-  /** Сколько сейчас уходит на коробку, ₽/мес (null — не указано, берём среднее) */
-  boxMonthly: number | null;
-  setBoxMonthly: (v: number | null) => void;
+  /** Сравнение с готовой коробкой — всегда на средних рыночных тарифах, человек их не вводит */
   comparison: Comparison;
 
   name: string;
   setName: (v: string) => void;
   phone: string;
   setPhone: (v: string) => void;
-  /** Контакт отправлен — можно показывать расчётную стоимость и график */
+  /** Заявка отправлена */
   contactDone: boolean;
 
   modalOpen: boolean;
@@ -45,7 +40,7 @@ type Ctx = {
   /** Открыть попап квиза с того места, где человек остановился в прошлый раз */
   openModal: () => void;
   closeModal: () => void;
-  /** Отправить лид (WhatsApp или Telegram) и открыть экран результата */
+  /** Отправить лид (WhatsApp или Telegram) */
   submitContact: (via: "wa" | "tg") => boolean;
   leadSent: null | "wa" | "tg";
 };
@@ -53,8 +48,7 @@ type Ctx = {
 const QuizCtx = createContext<Ctx | null>(null);
 
 export function QuizProvider({ children }: { children: ReactNode }) {
-  const [answers, setAnswers] = useState<QuizAnswers>({ team: null, modules: [], platforms: [], wishes: "" });
-  const [boxMonthly, setBoxMonthly] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<QuizAnswers>({ team: null, modules: [], wishes: "" });
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [contactDone, setContactDone] = useState(false);
@@ -63,7 +57,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   const [leadSent, setLeadSent] = useState<null | "wa" | "tg">(null);
 
   const dev = useMemo(() => estimateDev(answers), [answers]);
-  const comparison = useMemo(() => compare(answers, dev, { monthly: boxMonthly }), [answers, dev, boxMonthly]);
+  const comparison = useMemo(() => compare(answers, dev, { monthly: null }), [answers, dev]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -76,18 +70,15 @@ export function QuizProvider({ children }: { children: ReactNode }) {
 
     const team = TEAM_OPTIONS.find((t) => t.id === answers.team)?.label;
     const mods = answers.modules.map((id) => MODULE_OPTIONS.find((m) => m.id === id)?.label).join(", ");
-    const plats = answers.platforms.map((id) => PLATFORM_OPTIONS.find((p) => p.id === id)?.label).join(", ");
     const lines = [
       `Здравствуйте! Меня зовут ${name.trim()}, телефон ${phone}.`,
       "Прошёл калькулятор на сайте, хочу смету и примеры интерфейсов.",
       "",
       `• Сотрудников: ${team}`,
       `• Модули: ${mods}`,
-      `• Платформы: ${plats}`,
     ];
     if (answers.wishes.trim()) lines.push(`• Ещё нужно: ${answers.wishes.trim()}`);
     lines.push(`• Стоимость разработки: от ${rub(dev.devMin)} до ${rub(dev.devMax)}`);
-    if (boxMonthly !== null) lines.push(`• Сейчас плачу за коробку: ${rub(boxMonthly)}/мес`);
     if (comparison.breakEvenMonth) lines.push(`• Окупаемость своего софта: ${comparison.breakEvenMonth} ${monthsWord(comparison.breakEvenMonth)}`);
     const text = lines.join("\n");
 
@@ -103,18 +94,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     }
     setLeadSent(via);
     setContactDone(true);
-    setStep(RESULT_STEP);
     return true;
   };
 
   const value = useMemo(
     () => ({
-      answers, setAnswers, dev,
-      boxMonthly, setBoxMonthly, comparison,
+      answers, setAnswers, dev, comparison,
       name, setName, phone, setPhone, contactDone,
       modalOpen, step, setStep, openModal, closeModal, submitContact, leadSent,
     }),
-    [answers, dev, boxMonthly, comparison, name, phone, contactDone, modalOpen, step, leadSent],
+    [answers, dev, comparison, name, phone, contactDone, modalOpen, step, leadSent],
   );
   return <QuizCtx.Provider value={value}>{children}</QuizCtx.Provider>;
 }
