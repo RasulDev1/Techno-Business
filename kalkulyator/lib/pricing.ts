@@ -70,11 +70,10 @@ export type QuizAnswers = {
   wishes: string;
 };
 
-/** Затраты на готовую коробку — вводятся после расчёта стоимости. null — «не знаю», подставляем средние */
+/** Сколько сейчас уходит на готовую коробку в месяц (подписка + платные интеграции вместе).
+ * null — человек не указал, подставляем среднее по рынку. Разовое внедрение коробки всегда считаем средним. */
 export type BoxCosts = {
-  subscription: number | null;
-  integrations: number | null;
-  setup: number | null;
+  monthly: number | null;
 };
 
 export type DevEstimate = {
@@ -86,11 +85,10 @@ export type DevEstimate = {
 };
 
 export type Comparison = {
-  subscription: number;
-  integrations: number;
+  monthly: number;
   setup: number;
-  /** Какие суммы подставлены средними, а не введены человеком */
-  estimated: (keyof BoxCosts)[];
+  /** Сумма подписки подставлена средней, а не введена человеком */
+  monthlyIsAverage: boolean;
   box3y: number;
   own3y: number;
   savings3y: number;
@@ -102,11 +100,10 @@ export type Comparison = {
 const roundK = (n: number) => Math.round(n / 1000) * 1000;
 const usersOf = (a: QuizAnswers) => TEAM_OPTIONS.find((t) => t.id === a.team)?.users ?? 10;
 
-export function averageBox(a: QuizAnswers): Required<{ [K in keyof BoxCosts]: number }> {
+export function averageBox(a: QuizAnswers): { monthly: number; setup: number } {
   const n = Math.max(1, a.modules.length);
   return {
-    subscription: roundK(usersOf(a) * BOX_PER_USER),
-    integrations: roundK(n * BOX_INTEGRATIONS_PER_MODULE),
+    monthly: roundK(usersOf(a) * BOX_PER_USER + n * BOX_INTEGRATIONS_PER_MODULE),
     setup: roundK(BOX_SETUP_BASE + n * BOX_SETUP_PER_MODULE),
   };
 }
@@ -129,14 +126,13 @@ export function estimateDev(a: QuizAnswers): DevEstimate {
 
 export function compare(a: QuizAnswers, dev: DevEstimate, costs: BoxCosts, horizon = 36): Comparison {
   const avg = averageBox(a);
-  const estimated = (Object.keys(costs) as (keyof BoxCosts)[]).filter((k) => costs[k] === null);
-  const subscription = costs.subscription ?? avg.subscription;
-  const integrations = costs.integrations ?? avg.integrations;
-  const setup = costs.setup ?? avg.setup;
-  const monthly = subscription + integrations;
+  const monthlyIsAverage = costs.monthly === null;
+  const monthly = costs.monthly ?? avg.monthly;
+  const setup = avg.setup;
 
-  // Накопленные затраты. Коробка: разовое внедрение + подписка и интеграции с ежегодной индексацией.
-  // Свой софт: разработка равными этапами за DEV_MONTHS, дальше только хостинг и поддержка.
+  // Накопленные затраты. Коробка: разовое внедрение (настройка, обучение) + подписка и
+  // платные интеграции с ежегодной индексацией. Свой софт: разработка равными этапами за
+  // DEV_MONTHS, дальше только хостинг и поддержка.
   const series: Comparison["series"] = [{ month: 0, box: setup, own: 0 }];
   let box = setup;
   let own = 0;
@@ -149,10 +145,9 @@ export function compare(a: QuizAnswers, dev: DevEstimate, costs: BoxCosts, horiz
   }
   const at36 = series[Math.min(36, horizon)];
   return {
-    subscription,
-    integrations,
+    monthly,
     setup,
-    estimated,
+    monthlyIsAverage,
     box3y: roundK(at36.box),
     own3y: roundK(at36.own),
     savings3y: roundK(at36.box - at36.own),
