@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { rub, type Estimate } from "@/lib/pricing";
+import { rub, type Comparison } from "@/lib/pricing";
 
-const BOX = "#ea580c";
-const OWN = "#2563eb";
+const BOX = "#e2622b";
+const OWN = "#1f3fd1";
 
 function short(n: number) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toLocaleString("ru-RU", { maximumFractionDigits: 1 })} млн`;
@@ -12,13 +12,14 @@ function short(n: number) {
   return String(n);
 }
 
-function niceMax(v: number) {
+// Шаг сетки «красивым» числом, чтобы подписи были вида 250 тыс / 500 тыс / 750 тыс
+function niceStep(v: number) {
   const pow = Math.pow(10, Math.floor(Math.log10(Math.max(v, 1))));
-  for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m * pow >= v) return m * pow;
+  for (const m of [1, 2, 2.5, 5, 10]) if (m * pow >= v) return m * pow;
   return 10 * pow;
 }
 
-export default function PaybackChart({ estimate }: { estimate: Estimate }) {
+export default function PaybackChart({ estimate }: { estimate: Comparison }) {
   const wrap = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(640);
   const [hover, setHover] = useState<number | null>(null);
@@ -38,7 +39,8 @@ export default function PaybackChart({ estimate }: { estimate: Estimate }) {
   const iw = w - pad.l - pad.r;
   const ih = h - pad.t - pad.b;
   const lastM = series[series.length - 1].month;
-  const yMax = niceMax(Math.max(...series.map((p) => Math.max(p.box, p.own))) * 1.05);
+  const yStep = niceStep((Math.max(...series.map((p) => Math.max(p.box, p.own))) * 1.05) / 4);
+  const yMax = yStep * 4;
 
   const x = (m: number) => pad.l + (m / lastM) * iw;
   const y = (v: number) => pad.t + ih - (v / yMax) * ih;
@@ -54,7 +56,7 @@ export default function PaybackChart({ estimate }: { estimate: Estimate }) {
     return `M${top.join("L")}L${bottom.join("L")}Z`;
   })();
 
-  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((k) => k * yMax);
+  const yTicks = [0, 1, 2, 3, 4].map((k) => k * yStep);
   const xStep = lastM > 36 || narrow ? 12 : 6;
   const xTicks = Array.from({ length: Math.floor(lastM / xStep) + 1 }, (_, i) => i * xStep);
 
@@ -70,9 +72,9 @@ export default function PaybackChart({ estimate }: { estimate: Estimate }) {
 
   return (
     <div>
-      <div className="mb-3 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
+      <div className="mb-3 flex flex-wrap gap-x-5 gap-y-1 text-[13px] font-medium text-muted">
         <span className="flex items-center gap-2">
-          <span className="h-1 w-5 rounded" style={{ background: BOX }} /> Готовая коробка (подписка)
+          <span className="h-1 w-5 rounded" style={{ background: BOX }} /> Готовая CRM (внедрение + подписка + интеграции)
         </span>
         <span className="flex items-center gap-2">
           <span className="h-1 w-5 rounded" style={{ background: OWN }} /> Свой софт (разработка + хостинг)
@@ -89,33 +91,33 @@ export default function PaybackChart({ estimate }: { estimate: Estimate }) {
         <svg width={w} height={h} className="block max-w-full" role="img" aria-label="График накопленных затрат по месяцам">
           {yTicks.map((v) => (
             <g key={v}>
-              <line x1={pad.l} x2={w - pad.r} y1={y(v)} y2={y(v)} stroke="#e2e8f0" />
-              <text x={pad.l - 8} y={y(v) + 4} textAnchor="end" fontSize={11} fill="#55657c">
+              <line x1={pad.l} x2={w - pad.r} y1={y(v)} y2={y(v)} stroke="#e7eaf0" />
+              <text x={pad.l - 8} y={y(v) + 4} textAnchor="end" fontSize={11} fill="#7b8597">
                 {short(v)}
               </text>
             </g>
           ))}
           {xTicks.map((m) => (
-            <text key={m} x={x(m)} y={h - 10} textAnchor="middle" fontSize={11} fill="#55657c">
+            <text key={m} x={x(m)} y={h - 10} textAnchor="middle" fontSize={11} fill="#7b8597">
               {m === 0 ? "старт" : `${m} мес`}
             </text>
           ))}
 
-          {savingsArea && <path d={savingsArea} fill="#16a34a" opacity={0.12} />}
+          {savingsArea && <path d={savingsArea} fill="#12805c" opacity={0.12} />}
           <path d={path("box")} fill="none" stroke={BOX} strokeWidth={3} strokeLinejoin="round" />
           <path d={path("own")} fill="none" stroke={OWN} strokeWidth={3} strokeLinejoin="round" />
 
           {be && (
             <g>
-              <line x1={x(be.month)} x2={x(be.month)} y1={pad.t} y2={pad.t + ih} stroke="#16a34a" strokeDasharray="4 4" />
-              <circle cx={x(be.month)} cy={y(be.own)} r={7} fill="#fff" stroke="#16a34a" strokeWidth={3} />
+              <line x1={x(be.month)} x2={x(be.month)} y1={pad.t} y2={pad.t + ih} stroke="#12805c" strokeDasharray="4 4" />
+              <circle cx={x(be.month)} cy={y(be.own)} r={7} fill="#fff" stroke="#12805c" strokeWidth={3} />
               <text
                 x={x(be.month) + (x(be.month) > w * 0.6 ? -10 : 10)}
                 y={pad.t + 12}
                 textAnchor={x(be.month) > w * 0.6 ? "end" : "start"}
                 fontSize={12}
                 fontWeight={800}
-                fill="#16a34a"
+                fill="#12805c"
               >
                 Окупаемость: {be.month} мес
               </text>
@@ -133,7 +135,7 @@ export default function PaybackChart({ estimate }: { estimate: Estimate }) {
 
         {hp && (
           <div
-            className="pointer-events-none absolute top-6 z-10 w-48 rounded-lg border border-line bg-white p-2.5 text-xs shadow-lg"
+            className="pointer-events-none absolute top-6 z-10 w-48 rounded-xl border border-line bg-white/95 p-3 backdrop-blur text-xs shadow-lg"
             style={{
               left: Math.min(Math.max(x(hp.month) - 96, 0), w - 192),
             }}
@@ -153,7 +155,7 @@ export default function PaybackChart({ estimate }: { estimate: Estimate }) {
           </div>
         )}
       </div>
-      <p className="mt-2 text-xs text-muted">Наведите или проведите пальцем по графику, чтобы увидеть затраты на любой месяц.</p>
+      <p className="m-0 mt-2 text-[13px] text-faint">Наведите или проведите пальцем по графику, чтобы увидеть затраты на любой месяц.</p>
     </div>
   );
 }

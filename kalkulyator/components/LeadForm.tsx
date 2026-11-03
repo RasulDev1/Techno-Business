@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useQuiz } from "./QuizContext";
 import { MODULE_OPTIONS, PLATFORM_OPTIONS, TEAM_OPTIONS, monthsWord, rub } from "@/lib/pricing";
+import { Arrow, Card, Eyebrow, SectionTitle } from "./Card";
 import { tgLink, waLink } from "@/lib/contacts";
 
 function formatPhone(raw: string) {
@@ -21,7 +22,7 @@ function formatPhone(raw: string) {
 }
 
 export default function LeadForm() {
-  const { answers, done, estimate: e } = useQuiz();
+  const { answers, done, dev, compared, comparison: c } = useQuiz();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
@@ -39,10 +40,15 @@ export default function LeadForm() {
         `• Сотрудников: ${team}`,
         `• Модули: ${mods}`,
         `• Платформы: ${plats}`,
-        `• Сейчас плачу за софт: ${answers.boxMonthly ? rub(answers.boxMonthly) + "/мес" : "не указано"}`,
-        `• Разработка: от ${rub(e.devMin)} до ${rub(e.devMax)}`,
       );
-      if (e.breakEvenMonth) lines.push(`• Окупаемость: ${e.breakEvenMonth} ${monthsWord(e.breakEvenMonth)}`);
+      if (answers.wishes.trim()) lines.push(`• Ещё нужно: ${answers.wishes.trim()}`);
+      lines.push(`• Стоимость разработки: от ${rub(dev.devMin)} до ${rub(dev.devMax)}`);
+      if (compared) {
+        lines.push(
+          `• Сейчас трачу на коробку: подписка ${rub(c.subscription)}/мес, интеграции ${rub(c.integrations)}/мес, внедрение ${rub(c.setup)}`,
+        );
+        if (c.breakEvenMonth) lines.push(`• Окупаемость своего софта: ${c.breakEvenMonth} ${monthsWord(c.breakEvenMonth)}`);
+      }
     }
     return lines.join("\n");
   };
@@ -77,75 +83,61 @@ export default function LeadForm() {
   };
 
   return (
-    <section id="lead" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
-      <div className="grid overflow-hidden rounded-3xl bg-accent text-white lg:grid-cols-[1.1fr_1fr]">
-        <div className="p-6 sm:p-10">
-          <h2 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">Не покупайте кота в мешке</h2>
-          <p className="mt-4 text-lg leading-relaxed text-blue-50">
-            Оставьте контакты — мы пришлём вам подробный разбор архитектуры под вашу нишу и покажем примеры интерфейсов
-            аналогичных систем, которые уже работают.
-          </p>
-          {done && (
-            <div className="mt-6 rounded-xl bg-white/10 p-4 text-sm ring-1 ring-white/20">
-              <p className="font-bold">Ваш расчёт приложим к заявке:</p>
-              <p className="mt-1 text-blue-50">
-                разработка от {rub(e.devMin)} до {rub(e.devMax)}
-                {e.breakEvenMonth ? `, окупаемость ${e.breakEvenMonth} ${monthsWord(e.breakEvenMonth)}` : ""}
-              </p>
-            </div>
-          )}
-        </div>
+    <section id="lead" className="scroll-mt-6 pt-24 sm:pt-32">
+      <div className="mx-auto max-w-[760px] text-center">
+        <Eyebrow>Смета и примеры</Eyebrow>
+        <SectionTitle>Не покупайте кота в мешке</SectionTitle>
+        <p className="mx-auto mt-4 max-w-[34em] text-balance text-[15px] leading-[1.8] text-muted">
+          Оставьте контакты — мы пришлём вам подробный разбор архитектуры под вашу нишу и покажем примеры интерфейсов
+          аналогичных систем, которые уже работают.
+        </p>
+      </div>
 
-        <form onSubmit={submit} noValidate className="flex flex-col gap-3 bg-white p-6 text-ink sm:p-10">
-          <label className="text-sm font-bold" htmlFor="lead-name">
-            Ваше имя
-          </label>
-          <input
-            id="lead-name"
-            autoComplete="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Как к вам обращаться"
-            className="rounded-xl border-2 border-line px-4 py-3.5 text-lg outline-none focus:border-accent"
-          />
-          <label className="mt-2 text-sm font-bold" htmlFor="lead-phone">
-            Номер телефона (WhatsApp / Telegram)
-          </label>
-          <input
-            id="lead-phone"
-            type="tel"
-            autoComplete="tel"
-            inputMode="tel"
-            value={phone}
-            onChange={(e) => setPhone(formatPhone(e.target.value))}
-            placeholder="+7 (___) ___-__-__"
-            className="rounded-xl border-2 border-line px-4 py-3.5 text-lg outline-none focus:border-accent"
-          />
-          <p className="min-h-5 text-sm font-semibold text-bad" role="alert">
-            {error}
-          </p>
-          <button
-            type="submit"
-            className="rounded-xl bg-cta px-6 py-4 text-[17px] font-bold text-white shadow-lg shadow-orange-500/25 transition hover:bg-cta-hover"
-          >
-            Получить смету и примеры в мессенджер
-          </button>
-          <button
-            type="button"
-            onClick={toTelegram}
-            className="rounded-xl px-6 py-3 font-bold text-accent ring-2 ring-accent/20 transition hover:bg-accent-soft"
-          >
-            Удобнее в Telegram
-          </button>
-          {sent && (
-            <p className="rounded-lg bg-green-50 p-3 text-sm font-semibold text-green-800">
-              {sent === "wa"
-                ? "Открыли WhatsApp с готовым сообщением — осталось нажать «Отправить»."
-                : "Скопировали сообщение и открыли Telegram — вставьте его в чат и отправьте."}
-            </p>
-          )}
-          <p className="text-xs text-muted">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
-        </form>
+      <div className="mx-auto mt-10 max-w-[680px]">
+        <Card>
+          <form onSubmit={submit} noValidate className="flex flex-col gap-7 px-6 py-8 sm:px-12 sm:py-11">
+            {done && (
+              <p className="m-0 rounded-xl bg-accent-soft px-4 py-3 text-[14px] leading-relaxed text-muted">
+                Приложим ваш расчёт: разработка от {rub(dev.devMin)} до {rub(dev.devMax)}
+                {compared && c.breakEvenMonth ? `, окупаемость ${c.breakEvenMonth} ${monthsWord(c.breakEvenMonth)}` : ""}
+              </p>
+            )}
+            <div className="flex flex-col gap-3">
+              <label className="text-[18px] font-semibold tracking-[-0.01em]" htmlFor="lead-name">Ваше имя</label>
+              <div className="fw">
+                <input id="lead-name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}
+                  placeholder="Как к вам обращаться" className="field" aria-invalid={error && name.trim().length < 2 ? true : undefined} />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <label className="text-[18px] font-semibold tracking-[-0.01em]" htmlFor="lead-phone">Номер телефона (WhatsApp / Telegram)</label>
+              <div className="fw">
+                <input id="lead-phone" type="tel" autoComplete="tel" inputMode="tel" value={phone}
+                  onChange={(e) => setPhone(formatPhone(e.target.value))} placeholder="+7 (___) ___-__-__" className="field" />
+              </div>
+            </div>
+            {error && <p className="-mt-3 m-0 text-sm font-medium text-error" role="alert">{error}</p>}
+            <div className="flex flex-col gap-3">
+              <button type="submit"
+                className="btn-primary inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold leading-none text-white">
+                Получить смету и примеры в мессенджер
+                <span className="nudge"><Arrow /></span>
+              </button>
+              <button type="button" onClick={toTelegram}
+                className="btn-back cursor-pointer rounded-xl px-4 py-3 text-[15px] font-medium text-faint hover:text-accent">
+                Удобнее в Telegram
+              </button>
+            </div>
+            {sent && (
+              <p className="m-0 rounded-xl bg-good-soft px-4 py-3 text-[14px] font-medium text-good">
+                {sent === "wa"
+                  ? "Открыли WhatsApp с готовым сообщением — осталось нажать «Отправить»."
+                  : "Скопировали сообщение и открыли Telegram — вставьте его в чат и отправьте."}
+              </p>
+            )}
+            <p className="m-0 text-center text-[13px] text-faint">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+          </form>
+        </Card>
       </div>
     </section>
   );

@@ -1,30 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import "@fontsource-variable/manrope";
+import "@fontsource-variable/playfair-display";
 import "./globals.css";
 
-const manrope = localFont({
-  src: [
-    { path: "./fonts/manrope-500.woff2", weight: "500" },
-    { path: "./fonts/manrope-600.woff2", weight: "600" },
-    { path: "./fonts/manrope-700.woff2", weight: "700" },
-    { path: "./fonts/manrope-800.woff2", weight: "800" },
-  ],
-  variable: "--font-manrope",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "Свой софт для бизнеса по цене коробки — калькулятор стоимости и окупаемости",
+  title: "Свой софт для бизнеса — калькулятор стоимости",
   description:
-    "CRM, склад и аналитика в одном приложении без ежемесячных подписок. Рассчитайте стоимость разработки и срок окупаемости своего софта за 1 минуту.",
+    "Соберите функционал своей CRM, склада и аналитики и сразу узнайте ориентировочную стоимость разработки. Сравните с подпиской на готовую коробку.",
 };
 
-export const viewport: Viewport = { themeColor: "#2563eb" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru" className={manrope.variable}>
-      <body className="font-sans font-medium">{children}</body>
+    <html lang="ru">
+      <body className="min-h-screen font-sans text-[17px] leading-relaxed text-ink antialiased">{children}</body>
     </html>
   );
 }
