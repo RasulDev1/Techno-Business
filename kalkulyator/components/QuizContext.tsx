@@ -15,10 +15,12 @@ import {
   type QuizAnswers,
 } from "@/lib/pricing";
 
-/** Шаги модального квиза: 0 команда, 1 модули, 2 платформы, 3 пожелания, 4 контакты, 5 результат */
+/** Шаги модального квиза: 0 команда, 1 модули, 2 платформы, 3 пожелания,
+ * 4 примерный результат, 5 контакты, 6 точный результат с графиком */
 export const QUIZ_LAST_QUESTION = 3;
-export const CONTACT_STEP = 4;
-export const RESULT_STEP = 5;
+export const APPROX_STEP = 4;
+export const CONTACT_STEP = 5;
+export const RESULT_STEP = 6;
 
 type Ctx = {
   answers: QuizAnswers;

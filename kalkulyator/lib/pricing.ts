@@ -19,11 +19,11 @@ export const MODULE_OPTIONS: {
   hint: string;
   price: [number, number];
 }[] = [
-  { id: "crm", label: "CRM / Продажи", hint: "Сделки, воронка, задачи менеджеров", price: [45_000, 80_000] },
-  { id: "stock", label: "Склад / Учёт остатков", hint: "Приход, расход, остатки, инвентаризация", price: [40_000, 70_000] },
-  { id: "finance", label: "Управленческие финансы", hint: "ДДС, P&L, прибыль по направлениям", price: [35_000, 60_000] },
-  { id: "production", label: "Производство", hint: "Техкарты, заказы в работу, себестоимость", price: [60_000, 110_000] },
-  { id: "cabinet", label: "Личный кабинет клиента / курьера", hint: "Статусы заказов, маршруты, оплата", price: [40_000, 75_000] },
+  { id: "crm", label: "CRM / Продажи", hint: "Сделки, воронка, задачи менеджеров", price: [22_000, 40_000] },
+  { id: "stock", label: "Склад / Учёт остатков", hint: "Приход, расход, остатки, инвентаризация", price: [20_000, 35_000] },
+  { id: "finance", label: "Управленческие финансы", hint: "ДДС, P&L, прибыль по направлениям", price: [18_000, 30_000] },
+  { id: "production", label: "Производство", hint: "Техкарты, заказы в работу, себестоимость", price: [30_000, 55_000] },
+  { id: "cabinet", label: "Личный кабинет клиента / курьера", hint: "Статусы заказов, маршруты, оплата", price: [20_000, 38_000] },
 ];
 
 export const PLATFORM_OPTIONS: {
@@ -39,7 +39,7 @@ export const PLATFORM_OPTIONS: {
 ];
 
 /** Каркас системы: авторизация, роли и права, админка, деплой */
-export const BASE_PRICE: [number, number] = [25_000, 40_000];
+export const BASE_PRICE: [number, number] = [12_000, 20_000];
 
 /** Чем больше пользователей, тем больше ролей, прав и нагрузки */
 export const TEAM_FACTOR: Record<TeamSize, number> = { s: 1, m: 1.1, l: 1.2, xl: 1.35 };
@@ -51,9 +51,11 @@ export const OWN_MONTHLY: Record<TeamSize, number> = { s: 2_000, m: 3_000, l: 5_
 export const BOX_PER_USER = 1_000;
 /** Платные виджеты и интеграции из маркетплейса (Telegram, Авито, телефония…) на каждый модуль, ₽/мес */
 export const BOX_INTEGRATIONS_PER_MODULE = 1_500;
-/** Разовое внедрение коробки у интегратора: настройка воронок, полей, прав, обучение, ₽ */
-export const BOX_SETUP_BASE = 30_000;
-export const BOX_SETUP_PER_MODULE = 20_000;
+/** Разовое внедрение готовой коробки у интегратора: настройка воронок, полей, прав,
+ * обучение сотрудников. В среднем по СНГ — 100 000–150 000 ₽, в зависимости от числа модулей. */
+export const BOX_SETUP_BASE = 100_000;
+export const BOX_SETUP_PER_MODULE = 10_000;
+export const BOX_SETUP_RANGE_NOTE = "100 000–150 000 ₽";
 /** Ежегодное повышение тарифов у вендоров */
 export const BOX_YEARLY_INDEX = 0.1;
 

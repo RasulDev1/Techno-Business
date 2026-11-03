@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { CONTACT_STEP, QUIZ_LAST_QUESTION, RESULT_STEP, useQuiz } from "./QuizContext";
+import { APPROX_STEP, CONTACT_STEP, QUIZ_LAST_QUESTION, RESULT_STEP, useQuiz } from "./QuizContext";
 import { Arrow } from "./Card";
 import PaybackChart from "./PaybackChart";
 import {
+  BOX_SETUP_RANGE_NOTE,
   DEV_MONTHS,
   MODULE_OPTIONS,
   PLATFORM_OPTIONS,
@@ -22,7 +23,8 @@ const QUESTIONS = [
   { q: "Где должна работать система?", hint: "Можно выбрать несколько" },
   { q: "Что ещё должна уметь система?", hint: "Необязательно. Опишите своими словами — учтём в смете" },
 ];
-const TOTAL_STEPS = RESULT_STEP + 1;
+/** Прогресс показываем только по вопросам квиза, не по экранам результата/контактов */
+const TOTAL_QUESTIONS = QUIZ_LAST_QUESTION + 1;
 
 const fmt = (n: number) => new Intl.NumberFormat("ru-RU").format(n).replace(/ /g, " ");
 const parseNum = (v: string) => {
@@ -134,14 +136,14 @@ export default function QuizModal() {
             {step <= QUIZ_LAST_QUESTION && (
               <>
                 <div className="flex flex-col gap-4 pr-10">
-                  <div className="h-[2px] w-full overflow-hidden rounded-full bg-accent/10" role="progressbar" aria-label="Прогресс" aria-valuemin={0} aria-valuemax={TOTAL_STEPS} aria-valuenow={step + 1}>
+                  <div className="h-[2px] w-full overflow-hidden rounded-full bg-accent/10" role="progressbar" aria-label="Прогресс" aria-valuemin={0} aria-valuemax={TOTAL_QUESTIONS} aria-valuenow={step + 1}>
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-[#7a9bff] via-accent to-[#7a5cff] shadow-[0_0_10px_rgb(31_63_209/.5)] transition-[width] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-                      style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
+                      style={{ width: `${((step + 1) / TOTAL_QUESTIONS) * 100}%` }}
                     />
                   </div>
                   <p className="m-0 text-[13px] font-medium uppercase tabular-nums tracking-[0.14em] text-faint">
-                    Шаг {step + 1} из {TOTAL_STEPS}
+                    Шаг {step + 1} из {TOTAL_QUESTIONS}
                   </p>
                 </div>
 
@@ -232,11 +234,42 @@ export default function QuizModal() {
               </>
             )}
 
-            {step === CONTACT_STEP && <ContactStep onBack={() => setStep(QUIZ_LAST_QUESTION)} />}
+            {step === APPROX_STEP && <ApproxResultStep onNext={() => setStep(CONTACT_STEP)} onBack={() => setStep(QUIZ_LAST_QUESTION)} />}
+            {step === CONTACT_STEP && <ContactStep onBack={() => setStep(APPROX_STEP)} />}
             {step === RESULT_STEP && <ResultStep onClose={closeModal} />}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ───────────── Примерный результат ───────────── */
+
+function ApproxResultStep({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const { dev } = useQuiz();
+  return (
+    <div className="step-in flex flex-col gap-7 pr-10">
+      <div>
+        <p className="m-0 text-[13px] font-medium uppercase tracking-[0.14em] text-faint">Ориентировочная стоимость вашего софта</p>
+        <p className="m-0 mt-3 font-[family-name:var(--font-display)] text-[clamp(30px,7vw,44px)] font-medium leading-[1.05] tracking-[-0.02em] [font-variant-numeric:lining-nums]">
+          <Money>от {rub(dev.devMin)}</Money> <span className="text-faint">до</span> <Money>{rub(dev.devMax)}</Money>
+        </p>
+        <p className="m-0 mt-3 text-[15px] text-muted">
+          Это приблизительный диапазон по вашим ответам. Оставьте контакты — пришлём точную смету с разбивкой по модулям,
+          сравнением с готовой коробкой и графиком окупаемости.
+        </p>
+      </div>
+
+      <button type="button" onClick={onNext}
+        className="btn-primary inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-base font-semibold leading-none text-white">
+        Получить точную смету и график
+        <span className="nudge"><Arrow /></span>
+      </button>
+      <button type="button" onClick={onBack} className="btn-back -mt-3 inline-flex cursor-pointer items-center gap-2 self-start text-[15px] font-medium text-faint hover:text-accent">
+        <span className="nudge"><Arrow dir="left" /></span>
+        Назад
+      </button>
     </div>
   );
 }
@@ -352,10 +385,14 @@ function ResultStep({ onClose }: { onClose: () => void }) {
           <div>
             <p className="m-0 text-[13px] font-medium text-box">Готовая коробка за 3 года</p>
             <p className="m-0 mt-1 text-[24px] font-semibold tracking-[-0.02em] text-ink"><Money>{rub(c.box3y)}</Money></p>
+            <p className="m-0 mt-1 text-[13px] leading-relaxed text-muted">
+              включая внедрение у интегратора <Money>{rub(c.setup)}</Money> (в среднем по СНГ {BOX_SETUP_RANGE_NOTE})
+            </p>
           </div>
           <div>
             <p className="m-0 text-[13px] font-medium text-accent">Свой софт за 3 года</p>
             <p className="m-0 mt-1 text-[24px] font-semibold tracking-[-0.02em] text-ink"><Money>{rub(c.own3y)}</Money></p>
+            <p className="m-0 mt-1 text-[13px] leading-relaxed text-muted">разработка + хостинг и поддержка, без внедрения и подписок</p>
           </div>
         </div>
 
