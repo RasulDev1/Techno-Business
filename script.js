@@ -651,7 +651,8 @@ document.addEventListener('play', function (e) {
   }
 
   // Свой курсор: точка и отстающее кольцо; у кнопок кольцо «прилипает» к их границам, над скриншотами становится плашкой «Демо»
-  var curBox = null, curDot, curRing, curLabel, cX = -200, cY = -200, rX = -200, rY = -200, rW = 34, rH = 34, curRaf = 0, curMode = "", curTarget = null;
+  var curBox = null, curDot, curRing, curLabel, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null;
+  var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
   function curMove(e) {
     cX = e.clientX; cY = e.clientY;
@@ -661,6 +662,8 @@ document.addEventListener('play', function (e) {
     else if (t && t.closest(".shot")) mode = "label";
     else if (t) mode = "link";
     curTarget = mode === "stick" ? t : null;
+    var tone = e.target.closest && e.target.closest(BLUE) ? "light" : "";
+    if (tone !== curTone) { curTone = tone; curBox.setAttribute("data-tone", tone); }
     if (mode !== curMode) {
       curMode = mode; curBox.setAttribute("data-mode", mode);
       curLabel.textContent = mode === "label" ? "Демо" : "";
@@ -670,10 +673,10 @@ document.addEventListener('play', function (e) {
   function curFrame() {
     curRaf = 0;
     if (!curBox) return;
-    var tx = cX, ty = cY, tw = 34, th = 34, k = reduce ? 1 : 0.2;
+    var tx = cX, ty = cY, tw = 24, th = 24, k = reduce ? 1 : 0.2;
     if (curMode === "stick" && curTarget) { var r = curTarget.getBoundingClientRect(); tx = r.left + r.width / 2; ty = r.top + r.height / 2; tw = r.width + 10; th = r.height + 10; k = reduce ? 1 : 0.28; }
     else if (curMode === "label") { tw = 62; th = 62; }
-    else if (curMode === "link") { tw = 52; th = 52; }
+    else if (curMode === "link") { tw = 42; th = 42; }
     rX += (tx - rX) * k; rY += (ty - rY) * k; rW += (tw - rW) * 0.22; rH += (th - rH) * 0.22;
     curDot.style.transform = "translate(" + cX + "px," + cY + "px)";
     curRing.style.transform = "translate(" + rX.toFixed(1) + "px," + rY.toFixed(1) + "px)";
@@ -692,7 +695,7 @@ document.addEventListener('play', function (e) {
   function stopCursor() {
     if (!curBox) return;
     window.removeEventListener("pointermove", curMove); document.removeEventListener("pointerleave", curLeave);
-    cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; root.classList.remove("pm-cursor-on");
+    cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; curTone = ""; root.classList.remove("pm-cursor-on");
   }
 
   // Скелетоны вместо спиннеров: пульсирующие плашки по форме будущего содержимого
