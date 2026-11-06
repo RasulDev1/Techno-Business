@@ -653,9 +653,9 @@ document.addEventListener('play', function (e) {
   }
 
   // Свой курсор: четыре варианта, переключаются кнопкой в панели
-  var CUR_NAMES = ["Графит", "Уголок", "Световой маркер", "Текстовый курсор"];
-  var CUR_KEYS = ["graphite", "angle", "blur", "tag"];
-  var curStyle = 0, curBox = null, curDot, curRing, curLabel, curAngle, curCloud, curBadge, curTag, curTagT, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "", tagText = null;
+  var CUR_NAMES = ["Графит", "Дизайнерская стрелка"];
+  var CUR_KEYS = ["graphite", "arrow"];
+  var curStyle = 0, curBox = null, curDot, curRing, curLabel, curArrow, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "";
   var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
   var BADGES = [[".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a", "Написать"], [".card", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
@@ -663,20 +663,6 @@ document.addEventListener('play', function (e) {
   function regionText(tg) {
     for (var i = 0; i < BADGES.length; i++) if (tg && tg.closest(BADGES[i][0])) return BADGES[i][1];
     return "";
-  }
-  // Текстовый курсор: «+» в покое, у смысловых блоков плавно расширяется в капсулу с подписью
-  function setTag(txt) {
-    if (txt === tagText) return;
-    tagText = txt;
-    curTagT.style.opacity = "0";
-    setTimeout(function () {
-      if (tagText !== txt || !curTag) return;
-      curTagT.textContent = txt || "+";
-      var w = curTagT.offsetWidth;
-      curTag.style.width = (txt ? w + 22 : 14) + "px"; curTag.style.height = txt ? "24px" : "14px";
-      curTag.classList.toggle("is-cap", !!txt);
-      curTagT.style.opacity = "1";
-    }, 110);
   }
   function curMove(e) {
     cX = e.clientX; cY = e.clientY;
@@ -693,10 +679,10 @@ document.addEventListener('play', function (e) {
       curMode = mode; curBox.setAttribute("data-mode", mode);
       curLabel.textContent = key === "graphite" && mode === "label" ? "Демо" : "";
     }
-    if (key === "angle" || key === "blur") {
+    if (key === "arrow") {
       var txt = regionText(tg);
       if (txt !== badgeText) { badgeText = txt; if (txt) curBadge.textContent = txt; curBadge.classList.toggle("is-on", !!txt); curBox.setAttribute("data-badge", txt ? "on" : ""); }
-    } else if (key === "tag") setTag(regionText(tg));
+    }
     if (!curRaf) curRaf = requestAnimationFrame(curFrame);
   }
   function curFrame() {
@@ -710,11 +696,10 @@ document.addEventListener('play', function (e) {
     }
     rX += (tx - rX) * k; rY += (ty - rY) * k; rW += (tw - rW) * 0.22; rH += (th - rH) * 0.22;
     var p = "translate(" + cX + "px," + cY + "px)";
-    curDot.style.transform = p; curAngle.style.transform = p; curCloud.style.transform = p;
-    curTag.style.transform = "translate(" + (cX - 7) + "px," + (cY - 7) + "px)";
+    curDot.style.transform = p; curArrow.style.transform = p;
     curRing.style.transform = "translate(" + rX.toFixed(1) + "px," + rY.toFixed(1) + "px)";
     curRing.style.width = rW.toFixed(1) + "px"; curRing.style.height = rH.toFixed(1) + "px";
-    curBadge.style.transform = key === "blur" ? p : "translate(" + (cX * .6 + rX * .4 + 16).toFixed(1) + "px," + (cY * .6 + rY * .4 + 18).toFixed(1) + "px)";
+    curBadge.style.transform = key === "arrow" ? "translate(" + (cX + 9) + "px," + (cY + 17) + "px)" : "translate(" + (cX * .6 + rX * .4 + 16).toFixed(1) + "px," + (cY * .6 + rY * .4 + 18).toFixed(1) + "px)";
     if (Math.abs(tx - rX) + Math.abs(ty - rY) + Math.abs(tw - rW) + Math.abs(th - rH) > 0.4) curRaf = requestAnimationFrame(curFrame);
   }
   function curLeave() { if (curBox) curBox.style.opacity = "0"; }
@@ -722,15 +707,14 @@ document.addEventListener('play', function (e) {
     if (!curBox) return;
     curBox.setAttribute("data-style", CUR_KEYS[curStyle]);
     badgeText = ""; curBadge.classList.remove("is-on"); curBox.setAttribute("data-badge", ""); curMode = ""; curBox.setAttribute("data-mode", ""); curLabel.textContent = "";
-    tagText = null; curTagT.textContent = "+"; curTag.style.width = "14px"; curTag.style.height = "14px"; curTag.classList.remove("is-cap");
     rW = rH = 24;
   }
   function startCursor() {
     if (!fine || curBox) return;
     curBox = document.createElement("div"); curBox.className = "pm-cursor"; curBox.setAttribute("aria-hidden", "true");
-    curBox.innerHTML = '<i class="pm-dot"></i><i class="pm-ring"><span></span></i><div class="pm-angle"><div class="pm-angle-in"><i class="ah"></i><i class="av"></i></div></div><i class="pm-cloud"></i><div class="pm-badge"></div><div class="pm-tag"><span></span></div>';
+    curBox.innerHTML = '<i class="pm-dot"></i><i class="pm-ring"><span></span></i><svg class="pm-arrow" width="16" height="22" viewBox="-1 -1 16 22"><path d="M0 0 L0 17 L4.4 13 L7.4 19.6 L10.2 18.4 L7.2 11.9 L12.8 11.9 Z" fill="#111827" stroke="#fff" stroke-width="1" stroke-linejoin="round"/></svg><div class="pm-badge"></div>';
     document.body.appendChild(curBox);
-    curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild; curAngle = curBox.querySelector(".pm-angle"); curCloud = curBox.querySelector(".pm-cloud"); curBadge = curBox.querySelector(".pm-badge"); curTag = curBox.querySelector(".pm-tag"); curTagT = curTag.firstChild;
+    curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild; curArrow = curBox.querySelector(".pm-arrow"); curBadge = curBox.querySelector(".pm-badge");
     var saved = parseInt(load("premium-cursor"), 10); curStyle = saved >= 0 && saved < CUR_KEYS.length ? saved : 0;
     applyCurStyle(); curBtn.hidden = false;
     root.classList.add("pm-cursor-on");
