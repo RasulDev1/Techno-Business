@@ -390,10 +390,11 @@ document.querySelectorAll(".shot img").forEach((img) => {
   var mq = window.matchMedia('(max-width: 620px)'), last = window.pageYOffset, ticking = false;
   function upd() {
     ticking = false;
-    var y = window.pageYOffset, nearEnd = y + innerHeight >= document.documentElement.scrollHeight - 80;
+    var y = window.pageYOffset;
     if (!mq.matches) { bar.classList.remove('is-hidden'); last = y; return; }
+    // высоту документа читаем только когда она нужна: чтение scrollHeight заставляет браузер пересчитать раскладку
     if (y < innerHeight * 0.8) bar.classList.add('is-hidden');
-    else if (y < last - 4 || nearEnd) bar.classList.remove('is-hidden');
+    else if (y < last - 4 || y + innerHeight >= document.documentElement.scrollHeight - 80) bar.classList.remove('is-hidden');
     else if (y > last + 4) bar.classList.add('is-hidden');
     last = y;
   }
@@ -474,6 +475,14 @@ document.addEventListener('play', function (e) {
   }
   function restoreTitle() { if (title) { title.innerHTML = titleHTML; title.removeAttribute("aria-label"); } }
 
+  // Пока цифра считается, её ширина зафиксирована по итоговому значению: соседний текст не прыгает и не переносится
+  // (раньше на телефоне блоки под цифрами дёргались вверх-вниз на строку, это сдвиг раскладки CLS)
+  function lockW(el, text) {
+    var prev = el.textContent; el.textContent = text;
+    var w = el.getBoundingClientRect().width; el.textContent = prev;
+    el.style.display = "inline-block"; el.style.width = w + "px"; el.style.whiteSpace = "nowrap"; el.style.flex = "none";
+  }
+  function unlockW(el) { el.style.display = ""; el.style.width = ""; el.style.whiteSpace = ""; el.style.flex = ""; }
   // Проценты и полоски растут строго вместе
   function syncMetrics() {
     document.querySelectorAll(".hero-metrics .metric").forEach(function (m, idx) {
@@ -482,13 +491,14 @@ document.addEventListener('play', function (e) {
       var from = parseFloat(cs.getPropertyValue("--from")), target = parseFloat(cs.getPropertyValue("--to"));
       cancelAnimationFrame(raf["m" + idx]);
       if (reduce) return;
+      lockW(b, sign + to + "%");
       bar.style.animation = "none"; bar.style.width = from + "%"; b.textContent = sign + "0%";
       var t0 = performance.now() + idx * 160, dur = 2000;
       (function tick(now) {
         var p = Math.min(1, Math.max(0, (now - t0) / dur)), e = ease(p);
         b.textContent = sign + Math.round(to * e) + "%";
         bar.style.width = (from + (target - from) * e) + "%";
-        if (p < 1) raf["m" + idx] = requestAnimationFrame(tick);
+        if (p < 1) raf["m" + idx] = requestAnimationFrame(tick); else unlockW(b);
       })(t0);
     });
     // «До 70%» в преимуществах: цифра и тонкая шкала под ней растут вместе
@@ -500,13 +510,14 @@ document.addEventListener('play', function (e) {
       var fill = track.firstChild, orig = fig.dataset.orig || (fig.dataset.orig = fig.textContent);
       cancelAnimationFrame(raf.fig);
       if (reduce) { fill.style.width = to + "%"; return; }
+      lockW(fig, orig);
       fill.style.width = "0%"; fig.textContent = "До 0%";
       function run() {
         var t0 = performance.now(), dur = 2000;
         (function tick(now) {
           var p = Math.min(1, (now - t0) / dur), e = ease(p);
           fig.textContent = "До " + Math.round(to * e) + "%"; fill.style.width = (to * e) + "%";
-          if (p < 1) raf.fig = requestAnimationFrame(tick);
+          if (p < 1) raf.fig = requestAnimationFrame(tick); else unlockW(fig);
         })(t0);
       }
       if ("IntersectionObserver" in window) {
@@ -517,9 +528,9 @@ document.addEventListener('play', function (e) {
   }
   function resetMetrics() {
     document.querySelectorAll(".metric-bar i").forEach(function (bar) { bar.style.animation = ""; bar.style.width = ""; });
-    document.querySelectorAll(".hero-metrics b[data-to]").forEach(function (b) { b.textContent = b.dataset.sign + b.dataset.to + "%"; });
+    document.querySelectorAll(".hero-metrics b[data-to]").forEach(function (b) { unlockW(b); b.textContent = b.dataset.sign + b.dataset.to + "%"; });
     document.querySelectorAll(".results-list .pm-track").forEach(function (t) { t.remove(); });
-    document.querySelectorAll(".results-list .fig[data-orig]").forEach(function (f) { f.textContent = f.dataset.orig; });
+    document.querySelectorAll(".results-list .fig[data-orig]").forEach(function (f) { unlockW(f); f.textContent = f.dataset.orig; });
   }
 
   // Магнитные кнопки
