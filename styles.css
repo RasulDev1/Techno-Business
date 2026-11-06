@@ -1880,7 +1880,7 @@ html.pm-dark .cm-bar { background: rgb(17 24 39 / .86); }
   background: conic-gradient(from var(--cm-ang), #2563eb, #7c3aed, #f97316, #22d3ee, #2563eb); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: cm-spin 5s linear infinite paused; }
 .results-list li:hover, .results-list li:focus-visible { transform: translateY(-3px); box-shadow: 0 22px 40px -22px rgb(37 99 235 / .5); border-color: rgb(37 99 235 / .35); outline: none; }
 .results-list li:hover::after, .results-list li:focus-visible::after, .res-layer li.is-open::after { opacity: 1; animation-play-state: running; }
-.res-veil { position: fixed; inset: 0; z-index: 999; background: rgb(15 23 42 / .42); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity: 0; transition: opacity .45s ease; }
+.res-veil { position: fixed; inset: 0; z-index: 999; background: rgb(15 23 42 / .42); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity: 0; transition: opacity .26s ease; }
 .res-veil.on { opacity: 1; }
 .res-layer.results-list { position: fixed; inset: 0; z-index: 1000; display: block; margin: 0; padding: 0; pointer-events: none; }
 .res-layer li { position: fixed; margin: 0; pointer-events: auto; transform-origin: 50% 50%; transform: none; }
@@ -1888,3 +1888,7 @@ html.pm-dark .cm-bar { background: rgb(17 24 39 / .86); }
 @media (prefers-reduced-motion: reduce) { .results-list li::after { animation: none; } .res-veil { transition: none; } }
 html.premium .res-layer li.is-open { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: rgb(37 99 235 / .35); }
 html.pm-dark.premium .res-layer li.is-open { background: #111827; }
+
+/* Лента заявок: постоянное плавное листание вниз, заявки проявляются при въезде сверху и гаснут при уходе вниз */
+.ledger-body.is-belt { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 calc(100% - 28px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 calc(100% - 28px), transparent 100%); }
+html .ledger-body.is-belt .ledger-row { transform: translateY(var(--belt, 0px)); transition: none; will-change: transform; }

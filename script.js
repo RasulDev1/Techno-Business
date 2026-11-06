@@ -128,44 +128,19 @@
   const SPEED = 2.55 * 1.3; // лента быстрее: сначала в 1,5 раза, затем ещё на 70% и на 30%
   const wait = (ms) => new Promise((r) => setTimeout(r, ms / SPEED));
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-  const GLIDE = 480; // плавное «листание» таблицы вниз, мс
-  const EASE = "cubic-bezier(.22,.8,.24,1)";
+  const BELT_MS = 1700; // одна строка проезжает за столько мс: лента едет вниз постоянно, без остановок
 
-  // Сначала таблица плавно «листается» вниз: строки скользят, самая старая уходит за нижний край и освобождается место.
-  // Когда сдвиг закончился, в освободившуюся строку сверху вписывается новая заявка.
-  function glideDown(row, old) {
-    const tops = old.map((r) => r.offsetTop);
-    row.style.opacity = "0";
-    body.appendChild(row);
-    old.forEach((r, i) => {
-      const dy = tops[i] - r.offsetTop;
-      if (dy) r.animate([{ transform: "translateY(" + dy + "px)" }, { transform: "none" }], { duration: GLIDE, easing: EASE });
-    });
-    return sleep(GLIDE).then(() => {
-      row.style.opacity = "";
-      row.animate([{ opacity: 0, transform: "translateY(-10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
-    });
-  }
-
+  // Запасной вариант (телефон: одна карточка): старая строка гаснет, новая появляется
   async function writeRow() {
-    const row = makeRow();
-    const smooth = VISIBLE > 1 && document.documentElement.classList.contains("premium") && row.animate;
-    if (smooth) {
-      const old = Array.from(body.children);
-      const first = old.length >= VISIBLE ? old[0] : null;
-      await glideDown(row, old);
-      if (first) first.remove();
-    } else {
-      if (body.children.length >= VISIBLE) {
-        const first = body.firstElementChild;
-        first.classList.add("is-leaving");
-        await sleep(350);
-        first.remove();
-      }
-      body.appendChild(row);
+    if (body.children.length >= VISIBLE) {
+      const first = body.firstElementChild;
+      first.classList.add("is-leaving");
+      await sleep(350);
+      first.remove();
     }
-    const hands = row.querySelectorAll(".hand");
-    for (const cell of hands) {
+    const row = makeRow();
+    body.appendChild(row);
+    for (const cell of row.querySelectorAll(".hand")) {
       cell.classList.add("is-written");
       await wait(140);
     }
@@ -174,14 +149,39 @@
     count(row.dataset.st);
   }
 
+  // Постоянное листание: таблица едет вниз с одной скоростью, сверху непрерывно въезжают новые заявки (плавно проявляются),
+  // снизу старые уходят. Каждый кадр обновляется только одна переменная --belt.
+  let rowH = 53, p = 1, last = 0, beltOn = false;
+  function spawn() {
+    while (body.children.length > VISIBLE) body.firstElementChild.remove(); // ушла за нижний край
+    const row = makeRow();
+    body.appendChild(row);
+    rowH = row.offsetHeight || rowH;
+    row.querySelectorAll(".hand").forEach((c, i) => setTimeout(() => c.classList.add("is-written"), i * 40));
+    setTimeout(() => { row.querySelector(".stamp").classList.add("is-down"); count(row.dataset.st); }, BELT_MS * 0.6);
+  }
+  function runBelt() {
+    if (beltOn) return;
+    beltOn = true; body.classList.add("is-belt"); last = performance.now();
+    const frame = (now) => {
+      if (!visible) { beltOn = false; return; }
+      p += Math.min(now - last, 80) / BELT_MS; last = now;
+      if (p >= 1) { p -= 1; spawn(); }
+      body.style.setProperty("--belt", (p - 1) * rowH + "px");
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }
+
   // Пишем, только пока журнал виден на экране
   let running = false, visible = true;
   async function loop() {
+    if (VISIBLE > 1 && document.documentElement.classList.contains("premium")) return runBelt();
     if (running) return;
     running = true;
     while (visible) {
       await writeRow();
-      await sleep(Math.max(250, (isPremium() ? 3200 + Math.random() * 1800 : 900) / SPEED - (VISIBLE > 1 ? GLIDE : 0)));
+      await wait(isPremium() ? 3200 + Math.random() * 1800 : 900);
     }
     running = false;
   }
@@ -969,7 +969,7 @@ document.addEventListener('play', function (e) {
   if (!list) return;
   var items = Array.prototype.slice.call(list.children);
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var DUR = reduce ? 1 : 520, EASE = "cubic-bezier(.22,.8,.24,1)";
+  var DUR = reduce ? 1 : 300, EASE = "cubic-bezier(.22,.8,.24,1)";
   var cur = null;
 
   items.forEach(function (li) {
