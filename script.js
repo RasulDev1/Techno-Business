@@ -125,7 +125,7 @@
   }
   if (reduce) return;
 
-  const wait = (ms) => new Promise((r) => setTimeout(r, ms / 1.5)); // лента на 50% быстрее
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms / 2.55)); // лента быстрее в 1,5 × 1,7 раза
 
   async function writeRow() {
     if (body.children.length >= VISIBLE) {
