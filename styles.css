@@ -1854,3 +1854,5 @@ html.pm-dark .cm-bar { background: rgb(17 24 39 / .86); }
 @media (max-width: 620px) { .results-list li:nth-child(1) > h2 { hyphens: none; letter-spacing: -.03em; } }
 /* Главная: верхнее окно делится ровно пополам */
 @media (min-width: 961px) { .hero .sheet-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+/* Карточки преимуществ на компьютере: заголовки в одну строку («В 2 раза больше закрытых клиентов») */
+@media (min-width: 1200px) and (max-width: 1589px) { .results-list li > h2 { font-size: 17.5px; letter-spacing: -.02em; } }

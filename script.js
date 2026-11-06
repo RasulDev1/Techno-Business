@@ -125,17 +125,41 @@
   }
   if (reduce) return;
 
-  const wait = (ms) => new Promise((r) => setTimeout(r, ms / 2.55)); // лента быстрее в 1,5 × 1,7 раза
+  const SPEED = 2.55 * 1.3; // лента быстрее: сначала в 1,5 раза, затем ещё на 70% и на 30%
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms / SPEED));
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const GLIDE = 480; // плавное «листание» таблицы вниз, мс
+  const EASE = "cubic-bezier(.22,.8,.24,1)";
+
+  // Новая заявка въезжает сверху, остальные плавно скользят вниз, самая старая уезжает за нижний край
+  function glideIn(row, old) {
+    const tops = old.map((r) => r.offsetTop);
+    body.appendChild(row);
+    const h = row.offsetHeight;
+    old.forEach((r, i) => {
+      const dy = tops[i] - r.offsetTop;
+      if (dy) r.animate([{ transform: "translateY(" + dy + "px)" }, { transform: "none" }], { duration: GLIDE, easing: EASE });
+    });
+    row.animate([{ transform: "translateY(" + -h + "px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: GLIDE, easing: EASE });
+  }
 
   async function writeRow() {
-    if (body.children.length >= VISIBLE) {
-      const first = body.firstElementChild;
-      first.classList.add("is-leaving");
-      await wait(450);
-      first.remove();
-    }
     const row = makeRow();
-    body.appendChild(row);
+    const smooth = VISIBLE > 1 && document.documentElement.classList.contains("premium") && row.animate;
+    if (smooth) {
+      const old = Array.from(body.children);
+      const first = old.length >= VISIBLE ? old[0] : null;
+      glideIn(row, old);
+      if (first) setTimeout(() => first.remove(), GLIDE);
+    } else {
+      if (body.children.length >= VISIBLE) {
+        const first = body.firstElementChild;
+        first.classList.add("is-leaving");
+        await sleep(350);
+        first.remove();
+      }
+      body.appendChild(row);
+    }
     const hands = row.querySelectorAll(".hand");
     for (const cell of hands) {
       cell.classList.add("is-written");
