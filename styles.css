@@ -1852,3 +1852,5 @@ html.pm-dark .cm-bar { background: rgb(17 24 39 / .86); }
   .hero-right .metric small { flex-direction: column; gap: 2px; font-size: 12px; }
 }
 @media (max-width: 620px) { .results-list li:nth-child(1) > h2 { hyphens: none; letter-spacing: -.03em; } }
+/* Главная: верхнее окно делится ровно пополам */
+@media (min-width: 961px) { .hero .sheet-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
