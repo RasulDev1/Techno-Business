@@ -1,0 +1,10 @@
+/* Tailwind без preflight: его сброс стилей поменял бы вид страниц, поэтому подключаем только тему и утилиты.
+   Утилиты лежат в слое и уступают основным стилям сайта (legacy.css). Классы ищем только в app/ и components/. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../app";
+@source "../components";
+/* Эти слова встречаются в разметке как обычные классы и атрибуты (class="grid", filter=, transform=),
+   утилиты Tailwind для них не создаём, чтобы они не перебили старые стили */
+@source not inline("absolute filter grid transform");
