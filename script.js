@@ -813,9 +813,7 @@ document.addEventListener('play', function (e) {
       if (manual) restart();
     }
     function restart() { clearInterval(timer); if (reduce) return; timer = setInterval(function () { if (!hovered && visible && !document.hidden) go(cur + 1); }, 4500 + n * 600); }
-    ["prev", "next"].forEach(function (k) {
-      mock.querySelector(".cm-" + k).addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); go(cur + (k === "next" ? 1 : -1), true); });
-    });
+    mock.addEventListener("click", function (e) { e.preventDefault(); go(cur + 1, true); });
     mock.addEventListener("pointerenter", function () { hovered = true; }); mock.addEventListener("pointerleave", function () { hovered = false; });
     if (window.IntersectionObserver) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(mock);
     go(0); restart();

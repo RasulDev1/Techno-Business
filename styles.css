@@ -1637,7 +1637,7 @@ html.pm-dark .pm-cursor[data-tone="light"] { --aura: rgb(255 255 255 / .3); --au
 .pm-cursor[data-style="arrow"][data-tone="light"] .pm-badge { background: rgb(255 255 255 / .96); color: #111827; }
 
 /* Карусели-макеты вместо скриншотов: CRM по нишам и три вида сайтов */
-.cm { position: absolute; inset: 0; overflow: hidden; background: var(--surface); transition: transform 1.2s ease; }
+.cm { cursor: pointer; position: absolute; inset: 0; overflow: hidden; background: var(--surface); transition: transform 1.2s ease; }
 .cm-stage { position: absolute; left: 0; top: 0; width: 640px; height: 400px; transform-origin: 0 0; transform: scale(var(--s, .84)); }
 .cm-slide { position: absolute; inset: 0; padding-bottom: 36px; font: 500 10px/1.25 var(--font-body); color: var(--ink); background: var(--surface); opacity: 0; visibility: hidden; transform: translateX(18px);
   transition: opacity .6s ease, transform .7s cubic-bezier(.16, 1, .3, 1), visibility 0s .7s; }
@@ -1647,8 +1647,6 @@ html.pm-dark .pm-cursor[data-tone="light"] { --aura: rgb(255 255 255 / .3); --au
 .cm-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 10px; background: rgb(255 255 255 / .86); border-top: 1px solid var(--line); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font: 700 11px/1 var(--font-body); color: var(--ink); }
 .cm-lab { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .01em; }
 .cm-nav { display: inline-flex; align-items: center; gap: 8px; flex: none; }
-.cm-prev, .cm-next { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; line-height: 1; color: var(--muted); background: var(--bg-2); cursor: pointer; transition: background-color .25s, color .25s; }
-.cm-prev:hover, .cm-next:hover { background: var(--accent); color: #fff; }
 .cm-dots { display: inline-flex; gap: 5px; }
 .cm-dots i { width: 6px; height: 6px; border-radius: 99px; background: var(--line-strong); cursor: pointer; transition: width .4s cubic-bezier(.16, 1, .3, 1), background-color .3s; }
 .cm-dots i.on { width: 16px; background: var(--accent); }
