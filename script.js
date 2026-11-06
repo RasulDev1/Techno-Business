@@ -514,7 +514,7 @@ document.addEventListener('play', function (e) {
   function parallax() {
     ticking = false;
     var on = root.classList.contains("premium") && !reduce;
-    document.querySelectorAll(".shot img").forEach(function (img) {
+    document.querySelectorAll(".shot img, .shot .mock").forEach(function (img) {
       if (!on) { img.style.removeProperty("--py"); return; }
       var r = img.parentElement.getBoundingClientRect(), k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
       img.style.setProperty("--py", Math.max(-1, Math.min(1, k)) * -6 + "px");
