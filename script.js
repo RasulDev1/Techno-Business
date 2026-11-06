@@ -53,6 +53,11 @@
   const byStatus = { new: 0, pay: 0, done: 0, cancel: 0 };
   const statOut = {};
   document.querySelectorAll("[data-st]").forEach((el) => { statOut[el.dataset.st] = el; });
+  // Журнал не должен выглядеть пустым: счётчики стартуют с набранных за день заявок
+  Object.assign(byStatus, { new: 4, pay: 3, done: 6, cancel: 1 });
+  done = 14;
+  for (const k in byStatus) if (statOut[k]) statOut[k].textContent = byStatus[k];
+  if (counter) counter.textContent = done;
 
   function time() {
     minutes += 7 + Math.floor(Math.random() * 19);

@@ -1533,3 +1533,33 @@ body { background: transparent; }
   .dev, .metric.is-done .metric-top b, .metric.is-done .cnt { transition: none; animation: none; }
   .card:hover .shot .dev-phone .dev-screen img { transition: none; }
 }
+
+/* Как мы работаем, примеры сценариев */
+.process, .cases { padding-block: 0 56px; }
+.process h2, .cases h2 { margin: 0 0 22px; font: 600 clamp(26px, 2.8vw, 38px)/1.15 var(--font-display); letter-spacing: -.02em; }
+.process-list { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.process-list li { counter-increment: step; padding: 22px 22px 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); min-width: 0; }
+.process-list li::before { content: counter(step); display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 14px; border-radius: 50%; background: var(--accent); color: #fff; font: 700 15px/1 var(--font-display); }
+.process-list h3 { margin: 0 0 8px; font: 600 18px/1.25 var(--font-display); }
+.process-list p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.step-tag { display: inline-block; margin-left: 4px; padding: 3px 9px; border-radius: 999px; background: #e0f2fe; color: #0284c7; font: 700 13px/1.2 var(--font-display); vertical-align: 2px; }
+.cases-note { margin: -10px 0 20px; color: var(--faint); font-size: 14px; }
+.cases-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.case { padding: 24px 26px 26px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); min-width: 0; }
+.case .tag { display: inline-block; margin-bottom: 8px; color: var(--accent); font: 600 13px/1.2 var(--font-body); }
+.case h3 { margin: 0 0 14px; font: 600 21px/1.25 var(--font-display); }
+.case dl { margin: 0; display: grid; gap: 10px; }
+.case dl > div { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.case dt { color: var(--faint); font: 600 12px/1.4 var(--font-body); text-transform: uppercase; letter-spacing: .08em; }
+.case dd { margin: 0; color: var(--ink); font-size: 16px; line-height: 1.45; }
+@media (max-width: 960px) { .process-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) {
+  .process, .cases { padding-bottom: 36px; }
+  .process-list { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .process-list li { padding: 16px 16px 18px; }
+  .cases-grid { grid-template-columns: minmax(0, 1fr); }
+  .case { padding: 18px 16px 20px; }
+}
+
+/* Бегущая строка тише, чтобы не спорить с главным предложением */
+.marquee { opacity: .6; }
