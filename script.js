@@ -652,28 +652,31 @@ document.addEventListener('play', function (e) {
     setTheme(saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches, false);
   }
 
-  // Свой курсор: пять вариантов, переключаются кнопкой в панели
-  var CUR_NAMES = ["Графит", "Увеличительное стекло", "Лазерный прицел", "Курсор-подсказка", "Умный контур"];
-  var CUR_KEYS = ["graphite", "lens", "cross", "label", "frame"];
-  var curStyle = 0, curBox = null, curDot, curRing, curLabel, curCross, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, lensEl = null, badgeText = "";
+  // Свой курсор: четыре варианта, переключаются кнопкой в панели
+  var CUR_NAMES = ["Графит", "Уголок", "Световой маркер", "Текстовый курсор"];
+  var CUR_KEYS = ["graphite", "angle", "blur", "tag"];
+  var curStyle = 0, curBox = null, curDot, curRing, curLabel, curAngle, curCloud, curBadge, curTag, curTagT, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "", tagText = null;
   var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
-  var LENS_SEL = ".hand, .num, .c-man, .metric-top b, .tally b, .ledger-stats li, .results-list h2, .results-list p, .price b, .hero .lead";
   var BADGES = [[".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a", "Написать"], [".card", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
   var hint = null, hintTimer = 0;
-  function nearStick(x, y) {
-    var best = null, bd = 64;
-    document.querySelectorAll(STICK).forEach(function (el) {
-      var r = el.getBoundingClientRect(); if (!r.width || r.bottom < 0 || r.top > innerHeight) return;
-      var dx = Math.max(r.left - x, 0, x - r.right), dy = Math.max(r.top - y, 0, y - r.bottom), d = Math.hypot(dx, dy);
-      if (d < bd) { bd = d; best = el; }
-    });
-    return best;
+  function regionText(tg) {
+    for (var i = 0; i < BADGES.length; i++) if (tg && tg.closest(BADGES[i][0])) return BADGES[i][1];
+    return "";
   }
-  function setLens(el) {
-    if (el === lensEl) return;
-    if (lensEl) lensEl.classList.remove("pm-lens-hit");
-    lensEl = el; if (el) el.classList.add("pm-lens-hit");
+  // Текстовый курсор: «+» в покое, у смысловых блоков плавно расширяется в капсулу с подписью
+  function setTag(txt) {
+    if (txt === tagText) return;
+    tagText = txt;
+    curTagT.style.opacity = "0";
+    setTimeout(function () {
+      if (tagText !== txt || !curTag) return;
+      curTagT.textContent = txt || "+";
+      var w = curTagT.offsetWidth;
+      curTag.style.width = (txt ? w + 22 : 14) + "px"; curTag.style.height = txt ? "24px" : "14px";
+      curTag.classList.toggle("is-cap", !!txt);
+      curTagT.style.opacity = "1";
+    }, 110);
   }
   function curMove(e) {
     cX = e.clientX; cY = e.clientY;
@@ -684,55 +687,50 @@ document.addEventListener('play', function (e) {
     else if (t && t.closest(".shot")) mode = "label";
     else if (t) mode = "link";
     curTarget = mode === "stick" ? t : null;
-    if (key === "frame" && !curTarget) { var n = nearStick(cX, cY); if (n) { curTarget = n; mode = "stick"; } }
     var tone = tg && tg.closest(BLUE) ? "light" : "";
     if (tone !== curTone) { curTone = tone; curBox.setAttribute("data-tone", tone); }
     if (mode !== curMode) {
       curMode = mode; curBox.setAttribute("data-mode", mode);
       curLabel.textContent = key === "graphite" && mode === "label" ? "Демо" : "";
     }
-    setLens(key === "lens" && tg ? tg.closest(LENS_SEL) : null);
-    if (key === "label") {
-      var txt = "";
-      for (var i = 0; i < BADGES.length && !txt; i++) if (tg && tg.closest(BADGES[i][0])) txt = BADGES[i][1];
-      if (txt !== badgeText) { badgeText = txt; if (txt) curBadge.textContent = txt; curBadge.classList.toggle("is-on", !!txt); }
-    }
+    if (key === "angle" || key === "blur") {
+      var txt = regionText(tg);
+      if (txt !== badgeText) { badgeText = txt; if (txt) curBadge.textContent = txt; curBadge.classList.toggle("is-on", !!txt); curBox.setAttribute("data-badge", txt ? "on" : ""); }
+    } else if (key === "tag") setTag(regionText(tg));
     if (!curRaf) curRaf = requestAnimationFrame(curFrame);
   }
   function curFrame() {
     curRaf = 0;
     if (!curBox) return;
     var key = CUR_KEYS[curStyle], tx = cX, ty = cY, tw = 24, th = 24, k = reduce ? 1 : 0.2;
-    if (key === "lens") { tw = th = (curMode || lensEl) ? 46 : 30; }
-    else if (key === "frame") {
-      tw = th = 22;
-      if (curMode === "stick" && curTarget) { var fr = curTarget.getBoundingClientRect(); tx = fr.left + fr.width / 2; ty = fr.top + fr.height / 2; tw = fr.width + 12; th = fr.height + 12; k = reduce ? 1 : 0.26; }
-    } else if (key === "graphite") {
+    if (key === "graphite") {
       if (curMode === "stick" && curTarget) { var r = curTarget.getBoundingClientRect(); tx = r.left + r.width / 2; ty = r.top + r.height / 2; tw = r.width + 10; th = r.height + 10; k = reduce ? 1 : 0.28; }
       else if (curMode === "label") { tw = 62; th = 62; }
       else if (curMode === "link") { tw = 42; th = 42; }
     }
     rX += (tx - rX) * k; rY += (ty - rY) * k; rW += (tw - rW) * 0.22; rH += (th - rH) * 0.22;
-    curDot.style.transform = "translate(" + cX + "px," + cY + "px)";
-    curCross.style.transform = "translate(" + cX + "px," + cY + "px)";
+    var p = "translate(" + cX + "px," + cY + "px)";
+    curDot.style.transform = p; curAngle.style.transform = p; curCloud.style.transform = p;
+    curTag.style.transform = "translate(" + (cX - 7) + "px," + (cY - 7) + "px)";
     curRing.style.transform = "translate(" + rX.toFixed(1) + "px," + rY.toFixed(1) + "px)";
     curRing.style.width = rW.toFixed(1) + "px"; curRing.style.height = rH.toFixed(1) + "px";
-    curBadge.style.transform = "translate(" + (cX * .6 + rX * .4 + 14).toFixed(1) + "px," + (cY * .6 + rY * .4 + 16).toFixed(1) + "px)";
+    curBadge.style.transform = key === "blur" ? p : "translate(" + (cX * .6 + rX * .4 + 16).toFixed(1) + "px," + (cY * .6 + rY * .4 + 18).toFixed(1) + "px)";
     if (Math.abs(tx - rX) + Math.abs(ty - rY) + Math.abs(tw - rW) + Math.abs(th - rH) > 0.4) curRaf = requestAnimationFrame(curFrame);
   }
   function curLeave() { if (curBox) curBox.style.opacity = "0"; }
   function applyCurStyle() {
     if (!curBox) return;
     curBox.setAttribute("data-style", CUR_KEYS[curStyle]);
-    setLens(null); badgeText = ""; curBadge.classList.remove("is-on"); curMode = ""; curBox.setAttribute("data-mode", ""); curLabel.textContent = "";
+    badgeText = ""; curBadge.classList.remove("is-on"); curBox.setAttribute("data-badge", ""); curMode = ""; curBox.setAttribute("data-mode", ""); curLabel.textContent = "";
+    tagText = null; curTagT.textContent = "+"; curTag.style.width = "14px"; curTag.style.height = "14px"; curTag.classList.remove("is-cap");
     rW = rH = 24;
   }
   function startCursor() {
     if (!fine || curBox) return;
     curBox = document.createElement("div"); curBox.className = "pm-cursor"; curBox.setAttribute("aria-hidden", "true");
-    curBox.innerHTML = '<i class="pm-dot"></i><i class="pm-ring"><span></span><b class="c1"></b><b class="c2"></b><b class="c3"></b><b class="c4"></b></i><div class="pm-cross"><i class="xl"></i><i class="xr"></i><i class="xt"></i><i class="xb"></i><i class="xd"></i></div><div class="pm-badge"></div>';
+    curBox.innerHTML = '<i class="pm-dot"></i><i class="pm-ring"><span></span></i><div class="pm-angle"><div class="pm-angle-in"><i class="ah"></i><i class="av"></i></div></div><i class="pm-cloud"></i><div class="pm-badge"></div><div class="pm-tag"><span></span></div>';
     document.body.appendChild(curBox);
-    curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild; curCross = curBox.querySelector(".pm-cross"); curBadge = curBox.querySelector(".pm-badge");
+    curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild; curAngle = curBox.querySelector(".pm-angle"); curCloud = curBox.querySelector(".pm-cloud"); curBadge = curBox.querySelector(".pm-badge"); curTag = curBox.querySelector(".pm-tag"); curTagT = curTag.firstChild;
     var saved = parseInt(load("premium-cursor"), 10); curStyle = saved >= 0 && saved < CUR_KEYS.length ? saved : 0;
     applyCurStyle(); curBtn.hidden = false;
     root.classList.add("pm-cursor-on");
@@ -741,7 +739,7 @@ document.addEventListener('play', function (e) {
   function stopCursor() {
     if (!curBox) return;
     window.removeEventListener("pointermove", curMove); document.removeEventListener("pointerleave", curLeave);
-    setLens(null); cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; curTone = ""; curBtn.hidden = true; root.classList.remove("pm-cursor-on");
+    cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; curTone = ""; curBtn.hidden = true; root.classList.remove("pm-cursor-on");
   }
   curBtn.addEventListener("click", function () {
     curStyle = (curStyle + 1) % CUR_KEYS.length; store("premium-cursor", String(curStyle)); applyCurStyle();
