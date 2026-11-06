@@ -621,7 +621,7 @@ document.addEventListener('play', function (e) {
     cv.remove(); orbs.remove(); cv = orbs = ctx2 = null; pts = [];
   }
 
-  var SEL_CLICK = ".btn, .top-link, .type-tabs button, .card, .results-list li, .stamp, .premium-toggle, .pm-opt";
+  var SEL_CLICK = ".btn, .top-link, .type-tabs button, .card-link, .go, .card-toggle, .results-list li, .stamp, .premium-toggle, .pm-opt";
   function isDark() { return root.classList.contains("pm-dark"); }
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -684,9 +684,9 @@ document.addEventListener('play', function (e) {
   var CUR_NAMES = ["Графит", "Дизайнерская стрелка"];
   var CUR_KEYS = ["arrow"];
   var curStyle = 0, curBox = null, curDot, curRing, curLabel, curArrow, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "";
-  var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
+  var curTone = "", BLUE = ".topbar, .cta-band, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
-  var BADGES = [[".card.is-open .card-toggle", "Свернуть"], [".card-toggle", "Раскрыть"], [".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a", "Написать"], [".card", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
+  var BADGES = [[".card.is-open .card-toggle", "Свернуть"], [".card-toggle", "Раскрыть"], [".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a, .cta-btn", "Написать"], [".card-link, .go", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
   var hint = null, hintTimer = 0;
   function regionText(tg) {
     for (var i = 0; i < BADGES.length; i++) if (tg && tg.closest(BADGES[i][0])) return BADGES[i][1];

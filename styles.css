@@ -1895,3 +1895,49 @@ html .ledger-body.is-belt .ledger-row { transform: translateY(var(--belt, 0px));
 @media (min-width: 621px) and (prefers-reduced-motion: reduce) { .card-more, .card-more-in, .card-toggle svg { transition: none; } }
 /* Футер: новый длинный заголовок переносится на две строки и не заходит на контакты */
 @media (min-width: 961px) { .site-foot .foot-cta h2 { text-wrap: balance; max-width: 560px; margin-inline: auto; } }
+
+/* Финальный призыв к действию: отдельный синий блок с кнопками, под ним тонкий футер */
+.cta-band { margin-top: 56px; position: relative; isolation: isolate; overflow: hidden; background: var(--accent); color: #fff; }
+.cta-band::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(60% 120% at 85% 0%, rgb(255 255 255 / .16), transparent 60%), radial-gradient(40% 90% at 8% 110%, rgb(255 255 255 / .10), transparent 60%); }
+.cta-in { display: grid; justify-items: center; gap: 14px; padding-block: 64px 56px; text-align: center; }
+.cta-in h2 { margin: 0; max-width: 18em; font: 600 clamp(28px, 3.2vw, 44px)/1.12 var(--font-display); letter-spacing: -.025em; text-wrap: balance; color: #fff; }
+.cta-sub { margin: 0; max-width: 40em; font-size: 18px; line-height: 1.5; color: rgb(255 255 255 / .94); text-wrap: balance; }
+.cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 14px; margin-top: 14px; }
+.cta-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 26px; border-radius: 10px; font: 600 17px/1 var(--font-body); text-decoration: none; color: #1e293b; transition: transform .2s, box-shadow .2s, background-color .2s; -webkit-tap-highlight-color: transparent; }
+.cta-btn svg { width: 22px; height: 22px; flex: none; }
+.cta-tg { background: var(--cta); box-shadow: 0 10px 22px -10px rgb(0 0 0 / .45); }
+.cta-tg:hover { background: var(--cta-hover); transform: translateY(-2px); box-shadow: 0 14px 26px -10px rgb(0 0 0 / .5); }
+.cta-wa { background: #fff; box-shadow: 0 10px 22px -12px rgb(0 0 0 / .4); }
+.cta-wa svg { color: #128c7e; }
+.cta-wa:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -10px rgb(0 0 0 / .45); }
+.cta-btn:active { transform: scale(.97); }
+.cta-phone { margin: 6px 0 0; font-size: 15px; color: rgb(255 255 255 / .92); }
+.cta-phone a { color: #fff; font-weight: 600; text-underline-offset: 3px; }
+.cta-band :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.fbar { background: var(--surface); border-top: 1px solid var(--line); }
+.fbar-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 28px; padding-block: 18px; }
+.fbar .logo { gap: 10px; font-size: 16px; color: var(--ink); }
+.fbar .logo-mark { width: 30px; height: 30px; box-shadow: 0 0 0 1px var(--line-strong); }
+.fbar-copy, .fbar-legal { margin: 0; font-size: 13px; color: var(--muted); }
+.fbar-legal a { color: inherit; text-underline-offset: 3px; }
+.fbar-legal a:hover { color: var(--accent); }
+@media (max-width: 620px) {
+  .cta-band { margin-top: 40px; }
+  .cta-in { padding-block: 40px 34px; gap: 12px; }
+  .cta-in h2 { font-size: clamp(24px, 7vw, 28px); }
+  .cta-sub { font-size: 15px; }
+  .cta-actions { width: 100%; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .cta-btn { width: 100%; min-height: 52px; }
+  .fbar-in { flex-direction: column; align-items: flex-start; gap: 4px; padding-block: 16px 14px; }
+  .fbar-legal a { display: inline-block; padding-block: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .cta-btn { transition: none; } .cta-tg:hover, .cta-wa:hover { transform: none; } }
+
+/* Карточки решений: ссылкой на сайт стали только текст заголовка и подзаголовка, при наведении подчёркиваются */
+.card-link { color: inherit; text-decoration: none; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+.card-link:hover { text-decoration: underline; }
+.card-link:focus-visible { text-decoration: underline; outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.card .go { text-decoration: none; }
+.card-toggle .ct-text, .more .more-text { text-decoration: none; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+.card-toggle:hover .ct-text, .card-toggle:focus-visible .ct-text, .more:hover .more-text { text-decoration: underline; }
