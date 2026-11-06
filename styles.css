@@ -1538,15 +1538,15 @@ html.premium body { background: transparent; }
 @keyframes orb-b { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-6%, 7%); } 50% { transform: translate(-10%, -3%); } 75% { transform: translate(-3%, -8%); } }
 @keyframes orb-c { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(8%, -6%); } 50% { transform: translate(-6%, -9%); } 75% { transform: translate(-9%, 4%); } }
 
-html.premium .sheet, html.premium .card, html.premium .results-list li, html.premium .hero-left, html.premium .hero-right {
+html.premium .sheet, html.premium .card, html.premium .results-list li {
   background: rgb(255 255 255 / .6); -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);
   border-color: rgb(255 255 255 / .75); box-shadow: 0 1px 0 rgb(255 255 255 / .8) inset, 0 18px 40px -22px rgb(15 23 42 / .28);
 }
 html.premium .ledger-cols { background: rgb(248 249 251 / .55); }
-html.premium .ledger-body .ledger-row:last-child, html.premium .sheet-head::before, html.premium .hero-left::before, html.premium .hero-right::before { background-color: rgb(245 248 255 / .55); }
+html.premium .ledger-body .ledger-row:last-child, html.premium .sheet-head::before { background-color: rgb(245 248 255 / .55); }
 html.premium .metric { background: rgb(255 255 255 / .5); }
 @media (max-width: 620px) {
-  html.premium .sheet, html.premium .card, html.premium .results-list li, html.premium .hero-left, html.premium .hero-right { -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%); }
+  html.premium .sheet, html.premium .card, html.premium .results-list li { -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%); }
 }
 @media (prefers-reduced-motion: reduce) { .pm-orbs i { animation: none; } }
 
@@ -1602,7 +1602,7 @@ html.pm-dark {
 }
 html.pm-dark .btn { color: #1e293b; }
 html.pm-dark .topbar .top-link { color: #2563eb; }
-html.pm-dark.premium .sheet, html.pm-dark.premium .card, html.pm-dark.premium .results-list li, html.pm-dark.premium .hero-left, html.pm-dark.premium .hero-right { background: rgb(17 24 39 / .62); border-color: rgb(255 255 255 / .08); box-shadow: 0 1px 0 rgb(255 255 255 / .05) inset, 0 20px 44px -22px rgb(0 0 0 / .8); }
+html.pm-dark.premium .sheet, html.pm-dark.premium .card, html.pm-dark.premium .results-list li { background: rgb(17 24 39 / .62); border-color: rgb(255 255 255 / .08); box-shadow: 0 1px 0 rgb(255 255 255 / .05) inset, 0 20px 44px -22px rgb(0 0 0 / .8); }
 html.pm-dark.premium .metric { background: rgb(17 24 39 / .55); }
 html.pm-dark.premium .ledger-cols, html.pm-dark.premium .ledger-body .ledger-row:last-child { background-color: rgb(30 41 66 / .45); }
 html.pm-dark .pm-orbs i:nth-child(1) { background: radial-gradient(closest-side, rgb(63 120 242 / .34), rgb(63 120 242 / 0)); }
@@ -1856,24 +1856,6 @@ html.pm-dark .cm-bar { background: rgb(17 24 39 / .86); }
 @media (min-width: 961px) { .hero .sheet-head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 /* Карточки преимуществ на компьютере: заголовки в одну строку («В 2 раза больше закрытых клиентов») */
 @media (min-width: 1200px) and (max-width: 1589px) { .results-list li > h2 { font-size: 17.5px; letter-spacing: -.02em; } }
-
-/* Главная: верхнее окно на компьютере — две отдельные карточки, слева заголовок с текстом, справа показатели, пояснение и кнопка */
-@media (min-width: 961px) {
-  .hero-sheet { background: none !important; border-color: transparent !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; overflow: visible; }
-  .hero-sheet > .sheet-head { padding: 0; gap: 24px; overflow: visible; isolation: auto; align-items: stretch; border: 0; }
-  .hero-sheet > .sheet-head::before, .hero-sheet > .sheet-head::after { display: none; }
-  .hero-left, .hero-right { position: relative; isolation: isolate; overflow: hidden; padding: 48px 44px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
-  .hero-left > *, .hero-right > * { position: relative; z-index: 1; }
-  .hero-left::before, .hero-right::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background-image: radial-gradient(color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1.4px); background-size: 22px 22px;
-    -webkit-mask-image: radial-gradient(120% 90% at 85% 10%, #000 0%, transparent 65%); mask-image: radial-gradient(120% 90% at 85% 10%, #000 0%, transparent 65%);
-    animation: hero-dots 24s linear infinite; }
-  .hero-right::after { content: ""; position: absolute; z-index: 0; pointer-events: none; width: 560px; height: 560px; right: -220px; top: -300px; border-radius: 50%; filter: blur(20px);
-    background: radial-gradient(closest-side at 38% 42%, color-mix(in srgb, var(--accent-2) 30%, transparent), transparent), radial-gradient(closest-side at 66% 64%, color-mix(in srgb, var(--accent) 20%, transparent), transparent);
-    animation: hero-glow 16s ease-in-out infinite alternate; }
-}
-@media (min-width: 961px) and (prefers-reduced-motion: reduce) { .hero-left::before, .hero-right::before, .hero-right::after { animation: none; } }
-
 /* Нижние карточки преимуществ: обводка при наведении, увеличение по нажатию */
 .results-list li { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s, border-color .35s; }
 .results-list li::after { content: ""; position: absolute; inset: -1px; z-index: 2; border-radius: inherit; padding: 1.5px; pointer-events: none; opacity: 0; transition: opacity .4s;
