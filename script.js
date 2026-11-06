@@ -6,7 +6,7 @@
   const word = document.getElementById("ledger-word");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isPremium = () => document.documentElement.classList.contains("premium");
-  const VISIBLE = window.matchMedia("(max-width: 620px)").matches ? 1 : 6;
+  const VISIBLE = window.matchMedia("(max-width: 620px)").matches ? 3 : 6;
 
   // Примеры заявок: подписаны на странице как «Пример заполнения». Клиент, запрос, менеджер и статус собираются случайно
   const MEN = ["Магомед А.", "Игорь", "Аслан Т.", "Хасан", "Дмитрий", "Рустам", "Ахмед", "Тамерлан", "Сергей П.", "Заур", "Мурат К."];
