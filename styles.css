@@ -1822,12 +1822,33 @@ html.pm-dark .cm-bar { background: rgb(17 24 39 / .86); }
 .sh-p em { margin-top: 2px; text-align: center; background: var(--c); color: #fff; font-weight: 700; font-size: 9px; padding: 6px 0; border-radius: 7px; }
 @media (prefers-reduced-motion: reduce) { .shot-cm, .cm-slide, .cm-dots i, .cm-chip { transition: none !important; } .cm-sheen, .shot-cm::after, .cm-lab i, .ck-r.is-new { animation: none !important; } .cm-lab i { opacity: 1; transform: none; } }
 
-/* Главная: заголовок с текстом по центру, лента заявок отдельной карточкой ниже */
-.hero .sheet-head { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; border-bottom: 0; }
-.hero .hero-title { display: contents; }
-.hero h1 { order: 1; max-width: 18em; }
-.hero .hero-side { order: 2; display: grid; justify-items: center; }
-.hero .hero-metrics { order: 3; width: 100%; max-width: 560px; margin-inline: auto; }
-.hero .stat-note { order: 4; margin-inline: auto; text-align: center; }
-.hero .lead { margin-inline: auto; }
+/* Главная: слева заголовок с текстом, справа показатели, пояснение и оранжевая кнопка; лента заявок отдельной карточкой ниже */
+.hero .sheet-head { border-bottom: 0; align-items: center; }
+.hero-left { display: grid; gap: 24px; align-content: center; }
+.hero-left .lead { margin: 0; }
+@media (min-width: 961px) {
+  .hero-right { display: grid; gap: 14px; align-content: center; justify-items: stretch; }
+  .hero-right .hero-metrics { max-width: none; }
+  .hero-right .stat-note { margin: 0; max-width: none; }
+  .hero-right .hero-down { justify-content: center; width: 100%; margin-top: 6px; }
+}
 .hero .ledger-sheet { margin-top: 24px; }
+@media (max-width: 960px) {
+  /* планшет и телефон: прежний порядок — заголовок, показатели, пояснение, описание, кнопка */
+  .hero .sheet-head { gap: 28px; }
+  .hero-left, .hero-right { display: contents; }
+  .hero .sheet-head h1 { order: 1; }
+  .hero .hero-metrics { order: 2; }
+  .hero .stat-note { order: 3; }
+  .hero .sheet-head .lead { order: 4; margin-top: 4px; }
+  .hero .hero-down { order: 5; width: auto; margin-top: 0; justify-self: start; }
+}
+@media (max-width: 620px) { .hero .sheet-head { gap: 20px; } .hero .sheet-head .lead { margin-top: 12px; } }
+@media (min-width: 961px) and (max-width: 1160px) {
+  .hero-right .metric { padding: 14px 14px 12px; }
+  .hero-right .metric-top { gap: 6px; }
+  .hero-right .metric-top b { font-size: 30px; }
+  .hero-right .metric-top span { font-size: 14px; }
+  .hero-right .metric small { flex-direction: column; gap: 2px; font-size: 12px; }
+}
+@media (max-width: 620px) { .results-list li:nth-child(1) > h2 { hyphens: none; letter-spacing: -.03em; } }
