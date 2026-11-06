@@ -527,7 +527,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 .passport .page-head.has-mock h1 { overflow-wrap: normal; font-size: clamp(34px, 3.9vw, 54px); }
 .passport .page-head.has-mock { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 32px 56px; align-items: center; }
 .mock {
-  --t: 6s; position: relative; border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden;
+  --t: 9s; position: relative; border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden;
   background: var(--bg); box-shadow: var(--shadow);
 }
 .mock-bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: var(--surface); border-bottom: 1px solid var(--line); }
@@ -682,7 +682,7 @@ html { scrollbar-color: #b7c3d4 var(--bg); accent-color: var(--accent); caret-co
 
 /* Шапка страницы CRM/Сайта: CRM в окне браузера и магазин в телефоне поверх */
 .passport .page-head.crm-head { grid-template-columns: minmax(0, 1fr) minmax(0, 540px); }
-.combo { --t: 5.4s; position: relative; padding: 0 0 22px 118px; }
+.combo { --t: 8s; position: relative; padding: 0 0 22px 118px; }
 .combo .crm-mock { max-width: none; }
 .phone {
   position: absolute; left: 0; bottom: 0; width: 158px; padding: 18px 7px 10px; border-radius: 24px;
@@ -1821,12 +1821,3 @@ html.pm-dark .cm-bar { background: rgb(17 24 39 / .86); }
 .sh-inst { font-size: 8px; color: #64748b; }
 .sh-p em { margin-top: 2px; text-align: center; background: var(--c); color: #fff; font-weight: 700; font-size: 9px; padding: 6px 0; border-radius: 7px; }
 @media (prefers-reduced-motion: reduce) { .shot-cm, .cm-slide, .cm-dots i, .cm-chip { transition: none !important; } .cm-sheen, .shot-cm::after, .cm-lab i, .ck-r.is-new { animation: none !important; } .cm-lab i { opacity: 1; transform: none; } }
-
-/* Страницы сайта и CRM: заголовок по центру, анимированное демо с обработкой заявки отдельным блоком ниже */
-@media (min-width: 621px) {
-  .passport .page-head.has-mock, .passport .page-head.crm-head { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; gap: 34px; }
-  .passport .page-head.has-mock .ph-text { max-width: 820px; }
-  .passport .page-head.has-mock .tpl-lead { margin-inline: auto; }
-  .passport .page-head.has-mock:not(.crm-head) .mock { width: min(100%, 560px); max-width: none; justify-self: center; text-align: left; }
-  .passport .page-head.crm-head .combo { width: min(100%, 680px); justify-self: center; text-align: left; }
-}
