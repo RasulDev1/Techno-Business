@@ -1579,11 +1579,12 @@ html.pm-cursor-on, html.pm-cursor-on * { cursor: none !important; }
   position: fixed; inset: 0; z-index: 10000; pointer-events: none; opacity: 0; transition: opacity .3s; }
 .pm-cursor[data-tone="light"] { --core: #fff; --aura: rgb(255 255 255 / .3); --aura-hover: rgb(255 255 255 / .3); --label-bg: #fff; --label-fg: #111827; }
 .pm-dot { position: absolute; left: -2px; top: -2px; width: 4px; height: 4px; border-radius: 50%; background: var(--core); transition: background-color .35s cubic-bezier(.16, 1, .3, 1), opacity .3s; }
-.pm-ring { position: absolute; left: 0; top: 0; width: 24px; height: 24px; margin: 0; border: 0; border-radius: 50%; background: var(--aura); display: grid; place-items: center; translate: -50% -50%;
-  transition: border-radius .45s cubic-bezier(.16, 1, .3, 1), background-color .35s cubic-bezier(.16, 1, .3, 1); }
+.pm-ring { position: absolute; left: 0; top: 0; width: 24px; height: 24px; margin: 0; box-sizing: border-box; border: 1.5px solid transparent; border-radius: 50%; background: var(--aura); display: grid; place-items: center; translate: -50% -50%;
+  transition: border-radius .45s cubic-bezier(.16, 1, .3, 1), background-color .35s cubic-bezier(.16, 1, .3, 1), border-color .35s cubic-bezier(.16, 1, .3, 1); }
 .pm-ring span { font: 700 13px/1 var(--font-body); color: var(--label-fg); opacity: 0; transition: opacity .3s; }
-.pm-cursor[data-mode="stick"] .pm-ring { border-radius: 14px; background: var(--aura-hover); }
-.pm-cursor[data-mode="link"] .pm-ring { background: var(--aura-hover); }
+.pm-cursor[data-mode="stick"] .pm-ring { border-radius: 14px; background: var(--aura-hover); border-color: var(--accent); }
+.pm-cursor[data-mode="link"] .pm-ring { background: var(--aura-hover); border-color: var(--accent); }
+.pm-cursor[data-tone="light"][data-mode="stick"] .pm-ring, .pm-cursor[data-tone="light"][data-mode="link"] .pm-ring { border-color: rgb(255 255 255 / .9); }
 .pm-cursor[data-mode="label"] .pm-ring { background: var(--label-bg); }
 .pm-cursor[data-mode="label"] .pm-ring span { opacity: 1; }
 .pm-cursor[data-mode="label"] .pm-dot { opacity: 0; }
