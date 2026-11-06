@@ -1512,7 +1512,7 @@ html.premium .twi { display: inline-block; opacity: 0; transform: translateY(105
 .pm-track i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--accent); }
 
 /* Журнал: новая заявка сверху, старые уходят вниз */
-html.premium .ledger-body { display: flex; flex-direction: column-reverse; }
+html.premium .ledger-body { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
 html.premium .ledger-body .ledger-row { flex: none; transition-duration: .9s; transition-timing-function: cubic-bezier(.16, 1, .3, 1); }
 html.premium .ledger-body .ledger-row.is-leaving { transform: translateY(14px); }
 html.premium .ledger-body .ledger-row:last-child { background: #f5f8ff; }
@@ -1524,3 +1524,27 @@ html.premium .ledger-body .stamp:hover { filter: brightness(.97); }
   html.premium .card::after, html.premium .btn::before, html.premium .top-link::before { display: none; }
   html.premium .shot img, html.premium .card:hover .shot img { transform: none; }
 }
+
+/* Премиум: световые сферы, сетка с частицами и стеклянные панели */
+html.premium body { background: transparent; }
+.pm-net { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+.pm-orbs { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+.pm-orbs i { position: absolute; border-radius: 50%; will-change: transform; }
+.pm-orbs i:nth-child(1) { width: 62vmax; height: 62vmax; left: -14vmax; top: -18vmax; background: radial-gradient(closest-side, rgb(37 99 235 / .15), rgb(37 99 235 / 0)); animation: orb-a 22s ease-in-out infinite; }
+.pm-orbs i:nth-child(2) { width: 54vmax; height: 54vmax; right: -16vmax; top: 18vh; background: radial-gradient(closest-side, rgb(96 165 250 / .14), rgb(96 165 250 / 0)); animation: orb-b 26s ease-in-out infinite; }
+.pm-orbs i:nth-child(3) { width: 46vmax; height: 46vmax; left: 22vw; bottom: -22vmax; background: radial-gradient(closest-side, rgb(56 189 248 / .12), rgb(56 189 248 / 0)); animation: orb-c 20s ease-in-out infinite; }
+@keyframes orb-a { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(7%, 5%); } 50% { transform: translate(10%, -4%); } 75% { transform: translate(3%, 8%); } }
+@keyframes orb-b { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-6%, 7%); } 50% { transform: translate(-10%, -3%); } 75% { transform: translate(-3%, -8%); } }
+@keyframes orb-c { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(8%, -6%); } 50% { transform: translate(-6%, -9%); } 75% { transform: translate(-9%, 4%); } }
+
+html.premium .sheet, html.premium .card, html.premium .results-list li {
+  background: rgb(255 255 255 / .6); -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);
+  border-color: rgb(255 255 255 / .75); box-shadow: 0 1px 0 rgb(255 255 255 / .8) inset, 0 18px 40px -22px rgb(15 23 42 / .28);
+}
+html.premium .ledger-cols { background: rgb(248 249 251 / .55); }
+html.premium .ledger-body .ledger-row:last-child, html.premium .sheet-head::before { background-color: rgb(245 248 255 / .55); }
+html.premium .metric { background: rgb(255 255 255 / .5); }
+@media (max-width: 620px) {
+  html.premium .sheet, html.premium .card, html.premium .results-list li { -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%); }
+}
+@media (prefers-reduced-motion: reduce) { .pm-orbs i { animation: none; } }

@@ -515,12 +515,83 @@ document.addEventListener('play', function (e) {
   }
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(parallax); } }, { passive: true });
 
+  // Фон премиум-режима: световые сферы (CSS), тонкая сетка с узлами и сеть частиц (Canvas)
+  var orbs = null, cv = null, ctx2 = null, bgRaf = 0, lastT = 0, pts = [], W = 0, H = 0, mx = -9999, my = -9999, DPR = 1;
+  var GRID = 56, NODE_R = 100;
+  function bgSize() {
+    DPR = Math.min(1.5, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+    cv.width = W * DPR; cv.height = H * DPR; ctx2.setTransform(DPR, 0, 0, DPR, 0, 0);
+    var n = Math.round(Math.min(46, Math.max(16, W * H / 32000)));
+    while (pts.length < n) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .22, vy: (Math.random() - .5) * .22 });
+    pts.length = n;
+  }
+  function bgDraw(t) {
+    bgRaf = 0;
+    if (!cv) return;
+    if (!reduce && !document.hidden) bgRaf = requestAnimationFrame(bgDraw);
+    if (t - lastT < 32) return; // примерно 30 кадров в секунду
+    lastT = t;
+    ctx2.clearRect(0, 0, W, H);
+    // Сетка 4% и узлы, которые у курсора подсвечиваются и чуть притягиваются
+    ctx2.lineWidth = 1; ctx2.strokeStyle = "rgba(37,99,235,.045)"; ctx2.beginPath();
+    for (var x = 0; x <= W; x += GRID) { ctx2.moveTo(x + .5, 0); ctx2.lineTo(x + .5, H); }
+    for (var y = 0; y <= H; y += GRID) { ctx2.moveTo(0, y + .5); ctx2.lineTo(W, y + .5); }
+    ctx2.stroke();
+    for (x = 0; x <= W; x += GRID) {
+      for (y = 0; y <= H; y += GRID) {
+        var dx = mx - x, dy = my - y, d = Math.sqrt(dx * dx + dy * dy), k = d < NODE_R ? 1 - d / NODE_R : 0, e = k * k * (3 - 2 * k);
+        var px = x + dx * e * .16, py = y + dy * e * .16;
+        ctx2.beginPath(); ctx2.arc(px, py, 1.2 + e * 2.2, 0, 6.2832);
+        ctx2.fillStyle = e > 0 ? "rgba(37,99,235," + (.12 + e * .7).toFixed(2) + ")" : "rgba(37,99,235,.12)";
+        ctx2.fill();
+      }
+    }
+    // Частицы: редкие точки, которые сближаясь соединяются тонкими линиями, курсор мягко их отталкивает и тоже связывается
+    for (var i = 0; i < pts.length; i++) {
+      var a = pts[i];
+      if (!reduce) {
+        a.x += a.vx; a.y += a.vy;
+        if (a.x < -20 || a.x > W + 20) a.vx *= -1;
+        if (a.y < -20 || a.y > H + 20) a.vy *= -1;
+        var mdx = a.x - mx, mdy = a.y - my, md = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (md < 120 && md > 1) { a.x += mdx / md * .5; a.y += mdy / md * .5; }
+      }
+      for (var q = i + 1; q < pts.length; q++) {
+        var b = pts[q], ddx = a.x - b.x, ddy = a.y - b.y, dd = Math.sqrt(ddx * ddx + ddy * ddy);
+        if (dd < 150) { ctx2.strokeStyle = "rgba(37,99,235," + ((1 - dd / 150) * .22).toFixed(3) + ")"; ctx2.beginPath(); ctx2.moveTo(a.x, a.y); ctx2.lineTo(b.x, b.y); ctx2.stroke(); }
+      }
+      var cd = Math.hypot(a.x - mx, a.y - my);
+      if (cd < 160) { ctx2.strokeStyle = "rgba(37,99,235," + ((1 - cd / 160) * .35).toFixed(3) + ")"; ctx2.beginPath(); ctx2.moveTo(a.x, a.y); ctx2.lineTo(mx, my); ctx2.stroke(); }
+      ctx2.beginPath(); ctx2.arc(a.x, a.y, 1.8, 0, 6.2832); ctx2.fillStyle = "rgba(37,99,235,.35)"; ctx2.fill();
+    }
+  }
+  function onBgMove(e) { mx = e.clientX; my = e.clientY; }
+  function onBgLeave() { mx = my = -9999; }
+  function onVis() { if (cv && !bgRaf && !document.hidden) bgRaf = requestAnimationFrame(bgDraw); }
+  function startBg() {
+    if (cv) return;
+    orbs = document.createElement("div"); orbs.className = "pm-orbs"; orbs.setAttribute("aria-hidden", "true");
+    orbs.innerHTML = "<i></i><i></i><i></i>"; document.body.appendChild(orbs);
+    cv = document.createElement("canvas"); cv.className = "pm-net"; cv.setAttribute("aria-hidden", "true");
+    document.body.appendChild(cv); ctx2 = cv.getContext("2d"); bgSize();
+    window.addEventListener("resize", bgSize); document.addEventListener("visibilitychange", onVis);
+    if (fine) { window.addEventListener("pointermove", onBgMove, { passive: true }); document.addEventListener("pointerleave", onBgLeave); }
+    bgRaf = requestAnimationFrame(bgDraw);
+  }
+  function stopBg() {
+    if (!cv) return;
+    cancelAnimationFrame(bgRaf); bgRaf = 0;
+    window.removeEventListener("resize", bgSize); document.removeEventListener("visibilitychange", onVis);
+    window.removeEventListener("pointermove", onBgMove); document.removeEventListener("pointerleave", onBgLeave);
+    cv.remove(); orbs.remove(); cv = orbs = ctx2 = null; pts = [];
+  }
+
   function set(on) {
     root.classList.toggle("premium", on);
     btn.setAttribute("aria-pressed", String(on));
     btn.querySelector(".pt-text").textContent = on ? "Премиум включён" : "Премиум-версия";
-    if (on) { magnets = magnetTargets(); revealTitle(); syncMetrics(); }
-    else { magnets.forEach(function (el) { el.style.transform = ""; el.classList.remove("is-magnet"); }); magnets = []; restoreTitle(); resetMetrics(); }
+    if (on) { startBg(); magnets = magnetTargets(); revealTitle(); syncMetrics(); }
+    else { stopBg(); magnets.forEach(function (el) { el.style.transform = ""; el.classList.remove("is-magnet"); }); magnets = []; restoreTitle(); resetMetrics(); }
     parallax();
   }
   btn.addEventListener("click", function () {
