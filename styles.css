@@ -1946,11 +1946,8 @@ html.pm-dark .topbar .top-link:hover { color: #43299c; }
 html.pm-dark .m-contact { --accent: #43299c; --accent-soft: #ece8fb; }
 
 /* Призыв к действию — не футер: белый блок, под ним прежний синий футер без текста (только логотип, телефон и соцсети) */
-.cta-band { border-bottom: 1px solid var(--line); }
 .cta-band + .site-foot { margin-top: 56px; }
 @media (max-width: 620px) { .cta-band + .site-foot { margin-top: 36px; } }
-.cta-wa { color: var(--ink); }
-html.pm-dark .cta-wa:hover { box-shadow: inset 0 0 0 1.5px #25d3a7, 0 12px 24px -14px rgb(0 0 0 / .6); }
 @media (max-width: 620px) {
   .site-foot .foot-in { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding-block: 24px 58px; }
   .site-foot .foot-contacts { grid-column: 1; grid-row: 1; justify-self: stretch; }
@@ -1992,3 +1989,46 @@ html.pm-dark .cta-wa:hover { box-shadow: inset 0 0 0 1.5px #25d3a7, 0 12px 24px 
   .sheet > .ledger .ledger-body .stamp.st-cancel { background: rgb(255 255 255 / .06); border-color: rgb(255 255 255 / .25); color: rgb(255 255 255 / .72); }
   .sheet > .ledger .ledger-body .stamp svg { color: inherit; }
 }
+
+/* Призыв к действию: плоский, по центру, вплотную к футеру. Оформление как у полосы «Остались вопросы?» в проекте отеля:
+   белая полоса без теней, строгие кнопки с рамкой 1,5 px; вместо поля ввода выбор, куда написать или позвонить */
+.cta-band + .site-foot { margin-top: 0; }
+.cta-btn { border: 1.5px solid transparent; box-shadow: none; }
+.cta-tg { border-color: var(--cta); }
+.cta-tg:hover { border-color: var(--cta-hover); box-shadow: none; transform: none; }
+.cta-wa, .cta-call { background: transparent; border-color: var(--accent); color: var(--accent); box-shadow: none; }
+.cta-wa svg, .cta-call svg { color: inherit; }
+.cta-wa:hover, .cta-call:hover { background: var(--accent-soft); box-shadow: none; transform: none; }
+.cta-btn:active { transform: translateY(1px); }
+.cta-call { display: none; }
+.cta-num { font-variant-numeric: tabular-nums; }
+@media (min-width: 621px) {
+  .cta-in { grid-template-columns: minmax(0, 1fr); grid-template-areas: "t" "s" "a"; justify-items: center; text-align: center; gap: 14px; padding-block: 52px 56px; }
+  .cta-in h2 { font-size: clamp(30px, 3.1vw, 42px); text-wrap: balance; }
+  .cta-sub { max-width: 34em; text-wrap: balance; }
+  .cta-actions { justify-self: center; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .cta-phone { display: none; }
+  .cta-call { display: inline-flex; }
+}
+
+/* Призыв к действию: на кнопках нет текста, только значки Telegram, WhatsApp и звонка (подписи в aria-label) */
+.cta-actions { grid-area: a; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; margin-top: 8px; }
+.cta-btn { width: auto; min-height: 0; height: 64px; padding: 0; border: 1.5px solid var(--line-strong); border-radius: 16px; background: var(--surface); box-shadow: none; transition: border-color .2s, background-color .2s, transform .2s; }
+.cta-btn svg { width: 30px; height: 30px; transition: transform .25s; }
+.cta-tg { color: #0088cc; }
+.cta-wa { color: #128c7e; }
+.cta-call { display: inline-flex; color: var(--cta-hover); }
+.cta-btn:hover { background: color-mix(in srgb, currentColor 8%, var(--surface)); border-color: currentColor; transform: none; box-shadow: none; }
+.cta-btn:hover svg { transform: scale(1.08); }
+.cta-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.cta-phone { display: none; }
+@media (min-width: 621px) {
+  .cta-actions { display: flex; width: auto; gap: 16px; margin-top: 18px; justify-content: center; }
+  .cta-btn { width: 78px; height: 78px; border-radius: 18px; }
+  .cta-btn svg { width: 34px; height: 34px; }
+}
+html.pm-dark .cta-btn { background: rgb(255 255 255 / .04); }
+html.pm-dark .cta-btn:hover { background: color-mix(in srgb, currentColor 14%, #111827); }
+html.pm-dark .cta-tg { color: #38b6f0; }
+html.pm-dark .cta-wa { color: #34d57b; }
+html.pm-dark .cta-call { color: #fb923c; }
