@@ -1674,9 +1674,6 @@ html.pm-dark .cm-chip { background: rgb(17 24 39 / .92); border-color: #1f2a40; 
 @keyframes ck-in { from { opacity: 0; transform: translateY(-9px); background: color-mix(in srgb, var(--c) 18%, #fff); } 40% { background: color-mix(in srgb, var(--c) 14%, #fff); } to { opacity: 1; transform: none; background: transparent; } }
 .ck-kpis > div.flash { animation: ck-flash .9s ease; }
 @keyframes ck-flash { 0% { background: color-mix(in srgb, var(--c) 16%, #fff); } 100% { background: var(--surface); } }
-.ck-r em, .qz-opts > div, .qz-btns em, .qz-btns span, .sh-p em, .sh-i u, .sh-chips span, .ck-side nav i, .dn-btns em, .dn-mini, .dn-srv > div { cursor: pointer; transition: transform .25s cubic-bezier(.16, 1, .3, 1), background-color .25s, border-color .25s, box-shadow .25s, filter .25s; }
-.qz-opts > div:hover { border-color: color-mix(in srgb, var(--c) 55%, #e2e8f0); transform: translateY(-1px); }
-.ck-r em:hover, .sh-p em:hover, .dn-btns em:hover, .qz-btns em:hover { filter: brightness(1.08); transform: scale(1.04); }
 .sh-p em.done { background: #16a34a; }
 .sh-cart b.bump { animation: cm-bump .5s cubic-bezier(.16, 1, .3, 1); }
 @keyframes cm-bump { 40% { transform: scale(1.5); } }

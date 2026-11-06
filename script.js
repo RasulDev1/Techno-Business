@@ -828,8 +828,6 @@ document.addEventListener('play', function (e) {
             var cur = (em.className.match(/p-(\w+)/) || [])[1], i = cyc.indexOf(cur), nx = cyc[(i + 1) % cyc.length];
             em.className = "p-" + nx; em.textContent = pill[nx]; say("Статус обновлён: " + pill[nx]); return true;
           }
-          var ni = t.closest(".ck-side nav i");
-          if (ni) { slide.querySelectorAll(".ck-side nav i").forEach(function (x) { x.classList.toggle("on", x === ni); }); slide.querySelector(".ck-top h4").textContent = ni.textContent; return true; }
           return false;
         }
       };
@@ -917,11 +915,7 @@ document.addEventListener('play', function (e) {
       if (manual) restart();
     }
     function restart() { clearInterval(timer); if (reduce) return; timer = setInterval(function () { if (!hovered && visible && !document.hidden && Date.now() - lastUser > 5000) go(cur + 1); }, 6200 + n * 700); }
-    mock.addEventListener("click", function (e) {
-      e.preventDefault(); var h = hs[cur];
-      if (h && h.act && h.act(e.target)) { lastUser = Date.now(); return; }
-      go(cur + 1, true);
-    });
+    mock.addEventListener("click", function (e) { e.preventDefault(); go(cur + 1, true); });
     mock.addEventListener("pointerenter", function () { hovered = true; }); mock.addEventListener("pointerleave", function () { hovered = false; });
     if (window.IntersectionObserver) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(mock);
     if (!reduce) setInterval(function () {
