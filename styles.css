@@ -1900,10 +1900,17 @@ html .ledger-body.is-belt .ledger-row { transform: translateY(var(--belt, 0px));
 .cta-band { margin-top: 56px; position: relative; isolation: isolate; overflow: hidden; background: var(--accent); color: #fff; }
 .cta-band::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: radial-gradient(60% 120% at 85% 0%, rgb(255 255 255 / .16), transparent 60%), radial-gradient(40% 90% at 8% 110%, rgb(255 255 255 / .10), transparent 60%); }
-.cta-in { display: grid; justify-items: center; gap: 14px; padding-block: 64px 56px; text-align: center; }
-.cta-in h2 { margin: 0; max-width: 18em; font: 600 clamp(28px, 3.2vw, 44px)/1.12 var(--font-display); letter-spacing: -.025em; text-wrap: balance; color: #fff; }
-.cta-sub { margin: 0; max-width: 40em; font-size: 18px; line-height: 1.5; color: rgb(255 255 255 / .94); text-wrap: balance; }
-.cta-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 14px; margin-top: 14px; }
+/* Плоский вариант: текст слева, кнопки справа в одной строке; на планшете и телефоне всё выровнено влево */
+.cta-in { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "t" "s" "a" "p"; justify-items: start; gap: 12px 48px; padding-block: 40px 36px; text-align: left; }
+.cta-in h2 { grid-area: t; margin: 0; font: 600 clamp(28px, 3vw, 40px)/1.12 var(--font-display); letter-spacing: -.025em; color: #fff; }
+.cta-sub { grid-area: s; margin: 0; max-width: 36em; font-size: 18px; line-height: 1.5; color: rgb(255 255 255 / .94); text-wrap: pretty; }
+.cta-sub .br-desk { display: none; }
+.cta-actions { grid-area: a; display: flex; flex-wrap: wrap; gap: 12px 14px; margin-top: 8px; }
+@media (min-width: 961px) {
+  .cta-in { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "t a" "s p"; align-items: center; justify-items: start; }
+  .cta-actions { margin-top: 0; justify-self: end; flex-wrap: nowrap; }
+  .cta-phone { justify-self: end; }
+}
 .cta-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 54px; padding: 0 26px; border-radius: 10px; font: 600 17px/1 var(--font-body); text-decoration: none; color: #1e293b; transition: transform .2s, box-shadow .2s, background-color .2s; -webkit-tap-highlight-color: transparent; }
 .cta-btn svg { width: 22px; height: 22px; flex: none; }
 .cta-tg { background: var(--cta); box-shadow: 0 10px 22px -10px rgb(0 0 0 / .45); }
@@ -1912,7 +1919,7 @@ html .ledger-body.is-belt .ledger-row { transform: translateY(var(--belt, 0px));
 .cta-wa svg { color: #128c7e; }
 .cta-wa:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -10px rgb(0 0 0 / .45); }
 .cta-btn:active { transform: scale(.97); }
-.cta-phone { margin: 6px 0 0; font-size: 15px; color: rgb(255 255 255 / .92); }
+.cta-phone { grid-area: p; margin: 0; font-size: 15px; color: rgb(255 255 255 / .92); }
 .cta-phone a { color: #fff; font-weight: 600; text-underline-offset: 3px; }
 .cta-band :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .fbar { background: var(--surface); border-top: 1px solid var(--line); }
@@ -1924,10 +1931,10 @@ html .ledger-body.is-belt .ledger-row { transform: translateY(var(--belt, 0px));
 .fbar-legal a:hover { color: var(--accent); }
 @media (max-width: 620px) {
   .cta-band { margin-top: 40px; }
-  .cta-in { padding-block: 40px 34px; gap: 12px; }
+  .cta-in { padding-block: 30px 28px; gap: 10px; }
   .cta-in h2 { font-size: clamp(24px, 7vw, 28px); }
   .cta-sub { font-size: 15px; }
-  .cta-actions { width: 100%; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .cta-actions { width: 100%; flex-direction: column; gap: 10px; margin-top: 6px; }
   .cta-btn { width: 100%; min-height: 52px; }
   .fbar-in { flex-direction: column; align-items: flex-start; gap: 4px; padding-block: 16px 14px; }
   .fbar-legal a { display: inline-block; padding-block: 8px; }
