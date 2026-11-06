@@ -514,7 +514,7 @@ document.addEventListener('play', function (e) {
   function parallax() {
     ticking = false;
     var on = root.classList.contains("premium") && !reduce;
-    document.querySelectorAll(".shot img, .shot .mock").forEach(function (img) {
+    document.querySelectorAll(".shot img, .shot .cm").forEach(function (img) {
       if (!on) { img.style.removeProperty("--py"); return; }
       var r = img.parentElement.getBoundingClientRect(), k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
       img.style.setProperty("--py", Math.max(-1, Math.min(1, k)) * -6 + "px");
@@ -682,6 +682,8 @@ document.addEventListener('play', function (e) {
     if (key === "arrow") {
       var txt = regionText(tg);
       if (txt !== badgeText) { badgeText = txt; if (txt) curBadge.textContent = txt; curBadge.classList.toggle("is-on", !!txt); curBox.setAttribute("data-badge", txt ? "on" : ""); }
+      var bx = Math.min(cX + 14, innerWidth - curBadge.offsetWidth - 8), by = Math.min(cY + 20, innerHeight - 34);
+      curBadge.style.transform = "translate(" + bx.toFixed(0) + "px," + by.toFixed(0) + "px)";
     }
     if (!curRaf) curRaf = requestAnimationFrame(curFrame);
   }
@@ -699,7 +701,7 @@ document.addEventListener('play', function (e) {
     curDot.style.transform = p; curArrow.style.transform = p;
     curRing.style.transform = "translate(" + rX.toFixed(1) + "px," + rY.toFixed(1) + "px)";
     curRing.style.width = rW.toFixed(1) + "px"; curRing.style.height = rH.toFixed(1) + "px";
-    curBadge.style.transform = key === "arrow" ? "translate(" + (cX + 9) + "px," + (cY + 17) + "px)" : "translate(" + (cX * .6 + rX * .4 + 16).toFixed(1) + "px," + (cY * .6 + rY * .4 + 18).toFixed(1) + "px)";
+    if (key !== "arrow") curBadge.style.transform = "translate(" + (cX * .6 + rX * .4 + 16).toFixed(1) + "px," + (cY * .6 + rY * .4 + 18).toFixed(1) + "px)";
     if (Math.abs(tx - rX) + Math.abs(ty - rY) + Math.abs(tw - rW) + Math.abs(th - rH) > 0.4) curRaf = requestAnimationFrame(curFrame);
   }
   function curLeave() { if (curBox) curBox.style.opacity = "0"; }
@@ -717,7 +719,6 @@ document.addEventListener('play', function (e) {
     curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild; curArrow = curBox.querySelector(".pm-arrow"); curBadge = curBox.querySelector(".pm-badge");
     curStyle = 0;
     applyCurStyle();
-    root.classList.add("pm-cursor-on");
     window.addEventListener("pointermove", curMove, { passive: true }); document.addEventListener("pointerleave", curLeave);
   }
   function stopCursor() {
@@ -790,4 +791,33 @@ document.addEventListener('play', function (e) {
   }
   var start = true;
   if (start) set(true);
+})();
+
+// Карусели-макеты в карточках: CRM по нишам и виды сайтов
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll(".cm").forEach(function (mock, n) {
+    var stage = mock.querySelector(".cm-stage"), slides = [].slice.call(mock.querySelectorAll(".cm-slide"));
+    var lab = mock.querySelector(".cm-lab"), dotsBox = mock.querySelector(".cm-dots");
+    var cur = 0, timer = 0, hovered = false, visible = true, tick = null;
+    function fit() { var w = mock.clientWidth; if (w) stage.style.setProperty("--s", (w / 640).toFixed(4)); }
+    fit();
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(mock); else window.addEventListener("resize", fit);
+    var dots = slides.map(function (s, i) {
+      var d = document.createElement("i"); d.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); go(i, true); }); dotsBox.appendChild(d); return d;
+    });
+    function go(i, manual) {
+      cur = (i + slides.length) % slides.length;
+      slides.forEach(function (s, k) { s.classList.toggle("is-on", k === cur); dots[k].classList.toggle("on", k === cur); });
+      lab.textContent = slides[cur].getAttribute("data-label") || "";
+      if (manual) restart();
+    }
+    function restart() { clearInterval(timer); if (reduce) return; timer = setInterval(function () { if (!hovered && visible && !document.hidden) go(cur + 1); }, 4500 + n * 600); }
+    ["prev", "next"].forEach(function (k) {
+      mock.querySelector(".cm-" + k).addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); go(cur + (k === "next" ? 1 : -1), true); });
+    });
+    mock.addEventListener("pointerenter", function () { hovered = true; }); mock.addEventListener("pointerleave", function () { hovered = false; });
+    if (window.IntersectionObserver) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(mock);
+    go(0); restart();
+  });
 })();
