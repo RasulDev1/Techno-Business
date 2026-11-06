@@ -386,3 +386,121 @@ document.addEventListener('play', function (e) {
   if (mq.addEventListener) mq.addEventListener('change', apply);
   apply();
 })();
+
+// Цифры «Стало»: считаются от прежнего значения к итоговому, после чего вокруг них вспыхивает и гаснет свечение
+(function () {
+  var box = document.querySelector(".hero-metrics"); if (!box) return;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var phone = window.matchMedia("(max-width: 620px)").matches;
+  var metrics = box.querySelectorAll(".metric");
+  function fmt(v, dec) { return v.toFixed(dec).replace(".", ","); }
+  function run() {
+    metrics.forEach(function (m, i) {
+      var cnt = m.querySelector(".cnt"), t0 = performance.now() + 350 + i * 150, dur = 1600;
+      var from = cnt ? +cnt.dataset.from : 0, to = cnt ? +cnt.dataset.to : 0, dec = cnt ? +cnt.dataset.dec : 0, unit = cnt ? cnt.dataset.unit : "";
+      function glow() { m.classList.add("is-done"); }
+      if (reduce) return;
+      if (!cnt || phone) { setTimeout(glow, 350 + dur + i * 150); return; }
+      cnt.textContent = fmt(from, dec) + unit;
+      (function tick(now) {
+        var p = Math.min(1, Math.max(0, (now - t0) / dur)), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+        cnt.textContent = fmt(from + (to - from) * e, dec) + unit;
+        if (p < 1) requestAnimationFrame(tick); else glow();
+      })(t0);
+    });
+  }
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { io.disconnect(); run(); } }, { threshold: 0.4 });
+    io.observe(box);
+  } else run();
+})();
+
+// Преимущества: карточки проявляются по очереди (сдвиг вверх и снятие размытия)
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  var items = document.querySelectorAll(".results-list li"); if (!items.length) return;
+  items.forEach(function (li) { li.classList.add("rv"); });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      var li = en.target, i = Array.prototype.indexOf.call(items, li);
+      li.style.transitionDelay = i * 140 + "ms";
+      li.classList.add("rv-in");
+      setTimeout(function () { li.style.transitionDelay = ""; li.classList.remove("rv", "rv-in"); }, 900 + i * 140);
+    });
+  }, { threshold: 0.25 });
+  items.forEach(function (li) { io.observe(li); });
+})();
+
+// Макеты устройств: наклон за курсором, на телефоне экран сам прокручивается
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  document.querySelectorAll(".shot-phone, .shot-laptop").forEach(function (shot) {
+    var dev = shot.querySelector(".dev"), img = shot.querySelector(".dev-screen img"), screen = shot.querySelector(".dev-screen");
+    if (!dev || !img) return;
+    function measure() { dev.style.setProperty("--scroll", Math.max(0, img.offsetHeight - screen.clientHeight) + "px"); }
+    img.addEventListener("load", measure); window.addEventListener("resize", measure); measure();
+    if (reduce) return;
+    if (!fine) {
+      // На сенсорном экране нет наведения: экран телефона прокручивается, пока карточка видна
+      if (shot.classList.contains("shot-phone") && "IntersectionObserver" in window) {
+        new IntersectionObserver(function (e) { dev.classList.toggle("is-scroll", e[0].isIntersecting); }, { threshold: 0.6 }).observe(shot);
+      }
+      return;
+    }
+    shot.addEventListener("pointermove", function (e) {
+      var r = shot.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      dev.style.transform = "rotateY(" + (x * 18).toFixed(1) + "deg) rotateX(" + (-y * 14).toFixed(1) + "deg)";
+    });
+    shot.addEventListener("pointerleave", function () { dev.style.transform = ""; });
+  });
+})();
+
+// Точечная сетка на фоне: точки у курсора растут, подсвечиваются и расходятся
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  var cv = document.createElement("canvas"); cv.className = "dotgrid"; cv.setAttribute("aria-hidden", "true");
+  document.body.appendChild(cv);
+  var ctx = cv.getContext("2d"), GAP = 30, R = 120, mx = -999, my = -999, w = 0, h = 0, raf = 0, idle = 0;
+  function size() {
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    w = innerWidth; h = innerHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw();
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (var x = GAP / 2; x < w; x += GAP) {
+      for (var y = GAP / 2; y < h; y += GAP) {
+        var dx = x - mx, dy = y - my, d = Math.sqrt(dx * dx + dy * dy), k = d < R ? 1 - d / R : 0;
+        var px = x, py = y;
+        if (k > 0) { var s = k * k * 9 / (d || 1); px += dx * s; py += dy * s; }
+        ctx.beginPath(); ctx.arc(px, py, 1.1 + k * 1.9, 0, 6.2832);
+        ctx.fillStyle = k > 0 ? "rgba(37,99,235," + (0.25 + k * 0.6).toFixed(2) + ")" : "rgba(100,116,139,.2)";
+        ctx.fill();
+      }
+    }
+  }
+  function frame() {
+    draw(); raf = 0;
+    if (performance.now() - idle < 600) raf = requestAnimationFrame(frame);
+  }
+  window.addEventListener("pointermove", function (e) { mx = e.clientX; my = e.clientY; idle = performance.now(); if (!raf) raf = requestAnimationFrame(frame); }, { passive: true });
+  document.addEventListener("pointerleave", function () { mx = my = -999; if (!raf) raf = requestAnimationFrame(frame); });
+  window.addEventListener("resize", size); size();
+})();
+
+// Бегущая строка: при наведении мыши замедляется
+(function () {
+  var track = document.querySelector(".marquee-track"); if (!track || !track.getAnimations) return;
+  var box = track.parentElement, rate = 1, target = 1, on = false;
+  function step() {
+    rate += (target - rate) * 0.12;
+    var a = track.getAnimations()[0]; if (a) a.updatePlaybackRate(rate);
+    if (Math.abs(target - rate) > 0.01) requestAnimationFrame(step); else on = false;
+  }
+  function go(t) { target = t; if (!on) { on = true; requestAnimationFrame(step); } }
+  box.addEventListener("pointerenter", function () { go(0.2); });
+  box.addEventListener("pointerleave", function () { go(1); });
+})();
