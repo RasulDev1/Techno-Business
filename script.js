@@ -131,16 +131,20 @@
   const GLIDE = 480; // плавное «листание» таблицы вниз, мс
   const EASE = "cubic-bezier(.22,.8,.24,1)";
 
-  // Новая заявка въезжает сверху, остальные плавно скользят вниз, самая старая уезжает за нижний край
-  function glideIn(row, old) {
+  // Сначала таблица плавно «листается» вниз: строки скользят, самая старая уходит за нижний край и освобождается место.
+  // Когда сдвиг закончился, в освободившуюся строку сверху вписывается новая заявка.
+  function glideDown(row, old) {
     const tops = old.map((r) => r.offsetTop);
+    row.style.opacity = "0";
     body.appendChild(row);
-    const h = row.offsetHeight;
     old.forEach((r, i) => {
       const dy = tops[i] - r.offsetTop;
       if (dy) r.animate([{ transform: "translateY(" + dy + "px)" }, { transform: "none" }], { duration: GLIDE, easing: EASE });
     });
-    row.animate([{ transform: "translateY(" + -h + "px)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: GLIDE, easing: EASE });
+    return sleep(GLIDE).then(() => {
+      row.style.opacity = "";
+      row.animate([{ opacity: 0, transform: "translateY(-10px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease-out" });
+    });
   }
 
   async function writeRow() {
@@ -149,8 +153,8 @@
     if (smooth) {
       const old = Array.from(body.children);
       const first = old.length >= VISIBLE ? old[0] : null;
-      glideIn(row, old);
-      if (first) setTimeout(() => first.remove(), GLIDE);
+      await glideDown(row, old);
+      if (first) first.remove();
     } else {
       if (body.children.length >= VISIBLE) {
         const first = body.firstElementChild;
@@ -177,7 +181,7 @@
     running = true;
     while (visible) {
       await writeRow();
-      await wait(isPremium() ? 3200 + Math.random() * 1800 : 900);
+      await sleep(Math.max(250, (isPremium() ? 3200 + Math.random() * 1800 : 900) / SPEED - (VISIBLE > 1 ? GLIDE : 0)));
     }
     running = false;
   }
@@ -617,7 +621,7 @@ document.addEventListener('play', function (e) {
     cv.remove(); orbs.remove(); cv = orbs = ctx2 = null; pts = [];
   }
 
-  var SEL_CLICK = ".btn, .top-link, .type-tabs button, .card, .stamp, .premium-toggle, .pm-opt";
+  var SEL_CLICK = ".btn, .top-link, .type-tabs button, .card, .results-list li, .stamp, .premium-toggle, .pm-opt";
   function isDark() { return root.classList.contains("pm-dark"); }
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -682,7 +686,7 @@ document.addEventListener('play', function (e) {
   var curStyle = 0, curBox = null, curDot, curRing, curLabel, curArrow, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "";
   var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
-  var BADGES = [[".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a", "Написать"], [".card", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
+  var BADGES = [[".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a", "Написать"], [".card", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
   var hint = null, hintTimer = 0;
   function regionText(tg) {
     for (var i = 0; i < BADGES.length; i++) if (tg && tg.closest(BADGES[i][0])) return BADGES[i][1];
@@ -957,4 +961,79 @@ document.addEventListener('play', function (e) {
     }
     go(0); restart();
   });
+})();
+
+// Нижние карточки преимуществ: по нажатию увеличиваются и уходят в центр экрана, по повторному нажатию возвращаются
+(function () {
+  var list = document.querySelector(".results-list");
+  if (!list) return;
+  var items = Array.prototype.slice.call(list.children);
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var DUR = reduce ? 1 : 520, EASE = "cubic-bezier(.22,.8,.24,1)";
+  var cur = null;
+
+  items.forEach(function (li) {
+    li.setAttribute("tabindex", "0");
+    li.setAttribute("role", "button");
+    li.setAttribute("aria-expanded", "false");
+    li.addEventListener("click", function () { if (!cur) openCard(li); });
+    li.addEventListener("keydown", function (e) {
+      if ((e.key === "Enter" || e.key === " ") && !cur) { e.preventDefault(); openCard(li); }
+    });
+  });
+
+  function target(r) {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var s = Math.max(1, Math.min(1.9, (vw * 0.88) / r.width, (vh * 0.8) / r.height));
+    var dx = vw / 2 - (r.left + r.width / 2), dy = vh / 2 - (r.top + r.height / 2);
+    return "translate(" + dx + "px," + dy + "px) scale(" + s + ")";
+  }
+
+  function openCard(li) {
+    var r = li.getBoundingClientRect(), idx = items.indexOf(li);
+    var veil = document.createElement("div");
+    veil.className = "res-veil";
+    // копия карточки в отдельном слое: пустые скрытые «соседи» сохраняют номер и порядок для стилей nth-child
+    var layer = document.createElement("ol");
+    layer.className = "results-list res-layer";
+    layer.style.counterReset = "res " + idx;
+    for (var i = 0; i < idx; i++) { var d = document.createElement("li"); d.style.display = "none"; layer.appendChild(d); }
+    var clone = li.cloneNode(true);
+    clone.removeAttribute("tabindex"); clone.setAttribute("aria-expanded", "true");
+    clone.classList.add("is-open");
+    clone.style.cssText = "left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px;transition:transform " + DUR + "ms " + EASE + ",box-shadow " + DUR + "ms";
+    layer.appendChild(clone);
+    document.body.appendChild(veil);
+    document.body.appendChild(layer);
+    li.style.visibility = "hidden";
+    li.setAttribute("aria-expanded", "true");
+    void clone.offsetWidth;
+    veil.classList.add("on");
+    clone.style.transform = target(r);
+    cur = { li: li, r: r, veil: veil, layer: layer, clone: clone };
+    var close = function () { closeCard(); };
+    veil.addEventListener("click", close);
+    clone.addEventListener("click", close);
+    cur.onKey = function (e) { if (e.key === "Escape") closeCard(); };
+    cur.onResize = function () { closeCard(true); };
+    document.addEventListener("keydown", cur.onKey);
+    window.addEventListener("resize", cur.onResize);
+  }
+
+  function closeCard(instant) {
+    if (!cur) return;
+    var c = cur; cur = null;
+    document.removeEventListener("keydown", c.onKey);
+    window.removeEventListener("resize", c.onResize);
+    var finish = function () {
+      c.layer.remove(); c.veil.remove();
+      c.li.style.visibility = ""; c.li.setAttribute("aria-expanded", "false");
+    };
+    if (instant) return finish();
+    var r2 = c.li.getBoundingClientRect();
+    c.veil.classList.remove("on");
+    c.clone.classList.remove("is-open");
+    c.clone.style.transform = "translate(" + (r2.left - c.r.left) + "px," + (r2.top - c.r.top) + "px)";
+    setTimeout(finish, DUR + 30);
+  }
 })();
