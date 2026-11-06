@@ -424,7 +424,12 @@ document.addEventListener('play', function (e) {
   var btn = document.createElement("button");
   btn.type = "button"; btn.className = "premium-toggle"; btn.setAttribute("aria-pressed", "false");
   btn.innerHTML = '<span class="pt-dot" aria-hidden="true"></span><span class="pt-text">Премиум-версия</span>';
-  document.body.appendChild(btn);
+  var dock = document.createElement("div"); dock.className = "pm-dock";
+  var soundBtn = document.createElement("button"); soundBtn.type = "button"; soundBtn.className = "pm-opt pm-sound"; soundBtn.setAttribute("aria-pressed", "false"); soundBtn.setAttribute("aria-label", "Звуки интерфейса");
+  soundBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path class="snd-on" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.6 7.6 0 0 1 0 11"/><path class="snd-off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>';
+  var themeBtn = document.createElement("button"); themeBtn.type = "button"; themeBtn.className = "pm-opt pm-theme"; themeBtn.setAttribute("aria-pressed", "false"); themeBtn.setAttribute("aria-label", "Тёмная тема");
+  themeBtn.innerHTML = '<svg class="ic-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg><svg class="ic-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
+  dock.appendChild(btn); dock.appendChild(soundBtn); dock.appendChild(themeBtn); document.body.appendChild(dock);
 
   function ease(p) { return 1 - Math.pow(2, -10 * p); } // быстрый старт, очень мягкое замедление
 
@@ -586,12 +591,171 @@ document.addEventListener('play', function (e) {
     cv.remove(); orbs.remove(); cv = orbs = ctx2 = null; pts = [];
   }
 
+  var SEL_CLICK = ".btn, .top-link, .type-tabs button, .card, .stamp, .premium-toggle, .pm-opt";
+  function isDark() { return root.classList.contains("pm-dark"); }
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  // Звуки: короткие приглушённые «стеклянные» щелчки, синтезируются на лету, по умолчанию выключены
+  var audio = null, soundOn = false, lastTick = 0, lastHover = null;
+  function ac() {
+    if (!audio) { var C = window.AudioContext || window.webkitAudioContext; if (C) audio = new C(); }
+    if (audio && audio.state === "suspended") audio.resume();
+    return audio;
+  }
+  function blip(freq, dur, type, vol, slide, delay) {
+    if (!soundOn) return;
+    var a = ac(); if (!a) return;
+    var t = a.currentTime + (delay || 0), o = a.createOscillator(), g = a.createGain();
+    o.type = type || "sine"; o.frequency.setValueAtTime(freq, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.04, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.03);
+  }
+  var sfx = {
+    hover: function () { blip(2300, 0.05, "sine", 0.014, 2900); },
+    click: function () { blip(880, 0.08, "triangle", 0.045, 520); },
+    status: function () { blip(660, 0.1, "sine", 0.05); blip(990, 0.14, "sine", 0.045, null, 0.07); },
+    toggle: function () { blip(520, 0.07, "triangle", 0.04); blip(780, 0.1, "triangle", 0.04, null, 0.06); }
+  };
+  document.addEventListener("pointerover", function (e) {
+    if (!soundOn || !root.classList.contains("premium") || !e.target.closest) return;
+    var el = e.target.closest(SEL_CLICK), now = performance.now();
+    if (el && el !== lastHover && now - lastTick > 70) { lastTick = now; sfx.hover(); }
+    lastHover = el;
+  }, true);
+  document.addEventListener("click", function (e) {
+    if (!soundOn || !root.classList.contains("premium") || !e.target.closest) return;
+    if (e.target.closest(".stamp")) sfx.status();
+    else if (e.target.closest(SEL_CLICK) && !e.target.closest(".pm-sound")) sfx.click();
+  }, true);
+  function setSound(on, silent) {
+    soundOn = on; soundBtn.setAttribute("aria-pressed", String(on));
+    soundBtn.setAttribute("aria-label", on ? "Выключить звуки" : "Включить звуки");
+    if (on) { ac(); if (!silent) sfx.toggle(); }
+    store("premium-sound", on ? "1" : "0");
+  }
+  soundBtn.addEventListener("click", function () { setSound(!soundOn); });
+
+  // Тёмная тема: глубокие графитовые и тёмно-синие тона, свечение на фоне
+  function setTheme(dark, anim) {
+    if (anim && !reduce) { root.classList.add("pm-theme-anim"); setTimeout(function () { root.classList.remove("pm-theme-anim"); }, 900); }
+    root.classList.toggle("pm-dark", dark);
+    themeBtn.setAttribute("aria-pressed", String(dark));
+    themeBtn.setAttribute("aria-label", dark ? "Светлая тема" : "Тёмная тема");
+  }
+  themeBtn.addEventListener("click", function () { var d = !isDark(); setTheme(d, true); store("premium-theme", d ? "dark" : "light"); });
+  function initTheme() {
+    var saved = load("premium-theme");
+    setTheme(saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches, false);
+  }
+
+  // Свой курсор: точка и отстающее кольцо; у кнопок кольцо «прилипает» к их границам, над скриншотами становится плашкой «Демо»
+  var curBox = null, curDot, curRing, curLabel, cX = -200, cY = -200, rX = -200, rY = -200, rW = 34, rH = 34, curRaf = 0, curMode = "", curTarget = null;
+  var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
+  function curMove(e) {
+    cX = e.clientX; cY = e.clientY;
+    curBox.style.opacity = "1";
+    var t = e.target.closest ? e.target.closest(STICK + ", .shot, .card, a, button") : null, mode = "";
+    if (t && t.matches(STICK)) mode = "stick";
+    else if (t && t.closest(".shot")) mode = "label";
+    else if (t) mode = "link";
+    curTarget = mode === "stick" ? t : null;
+    if (mode !== curMode) {
+      curMode = mode; curBox.setAttribute("data-mode", mode);
+      curLabel.textContent = mode === "label" ? "Демо" : "";
+    }
+    if (!curRaf) curRaf = requestAnimationFrame(curFrame);
+  }
+  function curFrame() {
+    curRaf = 0;
+    if (!curBox) return;
+    var tx = cX, ty = cY, tw = 34, th = 34, k = reduce ? 1 : 0.2;
+    if (curMode === "stick" && curTarget) { var r = curTarget.getBoundingClientRect(); tx = r.left + r.width / 2; ty = r.top + r.height / 2; tw = r.width + 10; th = r.height + 10; k = reduce ? 1 : 0.28; }
+    else if (curMode === "label") { tw = 62; th = 62; }
+    else if (curMode === "link") { tw = 52; th = 52; }
+    rX += (tx - rX) * k; rY += (ty - rY) * k; rW += (tw - rW) * 0.22; rH += (th - rH) * 0.22;
+    curDot.style.transform = "translate(" + cX + "px," + cY + "px)";
+    curRing.style.transform = "translate(" + rX.toFixed(1) + "px," + rY.toFixed(1) + "px)";
+    curRing.style.width = rW.toFixed(1) + "px"; curRing.style.height = rH.toFixed(1) + "px";
+    if (Math.abs(tx - rX) + Math.abs(ty - rY) + Math.abs(tw - rW) + Math.abs(th - rH) > 0.4) curRaf = requestAnimationFrame(curFrame);
+  }
+  function curLeave() { if (curBox) curBox.style.opacity = "0"; }
+  function startCursor() {
+    if (!fine || curBox) return;
+    curBox = document.createElement("div"); curBox.className = "pm-cursor"; curBox.setAttribute("aria-hidden", "true");
+    curBox.innerHTML = '<i class="pm-dot"></i><i class="pm-ring"><span></span></i>'; document.body.appendChild(curBox);
+    curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild;
+    root.classList.add("pm-cursor-on");
+    window.addEventListener("pointermove", curMove, { passive: true }); document.addEventListener("pointerleave", curLeave);
+  }
+  function stopCursor() {
+    if (!curBox) return;
+    window.removeEventListener("pointermove", curMove); document.removeEventListener("pointerleave", curLeave);
+    cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; root.classList.remove("pm-cursor-on");
+  }
+
+  // Скелетоны вместо спиннеров: пульсирующие плашки по форме будущего содержимого
+  function skeleton(host, kind, ms) {
+    if (!host || reduce) return;
+    var old = host.querySelector(":scope > .pm-skel"); if (old) old.remove();
+    var sk = document.createElement("div"); sk.className = "pm-skel pm-skel-" + kind; sk.setAttribute("aria-hidden", "true");
+    if (kind === "rows") {
+      var rows = ""; for (var i = 0; i < 6; i++) rows += '<div class="sk-row"><i class="sk-b" style="width:' + (38 + (i * 7) % 20) + '%"></i><i class="sk-b" style="width:46%"></i><span class="sk-user"><i class="sk-av"></i><i class="sk-b" style="width:' + (50 + (i * 11) % 30) + '%"></i></span><i class="sk-b" style="width:' + (55 + (i * 13) % 35) + '%"></i><i class="sk-b" style="width:62%"></i><i class="sk-pill"></i></div>';
+      sk.innerHTML = rows;
+    } else {
+      sk.innerHTML = '<div class="sk-card"><i class="sk-img"></i><i class="sk-b" style="width:30%"></i><i class="sk-b sk-h" style="width:70%"></i><i class="sk-b" style="width:92%"></i><i class="sk-b" style="width:84%"></i><i class="sk-b" style="width:60%"></i></div>';
+    }
+    host.classList.add("pm-skel-host"); host.appendChild(sk);
+    setTimeout(function () { sk.classList.add("is-out"); setTimeout(function () { sk.remove(); if (!host.querySelector(":scope > .pm-skel")) host.classList.remove("pm-skel-host"); }, 500); }, ms);
+  }
+  document.addEventListener("click", function (e) {
+    if (!root.classList.contains("premium") || !e.target.closest) return;
+    var tab = e.target.closest(".type-tabs button");
+    if (tab && tab.getAttribute("aria-selected") !== "true") skeleton(document.querySelector(".grid"), "card", 650);
+  }, true);
+
+  // Живой график выручки в мокапе CRM: линии медленно колеблются, как будто идут продажи
+  var chart = null, chartRaf = 0;
+  var CH = { x: .2828, y: .6375, w: .4281, h: .225 }; // область графика на скриншоте crm.jpg (доли картинки)
+  var Y_PTS = [.5, .55, .47, .5, 0, 0, .58], D_PTS = [.6, 1, .02, .62, .56, .74, .38];
+  function curveThrough(ctx, pts, w, h) {
+    var xs = pts.map(function (_, i) { return i / (pts.length - 1) * w; }), ys = pts.map(function (v) { return h - 6 - v * (h - 12); });
+    ctx.beginPath(); ctx.moveTo(xs[0], ys[0]);
+    for (var i = 0; i < pts.length - 1; i++) { var cx = (xs[i] + xs[i + 1]) / 2; ctx.bezierCurveTo(cx, ys[i], cx, ys[i + 1], xs[i + 1], ys[i + 1]); }
+    ctx.stroke();
+  }
+  function chartFrame(t) {
+    chartRaf = 0;
+    if (!chart) return;
+    var cv = chart.cv, ctx = chart.ctx, w = cv.clientWidth, h = cv.clientHeight;
+    if (w < 20) { chartRaf = requestAnimationFrame(chartFrame); return; }
+    if (cv.width !== Math.round(w * chart.dpr)) { cv.width = Math.round(w * chart.dpr); cv.height = Math.round(h * chart.dpr); }
+    ctx.setTransform(chart.dpr, 0, 0, chart.dpr, 0, 0);
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = "#eef0f3"; ctx.lineWidth = 1;
+    [.0, .22, .45, .68, .91].forEach(function (g) { var y = Math.round(6 + g * (h - 12)) + .5; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); });
+    var s = t / 1000, wob = function (pts, ph, amp) { return pts.map(function (v, i) { var n = v + Math.sin(s * .8 + i * 1.7 + ph) * amp; return Math.max(0, Math.min(1, n)); }); };
+    ctx.lineWidth = 2.2; ctx.setLineDash([6, 5]); ctx.strokeStyle = "#10243d"; curveThrough(ctx, wob(D_PTS, 1.2, .045), w, h);
+    ctx.setLineDash([]); ctx.strokeStyle = "#f2c200"; ctx.lineWidth = 2.6; curveThrough(ctx, wob(Y_PTS, 0, .05), w, h);
+    if (!reduce) chartRaf = requestAnimationFrame(chartFrame);
+  }
+  function startChart() {
+    if (chart) return;
+    var img = document.querySelector('.shot img[src*="crm.jpg"]'); if (!img) return;
+    var shot = img.parentElement, cv = document.createElement("canvas"); cv.className = "pm-chart"; cv.setAttribute("aria-hidden", "true");
+    cv.style.cssText = "left:" + CH.x * 100 + "%;top:" + CH.y * 100 + "%;width:" + CH.w * 100 + "%;height:" + CH.h * 100 + "%";
+    shot.appendChild(cv); chart = { cv: cv, ctx: cv.getContext("2d"), dpr: Math.min(2, window.devicePixelRatio || 1) };
+    chartRaf = requestAnimationFrame(chartFrame);
+  }
+  function stopChart() { if (!chart) return; cancelAnimationFrame(chartRaf); chartRaf = 0; chart.cv.remove(); chart = null; }
+
   function set(on) {
     root.classList.toggle("premium", on);
     btn.setAttribute("aria-pressed", String(on));
     btn.querySelector(".pt-text").textContent = on ? "Премиум включён" : "Премиум-версия";
-    if (on) { startBg(); magnets = magnetTargets(); revealTitle(); syncMetrics(); }
-    else { stopBg(); magnets.forEach(function (el) { el.style.transform = ""; el.classList.remove("is-magnet"); }); magnets = []; restoreTitle(); resetMetrics(); }
+    if (on) { initTheme(); setSound(load("premium-sound") === "1", true); startCursor(); startChart(); skeleton(document.querySelector(".ledger-body"), "rows", 900); startBg(); magnets = magnetTargets(); revealTitle(); syncMetrics(); }
+    else { stopBg(); stopCursor(); stopChart(); root.classList.remove("pm-dark"); soundOn = false; magnets.forEach(function (el) { el.style.transform = ""; el.classList.remove("is-magnet"); }); magnets = []; restoreTitle(); resetMetrics(); }
     parallax();
   }
   btn.addEventListener("click", function () {
