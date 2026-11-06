@@ -60,21 +60,22 @@
     return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
   }
 
-  function makeRow() {
-    const [need, who] = nextNeed(), st = nextStatus();
-    const client = who === "м" ? nextMan() : who === "ж" ? nextWoman() : nextAny();
+  function makeRow(mine) {
+    const [need, who] = mine ? [mine.need, ""] : nextNeed(), st = mine ? mine.st : nextStatus();
+    const client = mine ? mine.client : who === "м" ? nextMan() : who === "ж" ? nextWoman() : nextAny();
     const [label, icon] = STATUS[st];
     n++;
     const row = document.createElement("div");
     row.className = "ledger-row";
     row.dataset.st = st;
+    if (mine) row.classList.add("is-mine");
     row.innerHTML =
       '<span class="num"></span><span class="hand c-time"></span><span class="hand c-client"></span>' +
       '<span class="hand c-need"></span><span class="hand c-man">Менеджер Султан</span>' +
       '<span class="mark"><span class="stamp st-' + st + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icon + "</svg>" + label + "</span></span>";
     const cells = row.children;
     cells[0].textContent = nextId();
-    cells[1].textContent = time();
+    cells[1].textContent = mine ? new Date().toTimeString().slice(0, 5) : time();
     cells[2].textContent = client;
     cells[3].textContent = need;
     return row;
@@ -99,9 +100,30 @@
     body.appendChild(row);
     count(row.dataset.st);
   }
-  if (reduce) return;
-
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  // Кнопка «Имитировать заявку»: новая строка появляется сразу, со статусом «Принято»
+  const sim = document.getElementById("ledger-sim");
+  if (sim) {
+    sim.addEventListener("click", async () => {
+      if (sim.disabled) return;
+      sim.disabled = true;
+      if (body.children.length >= VISIBLE) {
+        const first = body.firstElementChild;
+        if (!reduce) { first.classList.add("is-leaving"); await wait(300); }
+        first.remove();
+      }
+      const row = makeRow({ st: "new", client: "Вы", need: "Ваша заявка с сайта" });
+      body.appendChild(row);
+      const hands = row.querySelectorAll(".hand");
+      for (const cell of hands) { cell.classList.add("is-written"); if (!reduce) await wait(90); }
+      row.querySelector(".stamp").classList.add("is-down");
+      count("new");
+      await wait(reduce ? 0 : 500);
+      sim.disabled = false;
+    });
+  }
+  if (reduce) return;
 
   async function writeRow() {
     if (body.children.length >= VISIBLE) {
@@ -385,4 +407,65 @@ document.addEventListener('play', function (e) {
   });
   if (mq.addEventListener) mq.addEventListener('change', apply);
   apply();
+})();
+
+
+// Калькулятор окупаемости: три шага, результат считается на лету
+(function () {
+  var form = document.getElementById("roi-form"); if (!form) return;
+  var steps = form.querySelectorAll(".roi-step"), dots = form.querySelectorAll(".roi-progress li");
+  var back = document.getElementById("roi-back"), next = document.getElementById("roi-next");
+  var mgr = document.getElementById("roi-mgr"), hrs = document.getElementById("roi-hrs");
+  var out = { hours: document.getElementById("roi-hours"), days: document.getElementById("roi-days"), sales: document.getElementById("roi-sales") };
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cur = 0, shown = { hours: 0, days: 0 }, raf = {};
+
+  function fmt(n) { return Math.round(n).toLocaleString("ru-RU"); }
+  function tween(key, to) {
+    cancelAnimationFrame(raf[key]);
+    if (reduce) { shown[key] = to; out[key].textContent = fmt(to); return; }
+    var from = shown[key], t0 = performance.now();
+    (function tick(t) {
+      var k = Math.min(1, (t - t0) / 350), v = from + (to - from) * (1 - Math.pow(1 - k, 3));
+      shown[key] = v; out[key].textContent = fmt(v);
+      if (k < 1) raf[key] = requestAnimationFrame(tick);
+    })(t0);
+  }
+  function calc() {
+    var share = parseFloat(form.querySelector("input[name=sphere]:checked").value);
+    var m = +mgr.value, h = +hrs.value;
+    document.getElementById("roi-mgr-out").textContent = m;
+    document.getElementById("roi-hrs-out").textContent = String(h).replace(".", ",") + " ч";
+    var saved = m * h * 22 * share;
+    tween("hours", saved);
+    tween("days", saved / 8);
+    out.sales.textContent = Math.round(29 * (share / 0.8) * 0.6);
+  }
+  function go(i) {
+    cur = Math.max(0, Math.min(steps.length - 1, i));
+    steps.forEach(function (s, k) { s.classList.toggle("is-active", k === cur); });
+    dots.forEach(function (d, k) { d.classList.toggle("is-active", k === cur); d.classList.toggle("is-done", k < cur); });
+    back.disabled = cur === 0;
+    next.textContent = cur === steps.length - 1 ? "Начать заново" : "Далее";
+  }
+  next.addEventListener("click", function () { go(cur === steps.length - 1 ? 0 : cur + 1); });
+  back.addEventListener("click", function () { go(cur - 1); });
+  form.addEventListener("input", calc);
+  calc();
+})();
+
+// Плавающая кнопка связи: после первого экрана появляется справа внизу, у подвала уступает место крупным кнопкам контактов
+(function () {
+  var fab = document.getElementById("fab"), foot = document.getElementById("contacts"); if (!fab || !foot) return;
+  var pastHero = false, atFoot = false;
+  function upd() {
+    fab.classList.toggle("is-on", pastHero && !atFoot);
+    foot.classList.toggle("is-reached", atFoot);
+  }
+  function onScroll() { pastHero = window.pageYOffset > innerHeight * 0.8; upd(); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (e) { atFoot = e[0].isIntersecting; upd(); }, { threshold: 0.35 }).observe(foot);
+  }
+  onScroll();
 })();
