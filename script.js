@@ -5,6 +5,7 @@
   const counter = document.getElementById("ledger-count");
   const word = document.getElementById("ledger-word");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isPremium = () => document.documentElement.classList.contains("premium");
   const VISIBLE = window.matchMedia("(max-width: 620px)").matches ? 1 : 6;
 
   // Примеры заявок: подписаны на странице как «Пример заполнения». Клиент, запрос, менеджер и статус собираются случайно
@@ -91,6 +92,29 @@
     if (statOut[st]) statOut[st].textContent = byStatus[st];
   }
 
+  // Премиум-режим: нажатие на статус «перетекает» в следующий, плашка плавно меняет ширину и форму
+  const NEXT = { new: "pay", pay: "done", done: "new", cancel: "new" };
+  body.addEventListener("click", (e) => {
+    const stamp = e.target.closest && e.target.closest(".stamp");
+    if (!stamp || !isPremium() || reduce) return;
+    const row = stamp.closest(".ledger-row"), from = row.dataset.st, to = NEXT[from] || "new";
+    const w0 = stamp.getBoundingClientRect().width;
+    stamp.style.transition = "none"; stamp.style.width = w0 + "px"; stamp.style.overflow = "hidden";
+    stamp.className = "stamp is-down st-" + to;
+    const [label, icon] = STATUS[to];
+    stamp.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icon + "</svg>" + label;
+    stamp.style.width = "auto"; const w1 = stamp.getBoundingClientRect().width; stamp.style.width = w0 + "px";
+    void stamp.offsetWidth;
+    stamp.style.transition = "width .6s cubic-bezier(.16,1,.3,1), background-color .6s, color .6s, border-radius .6s";
+    stamp.style.width = w1 + "px"; stamp.style.borderRadius = "999px";
+    setTimeout(() => { stamp.style.width = ""; stamp.style.overflow = ""; stamp.style.borderRadius = ""; stamp.style.transition = ""; }, 650);
+    row.dataset.st = to;
+    if (byStatus[from] > 0) byStatus[from]--;
+    byStatus[to]++;
+    if (statOut[from]) statOut[from].textContent = byStatus[from];
+    if (statOut[to]) statOut[to].textContent = byStatus[to];
+  });
+
   // Сразу показываем уже заполненную часть страницы, без анимации остаются все строки
   for (let i = 0; i < Math.max(1, reduce ? VISIBLE : VISIBLE - 2); i++) {
     const row = makeRow();
@@ -129,7 +153,7 @@
     running = true;
     while (visible) {
       await writeRow();
-      await wait(900);
+      await wait(isPremium() ? 3200 + Math.random() * 1800 : 900);
     }
     running = false;
   }
@@ -385,4 +409,127 @@ document.addEventListener('play', function (e) {
   });
   if (mq.addEventListener) mq.addEventListener('change', apply);
   apply();
+})();
+
+
+// Премиум-режим: включается кнопкой, обычный сайт остаётся как есть
+(function () {
+  var root = document.documentElement, KEY = "premium-mode";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var EASE = "cubic-bezier(.16, 1, .3, 1)";
+  var raf = {}, title = document.querySelector(".hero h1"), titleHTML = title ? title.innerHTML : "";
+
+  // Кнопка-переключатель
+  var btn = document.createElement("button");
+  btn.type = "button"; btn.className = "premium-toggle"; btn.setAttribute("aria-pressed", "false");
+  btn.innerHTML = '<span class="pt-dot" aria-hidden="true"></span><span class="pt-text">Премиум-версия</span>';
+  document.body.appendChild(btn);
+
+  function ease(p) { return 1 - Math.pow(2, -10 * p); } // быстрый старт, очень мягкое замедление
+
+  // Заголовок: слова вырастают снизу вверх с размытием
+  function revealTitle() {
+    if (!title || reduce) return;
+    var words = title.textContent.trim().split(/\s+/);
+    title.setAttribute("aria-label", title.textContent.trim());
+    title.innerHTML = words.map(function (w, i) {
+      return '<span class="tw" aria-hidden="true"><span class="twi" style="--i:' + i + '">' + w + "</span></span>";
+    }).join(" ");
+  }
+  function restoreTitle() { if (title) { title.innerHTML = titleHTML; title.removeAttribute("aria-label"); } }
+
+  // Проценты и полоски растут строго вместе
+  function syncMetrics() {
+    document.querySelectorAll(".hero-metrics .metric").forEach(function (m, idx) {
+      var b = m.querySelector("b[data-to]"), bar = m.querySelector(".metric-bar i"); if (!b || !bar) return;
+      var to = +b.dataset.to, sign = b.dataset.sign, cs = getComputedStyle(bar);
+      var from = parseFloat(cs.getPropertyValue("--from")), target = parseFloat(cs.getPropertyValue("--to"));
+      cancelAnimationFrame(raf["m" + idx]);
+      if (reduce) return;
+      bar.style.animation = "none"; bar.style.width = from + "%"; b.textContent = sign + "0%";
+      var t0 = performance.now() + idx * 160, dur = 2000;
+      (function tick(now) {
+        var p = Math.min(1, Math.max(0, (now - t0) / dur)), e = ease(p);
+        b.textContent = sign + Math.round(to * e) + "%";
+        bar.style.width = (from + (target - from) * e) + "%";
+        if (p < 1) raf["m" + idx] = requestAnimationFrame(tick);
+      })(t0);
+    });
+    // «До 70%» в преимуществах: цифра и тонкая шкала под ней растут вместе
+    document.querySelectorAll(".results-list li").forEach(function (li, idx) {
+      var fig = li.querySelector(".fig"); if (!fig || !/^До\s*\d+%/.test(fig.textContent.trim())) return;
+      var h = fig.parentElement, to = parseInt(fig.textContent.replace(/\D/g, ""), 10);
+      var track = li.querySelector(".pm-track");
+      if (!track) { track = document.createElement("div"); track.className = "pm-track"; track.innerHTML = "<i></i>"; h.insertAdjacentElement("afterend", track); }
+      var fill = track.firstChild, orig = fig.dataset.orig || (fig.dataset.orig = fig.textContent);
+      cancelAnimationFrame(raf.fig);
+      if (reduce) { fill.style.width = to + "%"; return; }
+      fill.style.width = "0%"; fig.textContent = "До 0%";
+      function run() {
+        var t0 = performance.now(), dur = 2000;
+        (function tick(now) {
+          var p = Math.min(1, (now - t0) / dur), e = ease(p);
+          fig.textContent = "До " + Math.round(to * e) + "%"; fill.style.width = (to * e) + "%";
+          if (p < 1) raf.fig = requestAnimationFrame(tick);
+        })(t0);
+      }
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { io.disconnect(); run(); } }, { threshold: 0.5 });
+        io.observe(li);
+      } else run();
+    });
+  }
+  function resetMetrics() {
+    document.querySelectorAll(".metric-bar i").forEach(function (bar) { bar.style.animation = ""; bar.style.width = ""; });
+    document.querySelectorAll(".hero-metrics b[data-to]").forEach(function (b) { b.textContent = b.dataset.sign + b.dataset.to + "%"; });
+    document.querySelectorAll(".results-list .pm-track").forEach(function (t) { t.remove(); });
+    document.querySelectorAll(".results-list .fig[data-orig]").forEach(function (f) { f.textContent = f.dataset.orig; });
+  }
+
+  // Магнитные кнопки
+  var magnets = [];
+  function magnetTargets() { return Array.prototype.slice.call(document.querySelectorAll(".hero-down, .top-link, .hero .btn")); }
+  function onMove(e) {
+    if (!root.classList.contains("premium") || reduce || !fine) return;
+    magnets.forEach(function (el) {
+      var r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var dx = e.clientX - cx, dy = e.clientY - cy, near = Math.max(r.width, r.height) / 2 + 70;
+      if (Math.hypot(dx, dy) < near) { var cl = function (v, m) { return Math.max(-m, Math.min(m, v)); };
+        el.style.transform = "translate(" + cl(dx * 0.18, 9).toFixed(1) + "px," + cl(dy * 0.25, 7).toFixed(1) + "px)"; el.classList.add("is-magnet"); }
+      else if (el.classList.contains("is-magnet")) { el.style.transform = ""; el.classList.remove("is-magnet"); }
+    });
+  }
+  window.addEventListener("pointermove", onMove, { passive: true });
+
+  // Параллакс скриншотов в карточках
+  var ticking = false;
+  function parallax() {
+    ticking = false;
+    var on = root.classList.contains("premium") && !reduce;
+    document.querySelectorAll(".shot img").forEach(function (img) {
+      if (!on) { img.style.removeProperty("--py"); return; }
+      var r = img.parentElement.getBoundingClientRect(), k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
+      img.style.setProperty("--py", Math.max(-1, Math.min(1, k)) * -6 + "px");
+    });
+  }
+  window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(parallax); } }, { passive: true });
+
+  function set(on) {
+    root.classList.toggle("premium", on);
+    btn.setAttribute("aria-pressed", String(on));
+    btn.querySelector(".pt-text").textContent = on ? "Премиум включён" : "Премиум-версия";
+    if (on) { magnets = magnetTargets(); revealTitle(); syncMetrics(); }
+    else { magnets.forEach(function (el) { el.style.transform = ""; el.classList.remove("is-magnet"); }); magnets = []; restoreTitle(); resetMetrics(); }
+    parallax();
+  }
+  btn.addEventListener("click", function () {
+    var on = !root.classList.contains("premium");
+    set(on);
+    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
+  });
+  var start = false;
+  try { start = localStorage.getItem(KEY) === "1"; } catch (e) {}
+  if (location.hash === "#premium") start = true;
+  if (start) set(true);
 })();
