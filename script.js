@@ -793,29 +793,150 @@ document.addEventListener('play', function (e) {
   if (start) set(true);
 })();
 
-// Карусели-макеты в карточках: CRM по нишам и виды сайтов
+// Карусели-макеты в карточках: CRM по нишам и виды сайтов, живые данные и кликабельные элементы
 (function () {
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  function fmt(n) { return Math.round(n).toLocaleString("ru-RU").replace(/[  ]/g, " "); }
+  function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+  function reflow(el, cls) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+  function bumpNum(el, delta) {
+    var m = el.textContent.match(/^([^\d]*)([\d\s ]+)(.*)$/); if (!m) return;
+    var v = parseInt(m[2].replace(/\D/g, ""), 10) || 0;
+    el.textContent = m[1] + fmt(v + delta) + m[3];
+    if (el.parentElement) reflow(el.parentElement, "flash");
+  }
+  var kinds = {
+    crm: function (slide, say) {
+      var pool = JSON.parse(slide.dataset.pool), pill = JSON.parse(slide.dataset.pill), cyc = JSON.parse(slide.dataset.cycle), pi = 0;
+      var table = slide.querySelector(".ck-table"), head = slide.querySelector(".ck-h"), kb = slide.querySelectorAll(".ck-kpis > div b"), bars = slide.querySelectorAll(".ck-bars i");
+      function addRow() {
+        var r = pool[pi++ % pool.length], row = document.createElement("div"); row.className = "ck-r is-new";
+        row.innerHTML = r.slice(0, -1).map(function (c) { return "<span>" + c + "</span>"; }).join("") + '<span><em class="p-' + r[r.length - 1] + '">' + pill[r[r.length - 1]] + "</em></span>";
+        head.after(row);
+        var rows = table.querySelectorAll(".ck-r"); if (rows.length > 4) rows[rows.length - 1].remove();
+        if (kb[0]) bumpNum(kb[0], 1);
+        if (kb[1]) { var v = parseInt(kb[1].textContent.replace(/\D/g, ""), 10) || 1000; bumpNum(kb[1], Math.max(100, Math.round(v * 0.004 / 100) * 100)); }
+        var last = bars[bars.length - 1]; if (last) last.style.setProperty("--h", rnd(68, 100) + "%");
+        say("Новая заявка · " + slide.dataset.co + " +1");
+      }
+      return {
+        tick: addRow,
+        act: function (t) {
+          var em = t.closest(".ck-r em");
+          if (em) {
+            var cur = (em.className.match(/p-(\w+)/) || [])[1], i = cyc.indexOf(cur), nx = cyc[(i + 1) % cyc.length];
+            em.className = "p-" + nx; em.textContent = pill[nx]; say("Статус обновлён: " + pill[nx]); return true;
+          }
+          var ni = t.closest(".ck-side nav i");
+          if (ni) { slide.querySelectorAll(".ck-side nav i").forEach(function (x) { x.classList.toggle("on", x === ni); }); slide.querySelector(".ck-top h4").textContent = ni.textContent; return true; }
+          return false;
+        }
+      };
+    },
+    quiz: function (slide, say) {
+      var qs = JSON.parse(slide.dataset.qs), qi = 0, opts = slide.querySelector(".qz-opts"), h3 = slide.querySelector(".qz h3"),
+        label = slide.querySelector(".qz-prog span"), bar = slide.querySelector(".qz-prog s i"), pct = slide.querySelector(".qz-prog b"), nextBtn = slide.querySelector(".qz-btns em"), timer = 0;
+      function render(sel) {
+        var q = qs[qi]; h3.textContent = q.q;
+        opts.innerHTML = q.o.map(function (o, k) { return "<div" + (k === sel ? ' class="on"' : "") + "><span>" + o[0] + "</span><div><b>" + o[1] + "</b><small>" + o[2] + "</small></div><u>✓</u></div>"; }).join("");
+        reflow(opts, "swap");
+        label.textContent = "Вопрос " + (qi + 1) + " из " + qs.length;
+        var p = Math.round((qi + 1) / qs.length * 100); bar.style.width = p + "%"; pct.textContent = p + "%";
+      }
+      function choose(k) { opts.querySelectorAll(":scope > div").forEach(function (d, i) { d.classList.toggle("on", i === k); }); say("Ответ сохранён"); }
+      return {
+        tick: function () { qi = (qi + 1) % qs.length; render(-1); clearTimeout(timer); timer = setTimeout(function () { choose(qs[qi].a); }, 1000); },
+        act: function (t) {
+          var o = t.closest(".qz-opts > div"), all = [].slice.call(opts.children);
+          if (o) { choose(all.indexOf(o)); return true; }
+          if (t.closest(".qz-btns em")) { reflow(nextBtn, "press"); qi = (qi + 1) % qs.length; render(-1); return true; }
+          if (t.closest(".qz-btns span")) { qi = (qi + qs.length - 1) % qs.length; render(-1); return true; }
+          return false;
+        }
+      };
+    },
+    dental: function (slide, say) {
+      var names = [["Анна", "15:30"], ["Дмитрий", "16:15"], ["Мадина", "17:00"], ["Олег", "17:45"], ["Елена", "18:30"]], ni = 0;
+      return {
+        tick: function () { var n = names[ni++ % names.length]; say("Новая запись · " + n[0] + " · " + n[1]); },
+        act: function (t) {
+          var b = t.closest(".dn-btns em, .dn-mini");
+          if (b) {
+            var main = slide.querySelector(".dn-btns em"), txt = main.dataset.t || (main.dataset.t = main.textContent);
+            main.textContent = "✓ Заявка принята"; main.classList.add("done"); say("Заявка отправлена врачу");
+            clearTimeout(main._t); main._t = setTimeout(function () { main.textContent = txt; main.classList.remove("done"); }, 2200); return true;
+          }
+          var sv = t.closest(".dn-srv > div"); if (sv) { sv.classList.toggle("on"); return true; }
+          return false;
+        }
+      };
+    },
+    shop: function (slide, say) {
+      var cartB = slide.querySelector(".sh-cart b"), count = 2, last = -1, cards = slide.querySelectorAll(".sh-p");
+      function add(card) {
+        var btn = card.querySelector("em"), txt = btn.dataset.t || (btn.dataset.t = btn.textContent);
+        btn.textContent = "✓ В корзине"; btn.classList.add("done"); clearTimeout(btn._t); btn._t = setTimeout(function () { btn.textContent = txt; btn.classList.remove("done"); }, 1500);
+        count = count >= 9 ? 2 : count + 1; cartB.textContent = count; reflow(cartB, "bump");
+        say("Добавлено в корзину: " + card.querySelector("h6").textContent.split(",")[0]);
+      }
+      return {
+        tick: function () { var i; do { i = rnd(0, cards.length - 1); } while (i === last); last = i; add(cards[i]); },
+        act: function (t) {
+          var b = t.closest(".sh-p em"); if (b) { add(b.closest(".sh-p")); return true; }
+          var h = t.closest(".sh-i u"); if (h) { var on = h.classList.toggle("liked"); h.textContent = on ? "♥" : "♡"; return true; }
+          var ch = t.closest(".sh-chips span"); if (ch) { slide.querySelectorAll(".sh-chips span").forEach(function (x) { x.classList.toggle("on", x === ch); }); return true; }
+          return false;
+        }
+      };
+    }
+  };
   document.querySelectorAll(".cm").forEach(function (mock, n) {
-    var stage = mock.querySelector(".cm-stage"), slides = [].slice.call(mock.querySelectorAll(".cm-slide"));
-    var lab = mock.querySelector(".cm-lab"), dotsBox = mock.querySelector(".cm-dots");
-    var cur = 0, timer = 0, hovered = false, visible = true, tick = null;
+    var dev = mock.parentElement, shot = mock.closest(".shot"), stage = mock.querySelector(".cm-stage"), slides = [].slice.call(mock.querySelectorAll(".cm-slide"));
+    var lab = mock.querySelector(".cm-lab"), dotsBox = mock.querySelector(".cm-dots"), chip = dev.querySelector(".cm-chip"), chipT = chip.querySelector("span");
+    var cur = 0, timer = 0, hovered = false, visible = true, lastUser = 0, chipTimer = 0;
     function fit() { var w = mock.clientWidth; if (w) stage.style.setProperty("--s", (w / 640).toFixed(4)); }
     fit();
     if (window.ResizeObserver) new ResizeObserver(fit).observe(mock); else window.addEventListener("resize", fit);
+    function say(text) { chipT.textContent = text; chip.classList.add("on"); clearTimeout(chipTimer); chipTimer = setTimeout(function () { chip.classList.remove("on"); }, 2600); }
+    var hs = slides.map(function (s) { var k = kinds[s.dataset.kind]; return k ? k(s, say) : null; });
     var dots = slides.map(function (s, i) {
       var d = document.createElement("i"); d.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); go(i, true); }); dotsBox.appendChild(d); return d;
     });
+    function setLabel(text) {
+      lab.textContent = ""; lab.setAttribute("aria-label", text);
+      if (reduce) { lab.textContent = text; return; }
+      Array.from(text).forEach(function (ch, i) { var c = document.createElement("i"); c.textContent = ch; c.style.setProperty("--n", i); lab.appendChild(c); });
+    }
     function go(i, manual) {
-      cur = (i + slides.length) % slides.length;
+      var prev = slides[cur]; cur = (i + slides.length) % slides.length;
+      if (prev !== slides[cur]) { prev.classList.add("is-out"); setTimeout(function () { prev.classList.remove("is-out"); }, 850); }
       slides.forEach(function (s, k) { s.classList.toggle("is-on", k === cur); dots[k].classList.toggle("on", k === cur); });
-      lab.textContent = slides[cur].getAttribute("data-label") || "";
+      setLabel(slides[cur].getAttribute("data-label") || "");
+      chip.classList.remove("on");
       if (manual) restart();
     }
-    function restart() { clearInterval(timer); if (reduce) return; timer = setInterval(function () { if (!hovered && visible && !document.hidden) go(cur + 1); }, 4500 + n * 600); }
-    mock.addEventListener("click", function (e) { e.preventDefault(); go(cur + 1, true); });
+    function restart() { clearInterval(timer); if (reduce) return; timer = setInterval(function () { if (!hovered && visible && !document.hidden && Date.now() - lastUser > 5000) go(cur + 1); }, 6200 + n * 700); }
+    mock.addEventListener("click", function (e) {
+      e.preventDefault(); var h = hs[cur];
+      if (h && h.act && h.act(e.target)) { lastUser = Date.now(); return; }
+      go(cur + 1, true);
+    });
     mock.addEventListener("pointerenter", function () { hovered = true; }); mock.addEventListener("pointerleave", function () { hovered = false; });
     if (window.IntersectionObserver) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(mock);
+    if (!reduce) setInterval(function () {
+      if (!visible || document.hidden || Date.now() - lastUser < 7000) return;
+      var h = hs[cur]; if (h && h.tick) h.tick();
+    }, 3300 + n * 600);
+    // наклон карточки за курсором и блик
+    if (fine && !reduce && shot) {
+      shot.addEventListener("pointermove", function (e) {
+        var r = shot.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        shot.style.setProperty("--rx", ((.5 - py) * 7).toFixed(2) + "deg"); shot.style.setProperty("--ry", ((px - .5) * 9).toFixed(2) + "deg");
+        shot.style.setProperty("--gx", (px * 100).toFixed(1)); shot.style.setProperty("--gy", (py * 100).toFixed(1)); shot.classList.add("is-tilt");
+      });
+      shot.addEventListener("pointerleave", function () { shot.classList.remove("is-tilt"); shot.style.removeProperty("--rx"); shot.style.removeProperty("--ry"); });
+    }
     go(0); restart();
   });
 })();
