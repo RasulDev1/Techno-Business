@@ -429,9 +429,9 @@ document.addEventListener('play', function (e) {
   soundBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path class="snd-on" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a7.6 7.6 0 0 1 0 11"/><path class="snd-off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>';
   var themeBtn = document.createElement("button"); themeBtn.type = "button"; themeBtn.className = "pm-opt pm-theme"; themeBtn.setAttribute("aria-pressed", "false"); themeBtn.setAttribute("aria-label", "Тёмная тема");
   themeBtn.innerHTML = '<svg class="ic-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg><svg class="ic-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
-  var curBtn = document.createElement("button"); curBtn.type = "button"; curBtn.className = "pm-opt pm-curbtn"; curBtn.hidden = true; curBtn.setAttribute("aria-label", "Сменить вид курсора");
+  var curBtn = document.createElement("button"); curBtn.type = "button"; curBtn.className = "pm-opt pm-curbtn"; curBtn.setAttribute("aria-label", "Сменить вид курсора");
   curBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 7-6 2-2 6z"/></svg>';
-  dock.appendChild(soundBtn); dock.appendChild(themeBtn); dock.appendChild(curBtn); document.body.appendChild(dock);
+  dock.appendChild(soundBtn); dock.appendChild(themeBtn); document.body.appendChild(dock);
 
   function ease(p) { return 1 - Math.pow(2, -10 * p); } // быстрый старт, очень мягкое замедление
 
@@ -654,7 +654,7 @@ document.addEventListener('play', function (e) {
 
   // Свой курсор: четыре варианта, переключаются кнопкой в панели
   var CUR_NAMES = ["Графит", "Дизайнерская стрелка"];
-  var CUR_KEYS = ["graphite", "arrow"];
+  var CUR_KEYS = ["arrow"];
   var curStyle = 0, curBox = null, curDot, curRing, curLabel, curArrow, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "";
   var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
@@ -715,23 +715,16 @@ document.addEventListener('play', function (e) {
     curBox.innerHTML = '<i class="pm-dot"></i><i class="pm-ring"><span></span></i><svg class="pm-arrow" width="16" height="22" viewBox="-1 -1 16 22"><path d="M0 0 L0 17 L4.4 13 L7.4 19.6 L10.2 18.4 L7.2 11.9 L12.8 11.9 Z" fill="#111827" stroke="#fff" stroke-width="1" stroke-linejoin="round"/></svg><div class="pm-badge"></div>';
     document.body.appendChild(curBox);
     curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild; curArrow = curBox.querySelector(".pm-arrow"); curBadge = curBox.querySelector(".pm-badge");
-    var saved = parseInt(load("premium-cursor-v2"), 10); curStyle = saved >= 0 && saved < CUR_KEYS.length ? saved : 1;
-    applyCurStyle(); curBtn.hidden = false;
+    curStyle = 0;
+    applyCurStyle();
     root.classList.add("pm-cursor-on");
     window.addEventListener("pointermove", curMove, { passive: true }); document.addEventListener("pointerleave", curLeave);
   }
   function stopCursor() {
     if (!curBox) return;
     window.removeEventListener("pointermove", curMove); document.removeEventListener("pointerleave", curLeave);
-    cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; curTone = ""; curBtn.hidden = true; root.classList.remove("pm-cursor-on");
+    cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; curTone = ""; root.classList.remove("pm-cursor-on");
   }
-  curBtn.addEventListener("click", function () {
-    curStyle = (curStyle + 1) % CUR_KEYS.length; store("premium-cursor-v2", String(curStyle)); applyCurStyle();
-    if (!hint) { hint = document.createElement("span"); hint.className = "pm-hint"; dock.appendChild(hint); }
-    hint.textContent = "Курсор: " + CUR_NAMES[curStyle] + " (" + (curStyle + 1) + "/" + CUR_KEYS.length + ")";
-    hint.classList.add("is-on"); clearTimeout(hintTimer); hintTimer = setTimeout(function () { hint.classList.remove("is-on"); }, 2200);
-  });
-
   // Скелетоны вместо спиннеров: пульсирующие плашки по форме будущего содержимого
   function skeleton(host, kind, ms) {
     if (!host || reduce) return;
