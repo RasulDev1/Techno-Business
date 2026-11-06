@@ -686,7 +686,7 @@ document.addEventListener('play', function (e) {
   var curStyle = 0, curBox = null, curDot, curRing, curLabel, curArrow, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "";
   var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
-  var BADGES = [[".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a", "Написать"], [".card", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
+  var BADGES = [[".card.is-open .card-toggle", "Свернуть"], [".card-toggle", "Раскрыть"], [".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a", "Написать"], [".card", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
   var hint = null, hintTimer = 0;
   function regionText(tg) {
     for (var i = 0; i < BADGES.length; i++) if (tg && tg.closest(BADGES[i][0])) return BADGES[i][1];
@@ -1036,4 +1036,29 @@ document.addEventListener('play', function (e) {
     c.clone.style.transform = "translate(" + (r2.left - c.r.left) + "px," + (r2.top - c.r.top) + "px)";
     setTimeout(finish, DUR + 30);
   }
+})();
+
+// Карточки «Готовые решения» на компьютере и планшете: «Подробнее» раскрывает остальное, повторное нажатие сворачивает
+(function () {
+  var phone = window.matchMedia("(max-width: 620px)");
+  document.querySelectorAll(".grid .card").forEach(function (card) {
+    var btn = card.querySelector(".card-toggle"), label = card.querySelector(".ct-text");
+    if (!btn) return;
+    var toggle = function (e) {
+      if (phone.matches) return;
+      e.preventDefault(); e.stopPropagation();
+      var open = card.classList.toggle("is-open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (label) label.textContent = open ? "Свернуть" : "Подробнее";
+      if (open) setTimeout(function () {
+        var r = card.getBoundingClientRect();
+        if (r.bottom > window.innerHeight) window.scrollBy({ top: Math.min(r.bottom - window.innerHeight + 24, r.top - 80), behavior: "smooth" });
+      }, 470);
+    };
+    btn.addEventListener("click", toggle);
+    btn.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") toggle(e); });
+  });
+  // при переходе на телефон раскрытие управляется прежним механизмом
+  var reset = function () { if (phone.matches) document.querySelectorAll(".grid .card.is-open").forEach(function (c) { c.classList.remove("is-open"); var t = c.querySelector(".ct-text"); if (t) t.textContent = "Подробнее"; }); };
+  if (phone.addEventListener) phone.addEventListener("change", reset);
 })();

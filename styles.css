@@ -1874,3 +1874,24 @@ html.pm-dark.premium .res-layer li.is-open { background: #111827; }
 /* Лента заявок: постоянное плавное листание вниз, заявки проявляются при въезде сверху и гаснут при уходе вниз */
 .ledger-body.is-belt { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 calc(100% - 28px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 36px, #000 calc(100% - 28px), transparent 100%); }
 html .ledger-body.is-belt .ledger-row { transform: translateY(var(--belt, 0px)); transition: none; will-change: transform; }
+
+/* Карточки «Готовые решения»: раскрываются по кнопке «Подробнее», изначально видно всё до конца подзаголовка */
+.card-toggle { display: none; }
+@media (max-width: 620px) { .card-more, .card-more-in { display: contents; } }
+@media (min-width: 621px) {
+  .card-toggle { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin-top: auto; padding: 10px 14px 10px 0; font: 600 16px/1 var(--font-body); color: var(--accent); cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .card-toggle svg { transition: transform .35s cubic-bezier(.22, .8, .24, 1); }
+  .card.is-open .card-toggle svg { transform: rotate(180deg); }
+  .card-toggle:hover { color: #1d4ed8; }
+  .card-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .card-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.22, .8, .24, 1); }
+  .card.is-open .card-more { grid-template-rows: 1fr; }
+  .card-more-in { overflow: hidden; min-height: 0; opacity: 0; transition: opacity .25s; }
+  .card.is-open .card-more-in { opacity: 1; transition: opacity .4s .1s; }
+  .grid:has(.card.is-open) { align-items: start; }
+  .grid .card-foot .more { display: none; }
+  .grid .card.is-open .go { display: flex; align-items: center; justify-content: center; margin-top: 14px; min-height: 48px; border-radius: 10px; background: var(--cta); color: var(--ink); font: 600 16px/1 var(--font-body); box-shadow: var(--glow); }
+}
+@media (min-width: 621px) and (prefers-reduced-motion: reduce) { .card-more, .card-more-in, .card-toggle svg { transition: none; } }
+/* Футер: новый длинный заголовок переносится на две строки и не заходит на контакты */
+@media (min-width: 961px) { .site-foot .foot-cta h2 { text-wrap: balance; max-width: 560px; margin-inline: auto; } }
