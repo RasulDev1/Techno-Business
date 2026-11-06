@@ -431,7 +431,7 @@ document.addEventListener('play', function (e) {
   themeBtn.innerHTML = '<svg class="ic-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg><svg class="ic-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
   var curBtn = document.createElement("button"); curBtn.type = "button"; curBtn.className = "pm-opt pm-curbtn"; curBtn.hidden = true; curBtn.setAttribute("aria-label", "Сменить вид курсора");
   curBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 7-6 2-2 6z"/></svg>';
-  dock.appendChild(btn); dock.appendChild(soundBtn); dock.appendChild(themeBtn); dock.appendChild(curBtn); document.body.appendChild(dock);
+  dock.appendChild(soundBtn); dock.appendChild(themeBtn); dock.appendChild(curBtn); document.body.appendChild(dock);
 
   function ease(p) { return 1 - Math.pow(2, -10 * p); } // быстрый старт, очень мягкое замедление
 
@@ -795,13 +795,6 @@ document.addEventListener('play', function (e) {
     else { stopBg(); stopCursor(); stopChart(); root.classList.remove("pm-dark"); soundOn = false; magnets.forEach(function (el) { el.style.transform = ""; el.classList.remove("is-magnet"); }); magnets = []; restoreTitle(); resetMetrics(); }
     parallax();
   }
-  btn.addEventListener("click", function () {
-    var on = !root.classList.contains("premium");
-    set(on);
-    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
-  });
   var start = true;
-  try { start = localStorage.getItem(KEY) !== "0"; } catch (e) { start = true; }
-  if (location.hash === "#premium") start = true;
   if (start) set(true);
 })();
