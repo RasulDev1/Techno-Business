@@ -649,7 +649,7 @@ document.addEventListener('play', function (e) {
   themeBtn.addEventListener("click", function () { var d = !isDark(); setTheme(d, true); store("premium-theme", d ? "dark" : "light"); });
   function initTheme() {
     var saved = load("premium-theme");
-    setTheme(saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches, false);
+    setTheme(saved === "dark", false);
   }
 
   // Свой курсор: четыре варианта, переключаются кнопкой в панели
@@ -715,7 +715,7 @@ document.addEventListener('play', function (e) {
     curBox.innerHTML = '<i class="pm-dot"></i><i class="pm-ring"><span></span></i><svg class="pm-arrow" width="16" height="22" viewBox="-1 -1 16 22"><path d="M0 0 L0 17 L4.4 13 L7.4 19.6 L10.2 18.4 L7.2 11.9 L12.8 11.9 Z" fill="#111827" stroke="#fff" stroke-width="1" stroke-linejoin="round"/></svg><div class="pm-badge"></div>';
     document.body.appendChild(curBox);
     curDot = curBox.querySelector(".pm-dot"); curRing = curBox.querySelector(".pm-ring"); curLabel = curRing.firstChild; curArrow = curBox.querySelector(".pm-arrow"); curBadge = curBox.querySelector(".pm-badge");
-    var saved = parseInt(load("premium-cursor"), 10); curStyle = saved >= 0 && saved < CUR_KEYS.length ? saved : 0;
+    var saved = parseInt(load("premium-cursor-v2"), 10); curStyle = saved >= 0 && saved < CUR_KEYS.length ? saved : 1;
     applyCurStyle(); curBtn.hidden = false;
     root.classList.add("pm-cursor-on");
     window.addEventListener("pointermove", curMove, { passive: true }); document.addEventListener("pointerleave", curLeave);
@@ -726,7 +726,7 @@ document.addEventListener('play', function (e) {
     cancelAnimationFrame(curRaf); curRaf = 0; curBox.remove(); curBox = null; curMode = ""; curTone = ""; curBtn.hidden = true; root.classList.remove("pm-cursor-on");
   }
   curBtn.addEventListener("click", function () {
-    curStyle = (curStyle + 1) % CUR_KEYS.length; store("premium-cursor", String(curStyle)); applyCurStyle();
+    curStyle = (curStyle + 1) % CUR_KEYS.length; store("premium-cursor-v2", String(curStyle)); applyCurStyle();
     if (!hint) { hint = document.createElement("span"); hint.className = "pm-hint"; dock.appendChild(hint); }
     hint.textContent = "Курсор: " + CUR_NAMES[curStyle] + " (" + (curStyle + 1) + "/" + CUR_KEYS.length + ")";
     hint.classList.add("is-on"); clearTimeout(hintTimer); hintTimer = setTimeout(function () { hint.classList.remove("is-on"); }, 2200);
@@ -791,7 +791,7 @@ document.addEventListener('play', function (e) {
     root.classList.toggle("premium", on);
     btn.setAttribute("aria-pressed", String(on));
     btn.querySelector(".pt-text").textContent = on ? "Премиум включён" : "Премиум-версия";
-    if (on) { initTheme(); setSound(load("premium-sound") === "1", true); startCursor(); startChart(); skeleton(document.querySelector(".ledger-body"), "rows", 900); startBg(); magnets = magnetTargets(); revealTitle(); syncMetrics(); }
+    if (on) { initTheme(); setSound(load("premium-sound") !== "0", true); startCursor(); startChart(); skeleton(document.querySelector(".ledger-body"), "rows", 900); startBg(); magnets = magnetTargets(); revealTitle(); syncMetrics(); }
     else { stopBg(); stopCursor(); stopChart(); root.classList.remove("pm-dark"); soundOn = false; magnets.forEach(function (el) { el.style.transform = ""; el.classList.remove("is-magnet"); }); magnets = []; restoreTitle(); resetMetrics(); }
     parallax();
   }
@@ -800,8 +800,8 @@ document.addEventListener('play', function (e) {
     set(on);
     try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) {}
   });
-  var start = false;
-  try { start = localStorage.getItem(KEY) === "1"; } catch (e) {}
+  var start = true;
+  try { start = localStorage.getItem(KEY) !== "0"; } catch (e) { start = true; }
   if (location.hash === "#premium") start = true;
   if (start) set(true);
 })();
