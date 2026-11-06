@@ -1,0 +1,11 @@
+/* Первые мгновения до запуска скриптов (класс pm-wait ставит скрипт в <head>, снимает lib/site/premium.ts).
+   Цифры под заголовком и полоски ждут отсчёта с нуля, а кнопки звука и темы сразу показывают сохранённый выбор.
+   Если скрипты не загрузились, pm-wait снимается сам через 4 секунды. */
+@media (prefers-reduced-motion: no-preference) {
+  html.pm-wait .hero-metrics b[data-to] { visibility: hidden; }
+  html.pm-wait .metric-bar i { animation: none; width: var(--from); }
+}
+html.pm-wait.pm-dark .pm-theme .ic-sun { transform: rotate(90deg) scale(.3); opacity: 0; }
+html.pm-wait.pm-dark .pm-theme .ic-moon { transform: none; opacity: 1; }
+html.pm-wait.pm-mute .pm-sound .snd-on { opacity: 0; }
+html.pm-wait.pm-mute .pm-sound .snd-off { opacity: 1; }

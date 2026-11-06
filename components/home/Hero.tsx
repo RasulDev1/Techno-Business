@@ -1,11 +1,43 @@
+import { Fragment } from "react";
+
 // Первый экран: заголовок, метрики и журнал заявок (строки журнала дописывает скрипт)
+
+// Заголовок сразу разбит по словам: слова вырастают снизу вверх с первой отрисовки, без ожидания скриптов
+const TITLE = "Автоматизируйте бизнес и не теряйте клиентов";
+
+// Пока скрипты не запустились, вместо пустого журнала видны пульсирующие плашки строк.
+// Та же разметка, что у скелетона из lib/site/premium.ts: скрипт заменяет эту заготовку своей и через мгновение убирает
+function LedgerSkeleton() {
+  return (
+    <div className="pm-skel pm-skel-rows" aria-hidden="true">
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <div className="sk-row" key={i}>
+          <i className="sk-b" style={{ width: 38 + ((i * 7) % 20) + "%" }} />
+          <i className="sk-b" style={{ width: "46%" }} />
+          <span className="sk-user"><i className="sk-av" /><i className="sk-b" style={{ width: 50 + ((i * 11) % 30) + "%" }} /></span>
+          <i className="sk-b" style={{ width: 55 + ((i * 13) % 35) + "%" }} />
+          <i className="sk-b" style={{ width: "62%" }} />
+          <i className="sk-pill" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Hero() {
   return (
     <section className="wrap hero" aria-labelledby="hero-title">
       <div className="sheet">
         <div className="sheet-head">
           <div className="hero-left">
-            <h1 id="hero-title">Автоматизируйте бизнес и не теряйте клиентов</h1>
+            <h1 id="hero-title" aria-label={TITLE}>
+              {TITLE.split(" ").map((w, i) => (
+                <Fragment key={i}>
+                  {i > 0 && " "}
+                  <span className="tw" aria-hidden="true"><span className="twi" style={{ "--i": i }}>{w}</span></span>
+                </Fragment>
+              ))}
+            </h1>
             <p className="lead"><span className="lead-full">Все клиенты, заявки, чаты и товары — в одной внутренней системе. Быстрее обрабатывайте обращения, закрывайте больше сделок и возвращайте покупателей снова.</span><span className="lead-short">Управляйте клиентами, заявками и товарами в одной системе. Продавайте быстрее и без утери лидов</span></p>
           </div>
           <div className="hero-right">
@@ -31,7 +63,9 @@ export default function Hero() {
           {" "}
           <div className="ledger-row ledger-cols" aria-hidden="true"><span>№</span><span>Время</span><span>Клиент</span><span>Что нужно</span><span>Исполнитель</span><span>Отметка</span></div>
           {" "}
-          <div className="ledger-body" aria-hidden="true" />
+          <div className="ledger-body pm-skel-host" aria-hidden="true">
+            <LedgerSkeleton />
+          </div>
           <div className="ledger-foot" aria-hidden="true">
             <span className="ledger-note">Пример заполнения</span>
             <div className="ledger-total">

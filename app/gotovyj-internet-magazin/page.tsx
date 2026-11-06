@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Topbar from "@/components/Topbar";
+import FeatureVideo from "@/components/FeatureVideo";
 
 export const metadata: Metadata = {
   title: "CRM-система для автоматизации и продаж",
@@ -104,15 +105,7 @@ export default function ShopCrmPage() {
           <p className="live-link"><span>Открыть на отдельной странице:</span> <a href="https://rasuldev1.github.io/vexa/demo/" target="_blank" rel="noopener">rasuldev1.github.io/vexa/demo<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9" /></svg></a></p>
         </div>
         <section className="features" id="features">
-          <article className="sheet feature">
-            <span className="card-label"><span className="t-full">Функция 1</span><span className="t-short">Видео</span></span>
-            <div className="feature-media">
-              <video controls preload="metadata" playsInline poster="videos/vexa.jpg?v=2" aria-label="Работа с клиентами: видео">
-                <source src="videos/vexa.mp4?v=2" type="video/mp4" />
-              </video>
-            </div>
-            <h2>Работа с клиентами</h2>
-          </article>
+          <FeatureVideo label="Функция 1" shortLabel="Видео" title="Работа с клиентами" src="videos/vexa.mp4?v=2" poster="videos/vexa.jpg?v=2" />
         </section>
         <nav className="sheet next" aria-label="Что дальше">
           <h2>Что дальше</h2>

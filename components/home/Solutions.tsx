@@ -1,4 +1,5 @@
-// Готовые решения: вкладки и карточки с живыми макетами сайтов и CRM
+// Готовые решения: вкладки и карточки с живыми макетами сайтов и CRM.
+// Классы вкладок (has-tabs, tab-on, tab-off) действуют только на телефоне; они уже в разметке, чтобы карточки не перестраивались после загрузки
 export default function Solutions() {
   return (
     <section className="types" id="types">
@@ -10,8 +11,8 @@ export default function Solutions() {
         {" "}
         <div className="type-tabs" role="tablist" aria-label="Тип решения"><button type="button" role="tab" className="is-active" aria-selected="true" data-i="0">Сайт для быстрого оформления заявок</button><button type="button" role="tab" aria-selected="false" data-i="1">CRM-система</button></div>
         {" "}
-        <div className="grid">
-          <div className="card">
+        <div className="grid has-tabs">
+          <div className="card tab-on">
             <span className="card-label">Приложение 1</span>
             <div className="shot shot-cm">
               {" "}
@@ -269,7 +270,7 @@ export default function Solutions() {
               </div>
             </div>
           </div>
-          <div className="card">
+          <div className="card tab-off from-right">
             <span className="card-label">Приложение 2</span>
             <div className="shot shot-cm">
               {" "}
