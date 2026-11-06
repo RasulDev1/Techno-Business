@@ -14,9 +14,8 @@
   // Заявка: текст и для кого она; "м" — мужские товары и услуги, "ж" — женские, "" — подходит всем
   const NEEDS = [
     ["Перфоратор на 2 суток", "м"], ["Футболка Airline, размер M", "м"], ["Смета на ремонт офиса", ""], ["Запись на консультацию", ""],
-    ["Ветровка Storm Shell, 2 шт.", "м"], ["Бетономешалка на выходные", "м"], ["Курс по маникюру, оплата", "ж"], ["Шуруповёрт с доставкой", "м"],
+    ["Ветровка Storm Shell, 2 шт.", "м"], ["Бетономешалка на выходные", "м"], ["Шуруповёрт с доставкой", "м"],
     ["Беговые кроссовки, возврат", "м"], ["Лендинг под акцию", ""], ["Плиткорез на 3 суток", "м"], ["Худи, 3 размера на выбор", "м"],
-    ["Запись на окрашивание волос", "ж"], ["Курс по макияжу, оплата", "ж"], ["Запись на ламинирование ресниц", "ж"],
   ];
   // Чаще заявки доходят до вручения, реже отменяются
   const STATUSES = ["done", "done", "done", "done", "new", "new", "new", "pay", "pay", "cancel"];
@@ -697,7 +696,7 @@ document.addEventListener('play', function (e) {
   var curStyle = 0, curBox = null, curDot, curRing, curLabel, curArrow, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "";
   var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
-  var BADGES = [[".cta-call", "Позвонить"], [".card.is-open .card-toggle", "Свернуть"], [".card-toggle", "Раскрыть"], [".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a, .cta-btn", "Написать"], [".card-link, .go", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
+  var BADGES = [[".card.is-open .card-toggle", "Свернуть"], [".card-toggle", "Раскрыть"], [".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a, .cta-btn", "Написать"], [".card-link, .go", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
   var hint = null, hintTimer = 0;
   function regionText(tg) {
     for (var i = 0; i < BADGES.length; i++) if (tg && tg.closest(BADGES[i][0])) return BADGES[i][1];
@@ -894,9 +893,9 @@ document.addEventListener('play', function (e) {
       };
     },
     dental: function (slide, say) {
-      var names = [["Анна", "15:30"], ["Дмитрий", "16:15"], ["Мадина", "17:00"], ["Олег", "17:45"], ["Елена", "18:30"]], ni = 0;
+      var names = [["к терапевту", "15:30"], ["к хирургу", "16:15"], ["к ортодонту", "17:00"], ["к имплантологу", "17:45"], ["к пародонтологу", "18:30"]], ni = 0;
       return {
-        tick: function () { var n = names[ni++ % names.length]; say("Новая запись · " + n[0] + " · " + n[1]); },
+        tick: function () { var n = names[ni++ % names.length]; say("Новая запись " + n[0] + " · " + n[1]); },
         act: function (t) {
           var b = t.closest(".dn-btns em, .dn-mini");
           if (b) {

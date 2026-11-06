@@ -2012,7 +2012,7 @@ html.pm-dark .m-contact { --accent: #43299c; --accent-soft: #ece8fb; }
 }
 
 /* Призыв к действию: на кнопках нет текста, только значки Telegram, WhatsApp и звонка (подписи в aria-label) */
-.cta-actions { grid-area: a; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; margin-top: 8px; }
+.cta-actions { grid-area: a; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; margin-top: 8px; }
 .cta-btn { width: auto; min-height: 0; height: 64px; padding: 0; border: 1.5px solid var(--line-strong); border-radius: 16px; background: var(--surface); box-shadow: none; transition: border-color .2s, background-color .2s, transform .2s; }
 .cta-btn svg { width: 30px; height: 30px; transition: transform .25s; }
 .cta-tg { color: #0088cc; }
