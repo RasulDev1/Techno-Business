@@ -684,7 +684,7 @@ document.addEventListener('play', function (e) {
   var CUR_NAMES = ["Графит", "Дизайнерская стрелка"];
   var CUR_KEYS = ["arrow"];
   var curStyle = 0, curBox = null, curDot, curRing, curLabel, curArrow, curBadge, cX = -200, cY = -200, rX = -200, rY = -200, rW = 24, rH = 24, curRaf = 0, curMode = "", curTarget = null, badgeText = "";
-  var curTone = "", BLUE = ".topbar, .cta-band, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
+  var curTone = "", BLUE = ".topbar, .site-foot, .stamp.st-done, .type-tabs button[aria-selected='true'], .m-contact a:first-child";
   var STICK = ".btn, .top-link, .type-tabs button, .stamp, .premium-toggle, .pm-opt";
   var BADGES = [[".card.is-open .card-toggle", "Свернуть"], [".card-toggle", "Раскрыть"], [".res-layer li", "Вернуть"], [".results-list li", "Увеличить"], [".stamp", "Сменить статус"], [".shot", "Демо"], [".btn, .hero-down", "Смотреть"], [".top-link, .type-tabs button", "Выбрать"], [".foot-contacts a, .top-contacts a, .cta-btn", "Написать"], [".card-link, .go", "Открыть"], [".ledger", "Живая лента"], [".metric", "Цифры"]];
   var hint = null, hintTimer = 0;
